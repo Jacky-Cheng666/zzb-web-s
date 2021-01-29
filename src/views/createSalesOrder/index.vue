@@ -122,8 +122,8 @@
 
 <script>
 export default {
+  name: 'createSalesOrder',
   data() {
-    name: 'createSalesOrder'
     return {
       queryParams:{
         pay_period: '全部',
