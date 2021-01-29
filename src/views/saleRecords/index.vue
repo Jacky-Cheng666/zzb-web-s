@@ -45,21 +45,13 @@
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
-         <el-checkbox style="" size="mini" v-model="checked">所有页面全选</el-checkbox>
+        <el-button type="primary" icon="el-icon-circle-check" size="mini">所有页全选</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button
-          type="text"
-          icon="el-icon-download"
-          size="mini"
-        >批量下载附件</el-button>
+        <el-button type="info" icon="el-icon-download" size="mini">批量下载附件</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-download"
-          size="mini"
-        >导出</el-button>
+        <el-button type="info" icon="el-icon-download" size="mini">导出</el-button>
       </el-col>
       
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getPayDemandList"></right-toolbar>
@@ -117,7 +109,7 @@ export default {
   data() {
     return {
       myBackToTopStyle: {
-        right: '50px',
+        right: '70px',
         bottom: '70px',
         width: '40px',
         height: '40px',
@@ -135,7 +127,7 @@ export default {
       },
       showSearch: true,
       loading: false,
-      tableData: [],
+      tableData: [{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},],
       total: 0,
       allRows: [],
       value2:[],
