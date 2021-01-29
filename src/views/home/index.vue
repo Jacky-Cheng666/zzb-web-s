@@ -45,7 +45,8 @@
         <el-card class="box-card" style="width:200px">
             <div slot="header" class="clearfix">
                 <span>销售管理</span>
-                <i style="float: right" class="el-icon-paperclip"></i>
+                <!-- <i style="float: right" class="el-icon-paperclip"></i> -->
+                <svg-icon style="float: right" iconClass="nail"></svg-icon>
             </div>
             <el-link @click="toDetailPage(item)" style="margin-bottom:4px;display:block" type="primary" :underline="false" v-for="(item,index) in salesManage" :key="index">{{item.title}}</el-link>
         </el-card>
@@ -53,7 +54,8 @@
         <el-card class="box-card" style="width:200px">
             <div slot="header" class="clearfix">
                 <span>采购管理</span>
-                <i style="float: right" class="el-icon-paperclip"></i>
+                <!-- <i style="float: right" class="el-icon-paperclip"></i> -->
+                <svg-icon style="float: right" iconClass="nail"></svg-icon>
             </div>
             <div v-for="o in 4" :key="o" class="text item">
                 {{'我要请购 ' + o }}
@@ -63,7 +65,8 @@
         <el-card class="box-card" style="width:200px">
             <div slot="header" class="clearfix">
                 <span>生产管理</span>
-                <i style="float: right" class="el-icon-paperclip"></i>
+                <!-- <i style="float: right" class="el-icon-paperclip"></i> -->
+                <svg-icon style="float: right" iconClass="nail"></svg-icon>
             </div>
             <div v-for="o in 4" :key="o" class="text item">
                 {{'生产看板 ' + o }}
@@ -73,7 +76,8 @@
         <el-card class="box-card" style="width:200px">
             <div slot="header" class="clearfix">
                 <span>财务管理</span>
-                <i style="float: right" class="el-icon-paperclip"></i>
+                <!-- <i style="float: right" class="el-icon-paperclip"></i> -->
+                <svg-icon style="float: right" iconClass="nail"></svg-icon>
             </div>
             <div v-for="o in 4" :key="o" class="text item">
                 {{'报销中心 ' + o }}
@@ -83,7 +87,8 @@
         <el-card class="box-card" style="width:200px">
             <div slot="header" class="clearfix">
                 <span>企业管理</span>
-                <i style="float: right" class="el-icon-paperclip"></i>
+                <!-- <i style="float: right" class="el-icon-paperclip"></i> -->
+                <svg-icon style="float: right" iconClass="nail"></svg-icon>
             </div>
             <div v-for="o in 4" :key="o" class="text item">
                 {{'通讯录 ' + o }}
