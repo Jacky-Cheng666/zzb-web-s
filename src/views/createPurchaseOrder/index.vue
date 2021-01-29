@@ -48,8 +48,9 @@
         <el-form-item label="交货日期">
           <el-date-picker :clearable="false" style="width:140px" size="small" v-model="queryParams.deliver_time" type="date" placeholder="选择日期"></el-date-picker>
         </el-form-item>
-        <el-form-item>
-          <el-checkbox size="small" border v-model="queryParams.invoice">不开票</el-checkbox>
+        <el-form-item label="不开票">
+          <!-- <el-checkbox size="small" border v-model="queryParams.invoice">不开票</el-checkbox> -->
+          <el-switch v-model="queryParams.invoice"></el-switch>
         </el-form-item>
         <el-form-item label="付款计划">
           <el-badge :value="0" class="item" type="primary">

@@ -48,11 +48,13 @@
         <el-form-item label="订单说明">
           <el-input v-model="queryParams.remark" placeholder="输入订单说明" clearable size="small" style="width: 500px"/>
         </el-form-item>
-        <el-form-item>
-          <el-checkbox size="small" border v-model="queryParams.invoice">不开票</el-checkbox>
+        <el-form-item label="不开票">
+          <!-- <el-checkbox size="small" border v-model="queryParams.invoice">不开票</el-checkbox> -->
+          <el-switch v-model="queryParams.invoice"></el-switch>
         </el-form-item>
-        <el-form-item>
-          <el-checkbox size="small" border v-model="queryParams.payed">已付迄</el-checkbox>
+        <el-form-item label="已付迄">
+          <!-- <el-checkbox size="small" border v-model="queryParams.payed">已付迄</el-checkbox> -->
+          <el-switch v-model="queryParams.payed"></el-switch>
         </el-form-item>
         <el-form-item label="协议交货日期">
           <el-date-picker :clearable="false" style="width:140px" size="small" v-model="queryParams.deliver_time" type="date" placeholder="选择日期"></el-date-picker>
