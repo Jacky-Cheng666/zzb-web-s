@@ -24,6 +24,8 @@
 }
 .mb8 {
 	margin-bottom: 8px;
+	height: 30px;
+	line-height: 30px;
 }
 .ml5 {
 	margin-left: 5px;
@@ -52,7 +54,13 @@
 .m20 {
 	margin-left: 20px;
 }
-
+.table_tip{
+	font-size: 14px;
+	color: #515a6e;
+	margin-bottom: 8px;
+	display: flex;
+	justify-content: space-between;
+}
 .el-dialog:not(.is-fullscreen){
 	margin-top: 6vh !important;
 }

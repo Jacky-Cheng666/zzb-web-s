@@ -17,8 +17,12 @@ import '@/icons' // icon
 import '@/permission' // permission control
 
 import Pagination from "@/components/Pagination";
-Vue.component('Pagination', Pagination)
+import RightToolbar from "@/components/RightToolbar"
+import backToTop from '@/components/BackToTop'
 
+Vue.component('Pagination', Pagination)
+Vue.component('RightToolbar', RightToolbar)
+Vue.component('backToTop', backToTop)
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
