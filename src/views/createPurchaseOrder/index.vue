@@ -1,10 +1,10 @@
 <template>
   <div class="app-container createSalesOrder">
     <fieldset class="field" v-show="showSearch">
-      <legend>销售订单信息：</legend>
+      <legend>采购订单信息：</legend>
       <el-form :model="queryParams" ref="queryForm" :inline="true">
-        <el-form-item label="客户">
-          <el-select placeholder="选择客户" v-model="queryParams.pay_period" size="small" style="width: 310px">
+        <el-form-item label="供应商">
+          <el-select placeholder="选择供应商" v-model="queryParams.pay_period" size="small" style="width: 310px">
             <el-option label="全部" value="全部"></el-option>
             <el-option label="预付" value="预付"></el-option>
             <el-option label="到付" value="到付"></el-option>
@@ -42,23 +42,14 @@
             <el-option label="账本4" value="invoiced"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="订单号">
-          <el-input v-model="queryParams.inputValue" placeholder="输入客户订单号" clearable size="small" style="width: 200px"/>
-        </el-form-item>
         <el-form-item label="订单说明">
           <el-input v-model="queryParams.remark" placeholder="输入订单说明" clearable size="small" style="width: 500px"/>
         </el-form-item>
+        <el-form-item label="交货日期">
+          <el-date-picker :clearable="false" style="width:140px" size="small" v-model="queryParams.deliver_time" type="date" placeholder="选择日期"></el-date-picker>
+        </el-form-item>
         <el-form-item>
           <el-checkbox size="small" border v-model="queryParams.invoice">不开票</el-checkbox>
-        </el-form-item>
-        <el-form-item>
-          <el-checkbox size="small" border v-model="queryParams.payed">已付迄</el-checkbox>
-        </el-form-item>
-        <el-form-item label="协议交货日期">
-          <el-date-picker :clearable="false" style="width:140px" size="small" v-model="queryParams.deliver_time" type="date" placeholder="选择日期"></el-date-picker>
-        </el-form-item>
-        <el-form-item label="预计发货日期">
-          <el-date-picker :clearable="false" style="width:140px" size="small" v-model="queryParams.deliver_time" type="date" placeholder="选择日期"></el-date-picker>
         </el-form-item>
         <el-form-item label="付款计划">
           <el-badge :value="0" class="item" type="primary">
@@ -155,7 +146,8 @@ export default {
         payed: false,
         deliver_time: new Date(),
         pageNum: 1,
-        pageSize: 20
+        pageSize: 20,
+        type: ''
       },
       showSearch: true,
       loading: false,
@@ -196,5 +188,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 
 </style>

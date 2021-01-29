@@ -100,9 +100,9 @@ export const constantRoutes = [
         meta: { title: '我要请购',icon: 'el-icon-document-add' }
       },
       {
-        path: 'newCreateOrder',
-        name: 'newCreateOrder',
-        component: () => import('@/views/newCreateOrder/index'),
+        path: 'createPurchaseOrder',
+        name: 'createPurchaseOrder',
+        component: () => import('@/views/createPurchaseOrder/index'),
         meta: { title: '新建订单',icon: 'el-icon-document-add' }
       }
     ]
