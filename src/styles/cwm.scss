@@ -54,6 +54,9 @@
 .m20 {
 	margin-left: 20px;
 }
+.f14{
+	font-size: 14px;
+}
 .table_tip{
 	font-size: 14px;
 	color: #515a6e;
@@ -65,6 +68,13 @@
 	margin-top: 6vh !important;
 }
 
+.el-dialog--center .el-dialog__body {
+	padding: 0 25px;
+}
+.play_content{
+	height: 500px;
+	overflow: auto;
+}
 .el-table {
 	.el-table__header-wrapper, .el-table__fixed-header-wrapper {
 		th {
