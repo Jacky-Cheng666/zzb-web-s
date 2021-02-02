@@ -133,7 +133,7 @@
 
     <pay-plan v-model="plan_list" ref="payPlan"></pay-plan>
 
-    <element-info titleName="产品信息" ref="elementInfo">
+    <element-info myElementTitleName="我方产品信息" titleName="产品信息" ref="elementInfo">
       <template slot="content-wrap">
         <el-form-item label="客户物料信息：" label-width="110px">
           <el-form-item label="名称" prop="guest_element_name">
@@ -149,27 +149,21 @@
               <el-input v-model="elementInfoForm.guest_task_code" placeholder="输入项目" clearable size="small"/>
           </el-form-item>
         </el-form-item>
-        <el-form-item label="交易信息：" label-width="84px">
-          <el-row style="width:570px">
-            <el-col :span="10">
-                <el-form-item label="数量" prop="trade_num">
-                    <el-input v-model="elementInfoForm.trade_num" placeholder="输入数字" clearable size="small" style="width: 100px"/>
-                </el-form-item>
-            </el-col>
-            <el-col :span="14">
-                <el-form-item label="价格">
-                    <el-form-item label="未税价" label-width="70px">
-                        <el-switch v-model="elementInfoForm.noTax"></el-switch>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-input v-model="elementInfoForm.price" placeholder="输入数字" clearable size="small" style="width: 120px;margin-left:20px"/>
-                    </el-form-item>
-                </el-form-item>
-            </el-col>
-          </el-row>
+        <el-form-item>
+          <div>交易信息：</div>
+          <el-form-item label="数量" prop="trade_num" style="margin-right:126px">
+              <el-input v-model="elementInfoForm.trade_num" placeholder="输入数字" clearable size="small" style="width: 100px"/>
+          </el-form-item>
+          <el-form-item>
+              <el-form-item label="未税价" label-width="70px">
+                  <el-switch v-model="elementInfoForm.noTax"></el-switch>
+              </el-form-item>
+              <el-form-item label="价格">
+                  <el-input v-model="elementInfoForm.price" placeholder="输入数字" clearable size="small" style="width: 120px;"/>
+              </el-form-item>
+          </el-form-item>
         </el-form-item>
       </template>
-      
     </element-info>
   </div>
 </template>

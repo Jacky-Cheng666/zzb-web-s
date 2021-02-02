@@ -138,7 +138,7 @@
           <el-form-item label="数量" prop="trade_num" style="margin-right:126px">
               <el-input v-model="elementInfoForm.trade_num" placeholder="输入数字" clearable size="small" style="width: 100px"/>
           </el-form-item>
-          <el-form-item >
+          <el-form-item>
               <el-form-item label="未税价" label-width="70px">
                   <el-switch v-model="elementInfoForm.noTax"></el-switch>
               </el-form-item>
