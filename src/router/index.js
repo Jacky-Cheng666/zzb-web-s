@@ -83,6 +83,13 @@ export const constantRoutes = [
         name: 'deliveryManage',
         component: () => import('@/views/deliveryManage/index'),
         meta: { title: '发货管理',icon: 'el-icon-takeaway-box' }
+      },
+      {
+        path: 'saleOrder/:order_name',
+        name: 'saleOrder',
+        component: () => import('@/views/saleOrder/index'),
+        meta: { title: '销售订单',icon: 'el-icon-takeaway-box',activeMenu: '/saleManage/saleRecords' },
+        hidden: true
       }
     ]
   },

@@ -43,7 +43,7 @@
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
+    <el-row :gutter="10" class="mb8 mt20">
       <el-col :span="1.5">
         <el-button type="primary" icon="el-icon-circle-check" size="mini">所有页全选</el-button>
       </el-col>
@@ -75,7 +75,13 @@
     </div>
     <el-table v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="50" />
-      <el-table-column align="center" label="订单号" prop="order_name" width="160" />
+      <el-table-column align="center" label="订单号" prop="order_name" width="160">
+        <template slot-scope="scope">
+          <router-link :to="'/saleManage/saleOrder/'+scope.row.order_name">
+            <el-link :underline="false" type="primary">{{scope.row.order_name}}</el-link>
+          </router-link>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="客户名称" prop="purchase_name" />
       <el-table-column align="center" label="客户订单号" prop="receive_side_name" />
       <el-table-column align="center" label="总金额" prop="total_money_with_tax" width="120" />
@@ -127,7 +133,7 @@ export default {
       },
       showSearch: true,
       loading: false,
-      tableData: [{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},{order_name:"pr12465413"},],
+      tableData: [{order_name:"PO210115171738"},{order_name:"PO222222222"},{order_name:"PO33333333"},{order_name:"PO210115171738"},{order_name:"PO210115171738"},{order_name:"PO210115171738"},{order_name:"PO210115171738"},{order_name:"PO210115171738"},{order_name:"PO210115171738"},{order_name:"PO210115171738"},{order_name:"PO210115171738"},{order_name:"PO210115171738"},{order_name:"PO210115171738"},{order_name:"PO210115171738"},{order_name:"PO210115171738"},{order_name:"PO210115171738"},{order_name:"PO210115171738"},{order_name:"PO210115171738"},{order_name:"PO210115171738"},{order_name:"PO210115171738"},{order_name:"PO210115171738"},{order_name:"PO210115171738"},{order_name:"PO210115171738"},{order_name:"PO210115171738"},],
       total: 0,
       allRows: [],
       value2:[],
@@ -166,7 +172,10 @@ export default {
     resetQuery(){},
     getPayDemandList(){},
     handleSelectionChange(){},
-    handleCurrentChange(){}
+    handleCurrentChange(){},
+    viewSalesOrder(row){
+      this.$router.push('/saleManage/saleOrder'+row.order_name)
+    }
   },
 
 }
