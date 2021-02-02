@@ -75,6 +75,13 @@
 	height: 500px;
 	overflow: auto;
 }
+.el-dialog__title {
+	font-size: 16px;
+	font-weight: bold;
+}
+.el-form-item__label{
+	font-weight: normal;
+}
 .el-table {
 	.el-table__header-wrapper, .el-table__fixed-header-wrapper {
 		th {

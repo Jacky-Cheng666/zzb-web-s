@@ -1,0 +1,85 @@
+<template>
+  <div class="element_info">
+      <el-dialog center :title="titleName" :visible.sync="openElementInfo" width="646px" append-to-body>
+          <el-form ref="element_info" :model="elementInfoForm" label-width="50px" :inline="true">
+              <el-form-item label="我方产品信息：" label-width="110px">
+                  <el-form-item label="名称" prop="element_name">
+                      <el-input v-model="elementInfoForm.element_name" placeholder="输入名称" clearable size="small" style="width: 260px"/>
+                  </el-form-item>
+                  <el-form-item label="代码" prop="element_code">
+                      <el-input v-model="elementInfoForm.element_code" placeholder="输入代码" clearable size="small"/>
+                  </el-form-item>
+                  <el-form-item label="型号" prop="spec_code">
+                      <el-input v-model="elementInfoForm.spec_code" placeholder="输入型号" clearable size="small" style="width: 260px"/>
+                  </el-form-item>
+                  <el-form-item label="品牌" prop="element_code">
+                      <el-input v-model="elementInfoForm.brand" placeholder="输入品牌" clearable size="small"/>
+                  </el-form-item>
+                  <el-form-item label="单位" prop="unit">
+                      <el-input style="width:80px" v-model="elementInfoForm.unit" placeholder="单位" clearable size="small"/>
+                  </el-form-item>
+                  <el-form-item label="最小包装" prop="min_package" label-width="70px">
+                      <el-input style="width:100px" v-model="elementInfoForm.min_package" placeholder="最小包装" clearable size="small"/>
+                  </el-form-item>
+                  <el-form-item label="最少购买" prop="min_purchase" label-width="80px">
+                      <el-input style="width:170px" v-model="elementInfoForm.min_purchase" placeholder="最少购买" clearable size="small"/>
+                  </el-form-item>
+                  <el-form-item label="品类" prop="work_piece_id">
+                      <el-select placeholder="选择品类" v-model="elementInfoForm.work_piece_id" size="small" style="width:520px">
+                        <el-option label="全部" value="全部"></el-option>
+                        <el-option label="预付" value="预付"></el-option>
+                        <el-option label="到付" value="到付"></el-option>
+                        <el-option label="月结" value="月结"></el-option>
+                        <el-option label="自建" value="自建"></el-option>
+                      </el-select>
+                  </el-form-item>
+                  <slot name="my_element"></slot>
+              </el-form-item>
+              <slot name="content-wrap"></slot>
+              <el-form-item label="备注：" label-width="60px">
+                  <el-row style="width:570px">
+                      <el-input v-model="elementInfoForm.remark" placeholder="输入备注说明" clearable size="small" style="width: 100%"/>
+                  </el-row>
+              </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+             <el-button size="mini" @click="openElementInfo = false">取 消</el-button>
+             <el-button size="mini" type="primary" @click="openElementInfo = false">确 定</el-button>
+          </div>
+      </el-dialog>
+  </div>
+</template>
+
+<script>
+export default {
+    name: "element_info",
+    props:{
+        titleName: {
+            default: "物料信息"
+        }
+    },
+    data() {
+        return {
+            openElementInfo: false,
+            elementInfoForm: {
+                element_name: "",
+                element_code: "",
+                spec_code: "",
+                brand: "",
+                unit: "",
+                min_package: "",
+                min_purchase: "",
+                work_piece_id: "",
+                trade_num: "",
+                noTax: "",
+                price: "",
+                remark: ""
+            }
+        }
+    },
+}
+</script>
+
+<style>
+
+</style>
