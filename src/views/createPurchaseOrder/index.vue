@@ -73,7 +73,7 @@
         <el-button type="primary" icon="el-icon-plus" size="mini">批量新增</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="primary" icon="el-icon-plus" size="mini">新增</el-button>
+        <el-button @click="addElement" type="primary" icon="el-icon-plus" size="mini">新增</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button type="info" icon="el-icon-upload2" size="mini">导入</el-button>
@@ -110,7 +110,7 @@
       <el-table-column align="center" label="备注" prop="remark" width="200" />
       <el-table-column fixed="right" align="center" label="操作" width="70">
         <template>
-          <el-button size="mini" type="text" icon="el-icon-edit">修改</el-button>
+          <el-button @click="editElement" size="mini" type="text" icon="el-icon-edit">修改</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -120,12 +120,43 @@
     <el-tooltip placement="top" content="返回顶部">
       <back-to-top :custom-style="myBackToTopStyle" :visibility-height="300" :back-position="0" transition-name="fade" />
     </el-tooltip>
+
+    <element-info v-model="elementInfoForm" ref="elementInfo">
+      <template slot="my_element_sub">
+        <el-form-item style="width:580px">
+          <el-form-item label="项目">
+            <el-input v-model="elementInfoForm.task_code" placeholder="输入名称" clearable size="small" style="width: 200px"/>
+          </el-form-item>
+          <el-form-item label="子项目" label-width="60px">
+            <el-input v-model="elementInfoForm.sub_task_code" placeholder="输入子项目号" clearable size="small" style="width: 250px"/>
+          </el-form-item>
+        </el-form-item>
+      </template>
+      <template slot="content-wrap">
+        <el-form-item>
+          <div>交易信息：</div>
+          <el-form-item label="数量" prop="trade_num" style="margin-right:126px">
+              <el-input v-model="elementInfoForm.trade_num" placeholder="输入数字" clearable size="small" style="width: 100px"/>
+          </el-form-item>
+          <el-form-item >
+              <el-form-item label="未税价" label-width="70px">
+                  <el-switch v-model="elementInfoForm.noTax"></el-switch>
+              </el-form-item>
+              <el-form-item label="价格">
+                  <el-input v-model="elementInfoForm.price" placeholder="输入数字" clearable size="small" style="width: 120px;"/>
+              </el-form-item>
+          </el-form-item>
+        </el-form-item>
+      </template>
+    </element-info>
   </div>
 </template>
 
 <script>
+import elementInfo from '../../components/elementInfo'
 export default {
   name: 'createSalesOrder',
+  components: {elementInfo},
   data() {
     return {
       myBackToTopStyle: {
@@ -175,7 +206,8 @@ export default {
         {element_name:'特斯拉汽车',spec_code:'Model3 高级版 磨砂黑',brand:'特斯拉',unit: '个',num:999,total_money:9999,remark:'我是一条备注'},
         {element_name:'特斯拉汽车',spec_code:'Model3 高级版 磨砂黑',brand:'特斯拉',unit: '个',num:999,total_money:9999,remark:'我是一条备注'},
       ],
-      total: 0
+      total: 0,
+      elementInfoForm: {}
     }
   },
   methods: {
@@ -183,7 +215,13 @@ export default {
     toggleSearch(){
       this.showSearch = !this.showSearch
     },
-    getList(){}
+    getList(){},
+    addElement(){
+      this.$refs.elementInfo.openElementInfo = true;
+    },
+    editElement(){
+      this.$refs.elementInfo.openElementInfo = true;
+    }
   },
 }
 </script>

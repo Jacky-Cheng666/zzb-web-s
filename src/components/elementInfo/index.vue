@@ -2,7 +2,8 @@
   <div class="element_info">
       <el-dialog center :title="titleName" :visible.sync="openElementInfo" width="646px" append-to-body>
           <el-form ref="element_info" :model="elementInfoForm" label-width="50px" :inline="true">
-              <el-form-item label="我方产品信息：" label-width="110px">
+              <el-form-item>
+                  <div>{{myElementTitleName}}：</div>
                   <el-form-item label="名称" prop="element_name">
                       <el-input v-model="elementInfoForm.element_name" placeholder="输入名称" clearable size="small" style="width: 260px"/>
                   </el-form-item>
@@ -33,13 +34,16 @@
                         <el-option label="自建" value="自建"></el-option>
                       </el-select>
                   </el-form-item>
-                  <slot name="my_element"></slot>
+                  <slot name="my_element_sub"></slot>
               </el-form-item>
+
               <slot name="content-wrap"></slot>
-              <el-form-item label="备注：" label-width="60px">
-                  <el-row style="width:570px">
-                      <el-input v-model="elementInfoForm.remark" placeholder="输入备注说明" clearable size="small" style="width: 100%"/>
-                  </el-row>
+              
+              <el-form-item>
+                  <div class="myElementTitleName">备注：</div>
+                  <el-form-item prop="remark">
+                      <el-input v-model="elementInfoForm.remark" placeholder="输入备注说明" clearable size="small" style="width: 570px"/>
+                  </el-form-item>
               </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
@@ -56,6 +60,9 @@ export default {
     props:{
         titleName: {
             default: "物料信息"
+        },
+        myElementTitleName: {
+            default: "我方物料信息"
         }
     },
     data() {
