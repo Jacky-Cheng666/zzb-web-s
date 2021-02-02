@@ -52,7 +52,13 @@
 
     <el-table v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="50" />
-      <el-table-column align="center" label="订单号" prop="order_name" width="140" />
+      <el-table-column align="center" label="订单号" prop="order_name" width="140">
+        <template slot-scope="scope">
+          <router-link :to="'/saleManage/saleOrder/'+scope.row.order_name">
+            <el-link :underline="false" type="primary">{{scope.row.order_name}}</el-link>
+          </router-link>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="客户订单号" prop="receive_side_name" width="180" />
       <el-table-column align="center" label="客户名称" prop="purchase_name" />
       <el-table-column align="center" label="收货地址" prop="total_money_with_tax" width="120" />
@@ -95,7 +101,7 @@ export default {
       },
       showSearch: true,
       loading: false,
-      tableData: [],
+      tableData: [{order_name:"PO210115171738"},{order_name:"PO222222222"},{order_name:"PO33333333"}],
       total: 0,
       allRows: [],
     };
