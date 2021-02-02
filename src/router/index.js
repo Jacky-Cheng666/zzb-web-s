@@ -116,6 +116,13 @@ export const constantRoutes = [
         name: 'receiveManage',
         component: () => import('@/views/receiveManage/index'),
         meta: { title: '收货管理',icon: 'manage' }
+      },
+      {
+        path: 'purchaseOrder/:order_name',
+        name: 'purchaseOrder',
+        component: () => import('@/views/purchaseOrder/index'),
+        meta: { title: '采购订单',icon: 'el-icon-takeaway-box',activeMenu: '/purchaseManage/receiveManage' },
+        hidden: true
       }
     ]
   },
