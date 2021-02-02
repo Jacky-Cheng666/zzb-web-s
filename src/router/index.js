@@ -82,7 +82,7 @@ export const constantRoutes = [
         path: 'deliveryManage',
         name: 'deliveryManage',
         component: () => import('@/views/deliveryManage/index'),
-        meta: { title: '发货管理',icon: 'el-icon-takeaway-box' }
+        meta: { title: '发货管理',icon: 'manage' }
       },
       {
         path: 'saleOrder/:order_name',
@@ -110,6 +110,12 @@ export const constantRoutes = [
         name: 'createPurchaseOrder',
         component: () => import('@/views/createPurchaseOrder/index'),
         meta: { title: '新建订单',icon: 'el-icon-document-add' }
+      },
+      {
+        path: 'receiveManage',
+        name: 'receiveManage',
+        component: () => import('@/views/receiveManage/index'),
+        meta: { title: '收货管理',icon: 'manage' }
       }
     ]
   },

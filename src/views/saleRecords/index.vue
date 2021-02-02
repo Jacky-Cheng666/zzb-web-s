@@ -58,7 +58,8 @@
     </el-row>
     <div class="table_tip">
       <div>
-        <i class="el-icon-chat-line-square" style="color:#3894FF;font-size:16px"></i>
+        <!-- <i class="el-icon-chat-line-square" style="color:#3894FF;font-size:16px"></i> -->
+        <svg-icon iconClass="tip" class="mr5" style="font-size:18px;"></svg-icon>
         点击“订单号”可以查看订单详情，点击“附件”可以打印订单。
       </div>
       <div>
