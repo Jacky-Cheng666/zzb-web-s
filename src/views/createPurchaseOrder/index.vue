@@ -70,7 +70,7 @@
         <el-button type="info" icon="el-icon-back" size="mini">取消</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="primary" icon="el-icon-plus" size="mini">批量新增</el-button>
+        <el-button @click="batchAddClick" type="primary" icon="el-icon-plus" size="mini">批量新增</el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button @click="addElement" type="primary" icon="el-icon-plus" size="mini">新增</el-button>
@@ -149,14 +149,17 @@
         </el-form-item>
       </template>
     </element-info>
+
+    <battch-add ref="battchAdd"></battch-add>
   </div>
 </template>
 
 <script>
 import elementInfo from '../../components/elementInfo'
+const battchAdd = ()=>import('./components/batchAdd')
 export default {
   name: 'createSalesOrder',
-  components: {elementInfo},
+  components: {elementInfo,battchAdd},
   data() {
     return {
       myBackToTopStyle: {
@@ -221,6 +224,9 @@ export default {
     },
     editElement(){
       this.$refs.elementInfo.openElementInfo = true;
+    },
+    batchAddClick(){
+      this.$refs.battchAdd.openBatchAdd = true;
     }
   },
 }
