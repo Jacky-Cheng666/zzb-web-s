@@ -42,7 +42,9 @@
 
       <el-row :gutter="10" class="mb8 mt20">
         <el-col :span="1.5">
-            <el-button type="primary" icon="el-icon-delete" size="mini">收货</el-button>
+            <el-button type="primary" size="mini">
+                <svg-icon icon-class="receive"></svg-icon>
+                收货</el-button>
         </el-col>
         <el-col :span="1.5">
             <el-button type="warning" icon="el-icon-printer" size="mini">打印发货单</el-button>

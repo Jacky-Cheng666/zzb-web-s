@@ -1,6 +1,6 @@
 <template>
   <div class="app-container receiveManage">
-    <el-form :model="queryParams" ref="queryForm" v-show="showSearch" :inline="true">
+    <el-form class="mb20" :model="queryParams" ref="queryForm" v-show="showSearch" :inline="true">
       <el-form-item label="关键字">
         <el-input
           v-model="queryParams.inputValue"
@@ -24,7 +24,7 @@
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8 mt20">
+    <el-row :gutter="10" class="mb8">
       <el-col :span="12">
        <svg-icon iconClass="tip" class="mr5" style="font-size:18px;"></svg-icon>
        <span class="f14">点击“订单号”可以进入订单页。</span>

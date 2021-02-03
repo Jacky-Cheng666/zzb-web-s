@@ -42,7 +42,9 @@
 
       <el-row :gutter="10" class="mb8 mt20">
         <el-col :span="1.5">
-            <el-button type="danger" icon="el-icon-delete" size="mini">退单</el-button>
+            <el-button type="danger" size="mini">
+                <svg-icon icon-class="returnOrder"></svg-icon>&nbsp;退单
+            </el-button>
         </el-col>
         <el-col :span="1.5">
             <el-button type="info" icon="el-icon-download" size="mini">导出</el-button>
