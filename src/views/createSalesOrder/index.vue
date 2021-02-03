@@ -3,7 +3,7 @@
     <fieldset class="field" v-show="showSearch">
       <legend>销售订单信息：</legend>
       <el-form :model="queryParams" ref="queryForm" :inline="true">
-        <el-form-item label="客户">
+        <el-form-item label="客户" label-width="50px">
           <el-select placeholder="选择客户" v-model="queryParams.pay_period" size="small" style="width: 310px">
             <el-option label="全部" value="全部"></el-option>
             <el-option label="预付" value="预付"></el-option>
@@ -45,7 +45,7 @@
         <el-form-item label="订单号" label-width="70px">
           <el-input v-model="queryParams.inputValue" placeholder="输入客户订单号" clearable size="small" style="width: 200px"/>
         </el-form-item>
-        <el-form-item label="订单说明">
+        <el-form-item label="订单说明" label-width="78px">
           <el-input v-model="queryParams.remark" placeholder="输入订单说明" clearable size="small" style="width: 500px"/>
         </el-form-item>
         <el-form-item label="不开票" label-width="70px">

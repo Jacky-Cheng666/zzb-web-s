@@ -1,5 +1,5 @@
 <template>
-  <div>发起请购</div>
+  <div class="app-container">我的请购单列表</div>
 </template>
 
 <script>

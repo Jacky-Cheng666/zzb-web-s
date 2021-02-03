@@ -100,10 +100,16 @@ export const constantRoutes = [
     redirect: '/purchaseManage/initiateRequest',
     children: [
       {
-        path: 'initiateRequest',
-        name: 'initiateRequest',
-        component: () => import('@/views/initiateRequest/index'),
-        meta: { title: '我要请购',icon: 'el-icon-document-add' }
+        path: 'createRequestOrder',
+        name: 'createRequestOrder',
+        component: () => import('@/views/createRequestOrder/index'),
+        meta: { title: '新建请购',icon: 'el-icon-document-add' }
+      },
+      {
+        path: 'RequestOrdertList',
+        name: 'RequestOrdertList',
+        component: () => import('@/views/RequestOrdertList/index'),
+        meta: { title: '我的请购',icon: 'el-icon-tickets' }
       },
       {
         path: 'createPurchaseOrder',

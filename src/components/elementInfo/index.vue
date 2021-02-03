@@ -84,6 +84,9 @@ export default {
             }
         }
     },
+    created() {
+        console.log('公共组件');
+    },
 }
 </script>
 
