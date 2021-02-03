@@ -63,7 +63,7 @@ export const constantRoutes = [
   {
     path: '/saleManage',
     component: Layout,
-    meta: { title: '销售管理',icon: 'el-icon-goods' },
+    meta: { title: '销售管理',icon: 'el-icon-sold-out' },
     redirect: '/saleManage/createSalesOrder',
     children: [
       {
@@ -82,7 +82,7 @@ export const constantRoutes = [
         path: 'deliveryManage',
         name: 'deliveryManage',
         component: () => import('@/views/deliveryManage/index'),
-        meta: { title: '发货管理',icon: 'manage' }
+        meta: { title: '发货管理',icon: 'el-icon-s-operation' }
       },
       {
         path: 'saleOrder/:order_name',
@@ -115,7 +115,7 @@ export const constantRoutes = [
         path: 'receiveManage',
         name: 'receiveManage',
         component: () => import('@/views/receiveManage/index'),
-        meta: { title: '收货管理',icon: 'manage' }
+        meta: { title: '收货管理',icon: 'el-icon-s-operation' }
       },
       {
         path: 'purchaseOrder/:order_name',

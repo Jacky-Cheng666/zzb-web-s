@@ -1,6 +1,6 @@
 <template>
   <div class="app-container purchaseOrder">
-      <fieldset class="field" v-show="showSearch">
+      <fieldset class="field">
           <legend>订单信息：</legend>
           <div class="order_basic_info">
               <div class="title mb12">深圳市智造帮科技有限公司-采购订单</div>
