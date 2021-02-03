@@ -48,7 +48,7 @@
         </el-col>
         <el-col :span="1.5">
             <el-button type="warning" size="mini">
-                <svg-icon icon-class="reback" class-name="reback"></svg-icon>&nbsp;撤回
+                <svg-icon icon-class="reback"></svg-icon>&nbsp;撤回
             </el-button>
         </el-col>
 
