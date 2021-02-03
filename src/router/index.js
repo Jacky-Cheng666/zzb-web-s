@@ -106,9 +106,9 @@ export const constantRoutes = [
         meta: { title: '新建请购',icon: 'el-icon-document-add' }
       },
       {
-        path: 'RequestOrdertList',
-        name: 'RequestOrdertList',
-        component: () => import('@/views/RequestOrdertList/index'),
+        path: 'myRequestList',
+        name: 'myRequestList',
+        component: () => import('@/views/myRequestList/index'),
         meta: { title: '我的请购',icon: 'el-icon-tickets' }
       },
       {

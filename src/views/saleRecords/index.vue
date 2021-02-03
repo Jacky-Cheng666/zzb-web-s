@@ -184,6 +184,12 @@ export default {
 
 <style lang="scss" scoped>
 .saleRecords{
-  
+  .table_tip{
+    font-size: 14px;
+    color: #515a6e;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+  }
 }
 </style>
