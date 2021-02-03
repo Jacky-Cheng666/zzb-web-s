@@ -112,6 +112,12 @@ export const constantRoutes = [
         meta: { title: '我的请购',icon: 'el-icon-tickets' }
       },
       {
+        path: 'reqListFollow',
+        name: 'reqListFollow',
+        component: () => import('@/views/reqListFollow/index'),
+        meta: { title: '请购跟进',icon: 'el-icon-document-copy' }
+      },
+      {
         path: 'createPurchaseOrder',
         name: 'createPurchaseOrder',
         component: () => import('@/views/createPurchaseOrder/index'),
