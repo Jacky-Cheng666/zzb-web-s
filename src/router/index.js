@@ -97,7 +97,7 @@ export const constantRoutes = [
     path: '/purchaseManage',
     component: Layout,
     meta: { title: '采购管理', icon: 'el-icon-shopping-cart-2' },
-    redirect: '/purchaseManage/initiateRequest',
+    redirect: '/purchaseManage/createRequestOrder',
     children: [
       {
         path: 'createRequestOrder',
@@ -128,6 +128,13 @@ export const constantRoutes = [
         name: 'purchaseOrder',
         component: () => import('@/views/purchaseOrder/index'),
         meta: { title: '采购订单',icon: 'el-icon-takeaway-box',activeMenu: '/purchaseManage/receiveManage' },
+        hidden: true
+      },
+      {
+        path: 'requestOrder/:order_name',
+        name: 'requestOrder',
+        component: () => import('@/views/requestOrder/index'),
+        meta: { title: '请购单',icon: 'el-icon-takeaway-box',activeMenu: '/purchaseManage/myRequestList' },
         hidden: true
       }
     ]
