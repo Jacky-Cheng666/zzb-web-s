@@ -5,7 +5,15 @@
     <breadcrumb class="breadcrumb-container" />
 
     <div class="right-menu">
-      <el-dropdown class="avatar-container" trigger="click">
+      <search id="header-search" class="right-menu-item" />
+      <screenfull id="screenfull" class="right-menu-item hover-effect" />
+        <el-tooltip class="item" effect="dark" content="返回主页" placement="bottom">
+            <router-link to="/">
+              <svg-icon icon-class="home" class="right-menu-item homeIcon"></svg-icon>
+            </router-link>
+        </el-tooltip>
+      
+      <!-- <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
           <i class="el-icon-caret-bottom" />
@@ -17,11 +25,11 @@
           <router-link to="/">
             <el-dropdown-item>系统设置</el-dropdown-item>
           </router-link>
-          <!-- <el-dropdown-item divided @click.native="logout">
+          <el-dropdown-item divided @click.native="logout">
             <span style="display:block;">退出登录</span>
-          </el-dropdown-item> -->
+          </el-dropdown-item>
         </el-dropdown-menu>
-      </el-dropdown>
+      </el-dropdown> -->
     </div>
   </div>
 </template>
@@ -30,11 +38,15 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import Search from '@/components/HeaderSearch'
+import Screenfull from '@/components/Screenfull'
 
 export default {
   components: {
     Breadcrumb,
-    Hamburger
+    Hamburger,
+    Search,
+    Screenfull
   },
   computed: {
     ...mapGetters([
@@ -83,7 +95,7 @@ export default {
     float: right;
     height: 100%;
     line-height: 50px;
-
+    margin-right: 20px;
     &:focus {
       outline: none;
     }
@@ -104,6 +116,13 @@ export default {
           background: rgba(0, 0, 0, .025)
         }
       }
+    }
+    .homeIcon {
+      display: inline-block;
+      cursor: pointer;
+      width: 34px;
+      height: 34px;
+      vertical-align: 6px;
     }
 
     .avatar-container {
