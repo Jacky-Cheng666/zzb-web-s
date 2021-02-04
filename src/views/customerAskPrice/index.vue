@@ -104,7 +104,7 @@ export default {
       },
       showSearch: true,
       loading: false,
-      tableData: [{guest_element_name: "特斯拉汽车",guest_spec_code:"Model 3 高配版 红色"}],
+      tableData: [{order_name: "PO11234455",guest_spec_code:"Model 3 高配版 红色"}],
       total: 0,
       allRows: [],
       value2:[],
