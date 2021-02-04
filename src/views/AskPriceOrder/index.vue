@@ -61,18 +61,22 @@
       <pagination :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="handleCurrentChange">
         <div>
             <el-switch style="margin-right:10px" v-model="value1" active-text="报未税价" inactive-text="报含税价"></el-switch>
-            <el-button type="info" icon="el-icon-upload2" size="mini">导入</el-button>
+            <el-button @click="handleImport" type="info" icon="el-icon-upload2" size="mini">导入</el-button>
             <el-button type="info" icon="el-icon-download" size="mini">导出</el-button>
             <el-button type="danger" icon="el-icon-delete" size="mini">不报价</el-button>
             <el-button type="success" icon="el-icon-check" size="mini">已报价</el-button>
         </div>
     </pagination>
+
+    <upload-file ref="uploadFile"></upload-file>
   </div>
 </template>
 
 <script>
+import uploadFile from '@/components/UploadFile/index'
 export default {
   name: "AskPriceOrder",
+  components:{uploadFile},
   data() {
     return {
         showSearch: true,
@@ -89,7 +93,10 @@ export default {
       handleQuery(){},
       resetQuery(){},
       handleSelectionChange(){},
-      handleCurrentChange(){}
+      handleCurrentChange(){},
+      handleImport(){
+          this.$refs.uploadFile.upload.open = true;
+      }
   },
 };
 </script>

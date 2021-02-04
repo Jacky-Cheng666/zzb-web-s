@@ -16,7 +16,7 @@ export default {
   },
   mounted() {
     this.init()
-    console.log('screenfull',screenfull);
+    // console.log('screenfull',screenfull);
   },
   beforeDestroy() {
     this.destroy()
