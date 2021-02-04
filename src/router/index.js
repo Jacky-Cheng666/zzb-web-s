@@ -64,12 +64,12 @@ export const constantRoutes = [
     path: '/saleManage',
     component: Layout,
     meta: { title: '销售管理',icon: 'el-icon-sold-out' },
-    redirect: '/saleManage/createSalesOrder',
+    redirect: '/saleManage/createSaleOrder',
     children: [
       {
-        path: 'createSalesOrder',
-        name: 'createSalesOrder',
-        component: () => import('@/views/createSalesOrder/index'),
+        path: 'createSaleOrder',
+        name: 'createSaleOrder',
+        component: () => import('@/views/createSaleOrder/index'),
         meta: { title: '新建销单',icon: 'el-icon-document-add' }
       },
       {

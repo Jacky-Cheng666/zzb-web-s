@@ -45,54 +45,41 @@
         <el-card class="box-card" style="width:200px">
             <div slot="header" class="clearfix">
                 <span>销售管理</span>
-                <!-- <i style="float: right" class="el-icon-paperclip"></i> -->
                 <svg-icon style="float: right" iconClass="nail"></svg-icon>
             </div>
-            <el-link @click="toDetailPage(item)" style="margin-bottom:4px;display:block" type="primary" :underline="false" v-for="(item,index) in salesManage" :key="index">{{item.title}}</el-link>
+            <el-link @click="toDetailPage(item)" style="margin-bottom:6px;display:block" type="primary" :underline="false" v-for="(item,index) in saleManage" :key="index">{{item.title}}</el-link>
         </el-card>
 
         <el-card class="box-card" style="width:200px">
             <div slot="header" class="clearfix">
                 <span>采购管理</span>
-                <!-- <i style="float: right" class="el-icon-paperclip"></i> -->
                 <svg-icon style="float: right" iconClass="nail"></svg-icon>
             </div>
-            <div v-for="o in 4" :key="o" class="text item">
-                {{'我要请购 ' + o }}
-            </div>
+            <el-link @click="toDetailPage(item)" style="margin-bottom:6px;display:block" type="primary" :underline="false" v-for="(item,index) in purchaseManage" :key="index">{{item.title}}</el-link>
         </el-card>
 
         <el-card class="box-card" style="width:200px">
             <div slot="header" class="clearfix">
                 <span>生产管理</span>
-                <!-- <i style="float: right" class="el-icon-paperclip"></i> -->
                 <svg-icon style="float: right" iconClass="nail"></svg-icon>
             </div>
-            <div v-for="o in 4" :key="o" class="text item">
-                {{'生产看板 ' + o }}
-            </div>
+            <el-link @click="toDetailPage(item)" style="margin-bottom:6px;display:block" type="primary" :underline="false" v-for="(item,index) in manufactureManage" :key="index">{{item.title}}</el-link>
         </el-card>
 
         <el-card class="box-card" style="width:200px">
             <div slot="header" class="clearfix">
                 <span>财务管理</span>
-                <!-- <i style="float: right" class="el-icon-paperclip"></i> -->
                 <svg-icon style="float: right" iconClass="nail"></svg-icon>
             </div>
-            <div v-for="o in 4" :key="o" class="text item">
-                {{'报销中心 ' + o }}
-            </div>
+            <el-link @click="toDetailPage(item)" style="margin-bottom:6px;display:block" type="primary" :underline="false" v-for="(item,index) in financeManage" :key="index">{{item.title}}</el-link>
         </el-card>
 
         <el-card class="box-card" style="width:200px">
             <div slot="header" class="clearfix">
                 <span>企业管理</span>
-                <!-- <i style="float: right" class="el-icon-paperclip"></i> -->
                 <svg-icon style="float: right" iconClass="nail"></svg-icon>
             </div>
-            <div v-for="o in 4" :key="o" class="text item">
-                {{'通讯录 ' + o }}
-            </div>
+            <el-link @click="toDetailPage(item)" style="margin-bottom:6px;display:block" type="primary" :underline="false" v-for="(item,index) in companyManage" :key="index">{{item.title}}</el-link>
         </el-card>
       </div>
 
@@ -115,20 +102,49 @@ export default {
     return {
       isJoinCompany: true,
       userName: "陈先生",
-      salesManage:[
-          {title: '新建销单', url:'/salesManage/createSaleOrder'},
-          {title: '协同接单', url:'/salesManage/createSaleOrder'},
-          {title: '我要发货', url:'/salesManage/createSaleOrder'},
-          {title: '销售记录', url:'/salesManage/createSaleOrder'},
-          {title: '客户管理', url:'/salesManage/createSaleOrder'},
-          {title: '产品管理', url:'/salesManage/createSaleOrder'},
+      saleManage:[
+          {title: '新建销单', url:'/saleManage/createSaleOrder'},
+          {title: '协同接单', url:''},
+          {title: '我要发货', url:'/saleManage/deliveryManage'},
+          {title: '销售记录', url:'/saleManage/saleRecords'},
+          {title: '客户管理', url:''},
+          {title: '产品管理', url:''},
+      ],
+      purchaseManage:[
+          {title: '我的请购', url:'/purchaseManage/myRequestList'},
+          {title: '我要询价', url:''},
+          {title: '新建订单', url:'/purchaseManage/createPurchaseOrder'},
+          {title: '我要收货', url:'/purchaseManage/receiveManage'},
+          {title: '采购记录', url:''},
+          {title: '供应商管理', url:''},
+      ],
+      manufactureManage: [
+        {title: '生产看板', url:''},
+        {title: '工单管理', url:''},
+        {title: '团队管理', url:''},
+      ],
+      financeManage: [
+        {title: '报销中心', url:''},
+        {title: '付款管理', url:''},
+        {title: '收款管理', url:''},
+        {title: '付款统计', url:''},
+        {title: '收款统计', url:''},
+      ],
+      companyManage: [
+        {title: '通讯录', url:''},
+        {title: '流程管理', url:''},
+        {title: '库存管理', url:''},
+        {title: '品类管理', url:''},
+        {title: '基本信息', url:''},
       ]
     };
   },
   methods: {
     handleLogOut() {},
     toDetailPage(item){
-        this.$router.push('/saleManage')
+      if(item.url){
+        this.$router.push(item.url)
+      }
     }
   },
 };
