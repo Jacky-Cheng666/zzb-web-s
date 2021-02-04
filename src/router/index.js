@@ -98,6 +98,13 @@ export const constantRoutes = [
             component: () => import('@/views/customerAskPrice/index'),
             meta: { title: '客户询价',icon: 'el-icon-price-tag' }
           },
+          {
+            path: 'AskPriceOrder/:order_name',
+            name: 'AskPriceOrder',
+            component: () => import('@/views/AskPriceOrder/index'),
+            meta: { title: '询价单',icon: 'el-icon-price-tag',activeMenu: '/saleManage/synergyOrderManage/customerAskPrice' },
+            hidden: true,
+          },
         ]
       },
       {

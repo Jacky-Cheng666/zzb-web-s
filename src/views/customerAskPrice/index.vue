@@ -50,7 +50,13 @@
 
     <el-table height="660" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="50" />
-      <el-table-column align="center" label="询价单号" prop="order_name" width="140"/>
+      <el-table-column align="center" label="询价单号" prop="order_name" width="140">
+          <template slot-scope="scope">
+              <router-link :to="'/saleManage/synergyOrderManage/AskPriceOrder/'+scope.row.order_name">
+                <el-link :underline="false" type="primary">{{scope.row.order_name}}</el-link>
+              </router-link>
+          </template>
+      </el-table-column>
       <el-table-column align="center" label="客户名称" prop="guest_spec_code" />
       <el-table-column align="center" label="询价时间" prop="brand" width="160" />
       <el-table-column align="center" label="截至时间" prop="unit" width="160" />
@@ -144,9 +150,6 @@ export default {
     getPayDemandList(){},
     handleSelectionChange(){},
     handleCurrentChange(){},
-    viewSalesOrder(row){
-      this.$router.push('/saleManage/saleOrder'+row.order_name)
-    }
   },
 
 }
