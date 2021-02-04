@@ -112,7 +112,7 @@
 /** 表格布局 **/
 .pagination-container {
 	position: relative;
-	height: 25px;
+	// height: 250px;
 	margin-bottom: 10px;
 	margin-top: 15px;
 	padding: 10px 20px !important;
@@ -127,8 +127,12 @@
 }
 
 .pagination-container .el-pagination {
-	right: 0;
-	position: absolute;
+	// right: 0;
+	// position: absolute;
+}
+
+.pagination-container .el-button .el-button--mini{
+	height: 59px;
 }
 
 .el-table .fixed-width .el-button--mini {

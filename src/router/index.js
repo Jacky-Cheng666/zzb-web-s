@@ -92,6 +92,12 @@ export const constantRoutes = [
             component: () => import('@/views/synergyOfferPrice/index'),
             meta: { title: '协同报价',icon: 'el-icon-money' }
           },
+          {
+            path: 'customerAskPrice',
+            name: 'customerAskPrice',
+            component: () => import('@/views/customerAskPrice/index'),
+            meta: { title: '客户询价',icon: 'el-icon-price-tag' }
+          },
         ]
       },
       {

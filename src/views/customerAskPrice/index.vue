@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container synergyOfferPrice">
+  <div class="app-container customerAskPrice">
     <el-form class="mb20" :model="queryParams" ref="queryForm" v-show="showSearch" :inline="true">
       <el-form-item label="关键字">
         <el-input v-model="queryParams.inputValue" placeholder="输入关键字" clearable size="small" style="width: 240px" @keyup.enter.native="handleQuery"/>
@@ -39,43 +39,39 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button type="success" icon="el-icon-check" size="mini">报价</el-button>
+      <el-col :span="12">
+       <svg-icon iconClass="tip" class="mr5" style="font-size:18px;"></svg-icon>
+       <span class="f14 table_tip">点击“询价单号”可以查看询价单详情。</span>
       </el-col>
-       <el-col :span="1.5">
-        <el-button type="primary" icon="el-icon-folder-add" size="mini">保存</el-button>
-      </el-col>
-
 
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getPayDemandList"></right-toolbar>
     </el-row>
 
 
-    <el-table v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
+    <el-table height="660" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="50" />
-      <el-table-column align="center" label="客户物料名称" prop="guest_element_name" width="300"/>
-      <el-table-column align="center" label="客户物料型号" prop="guest_spec_code" width="340" />
-      <el-table-column align="center" label="品牌" prop="brand" width="140" />
-      <el-table-column align="center" label="单位" prop="unit" width="80" />
-      <el-table-column align="center" label="数量" prop="num" width="100" />
-      <el-table-column align="center" label="未税报价" prop="price" width="120" />
-      <el-table-column align="center" label="含税报价" prop="" width="120" />
-      <el-table-column align="center" label="最近未税报价" prop="" width="120" />
-      <el-table-column align="center" label="最近未税成交" prop="" width="120" />
-      <el-table-column align="center" label="操作">
+      <el-table-column align="center" label="询价单号" prop="order_name" width="140"/>
+      <el-table-column align="center" label="客户名称" prop="guest_spec_code" />
+      <el-table-column align="center" label="询价时间" prop="brand" width="160" />
+      <el-table-column align="center" label="截至时间" prop="unit" width="160" />
+      <el-table-column align="center" label="类型" prop="type" width="80" />
+      <el-table-column align="center" label="结款" prop="period" width="80" />
+      <el-table-column align="center" label="销售人" prop="saler" width="80" />
+      <el-table-column align="center" label="报价时间" prop="" width="160" />
+      <el-table-column align="center" label="操作" width="80">
         <template>
-          <el-button size="mini" type="text"><svg-icon icon-class="connect" class-name="connect-icon"></svg-icon>&nbsp;关联</el-button>
           <el-button size="mini" type="text"><svg-icon icon-class="return"></svg-icon>&nbsp;退回</el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <pagination
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="handleCurrentChange"
-    />
+    <pagination :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="handleCurrentChange">
+        <div>
+            <el-button type="danger" icon="el-icon-circle-close" size="mini">不报价</el-button>
+            <el-button type="success" icon="el-icon-circle-check" size="mini">已报价</el-button>
+        </div>
+    </pagination>
+
 
     <!-- you can add element-ui's tooltip -->
     <el-tooltip placement="top" content="返回顶部">
@@ -86,7 +82,7 @@
 
 <script>
 export default {
-  name: 'synergyOfferPrice',
+  name: 'customerAskPrice',
   data() {
     return {
       myBackToTopStyle: {
@@ -157,7 +153,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.synergyOfferPrice{
+.customerAskPrice{
   .table_tip{
     font-size: 14px;
     color: #515a6e;

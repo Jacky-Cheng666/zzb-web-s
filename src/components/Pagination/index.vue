@@ -1,7 +1,6 @@
 <template>
   <div :class="{'hidden':hidden}" class="pagination-container">
     <el-pagination
-      :background="background"
       :current-page.sync="currentPage"
       :page-size.sync="pageSize"
       :layout="layout"
@@ -11,6 +10,7 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
+    <slot></slot>
   </div>
 </template>
 
@@ -40,7 +40,7 @@ export default {
     },
     layout: {
       type: String,
-      default: 'total, sizes, prev, pager, next, jumper'
+      default: 'prev, pager, next'
     },
     background: {
       type: Boolean,
@@ -94,6 +94,8 @@ export default {
 .pagination-container {
   background: #fff;
   padding: 32px 16px;
+  display: flex;
+  justify-content: space-between;
 }
 .pagination-container.hidden {
   display: none;
