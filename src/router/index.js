@@ -73,6 +73,28 @@ export const constantRoutes = [
         meta: { title: '新建销单',icon: 'el-icon-document-add' }
       },
       {
+        path: 'synergyOrderManage',
+        name: 'synergyOrderManage',
+        component: () => import('@/views/synergyOrderManage/index'),
+        redirect: '/saleManage/synergyOrderManage/intentionOrder',
+        alwaysShow: true,
+        meta: { title: '协同接单',icon: 'el-icon-connection' },
+        children: [
+          {
+            path: 'intentionOrder',
+            name: 'intentionOrder',
+            component: () => import('@/views/intentionOrder/index'),
+            meta: { title: '意向订单',icon: 'el-icon-tickets' }
+          },
+          {
+            path: 'synergyOfferPrice',
+            name: 'synergyOfferPrice',
+            component: () => import('@/views/synergyOfferPrice/index'),
+            meta: { title: '协同报价',icon: 'el-icon-money' }
+          },
+        ]
+      },
+      {
         path: 'saleRecords',
         name: 'saleRecords',
         component: () => import('@/views/saleRecords/index'),
