@@ -63,7 +63,7 @@
             <el-switch style="margin-right:10px" v-model="value1" active-text="报未税价" inactive-text="报含税价"></el-switch>
             <el-button @click="handleImport" type="info" icon="el-icon-upload2" size="mini">导入</el-button>
             <el-button type="info" icon="el-icon-download" size="mini">导出</el-button>
-            <el-button type="danger" icon="el-icon-delete" size="mini">不报价</el-button>
+            <el-button type="danger" icon="el-icon-close" size="mini">不报价</el-button>
             <el-button type="success" icon="el-icon-check" size="mini">已报价</el-button>
         </div>
     </pagination>

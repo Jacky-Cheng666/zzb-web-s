@@ -73,8 +73,8 @@
 
     <pagination :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="handleCurrentChange">
         <div>
-            <el-button type="danger" icon="el-icon-circle-close" size="mini">不报价</el-button>
-            <el-button type="success" icon="el-icon-circle-check" size="mini">已报价</el-button>
+            <el-button type="danger" icon="el-icon-close" size="mini">不报价</el-button>
+            <el-button type="success" icon="el-icon-check" size="mini">已报价</el-button>
         </div>
     </pagination>
 
