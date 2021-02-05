@@ -18,8 +18,6 @@
 </template>
 
 <script>
-// fuse is a lightweight fuzzy-search module
-// make search results more in line with expectations
 import Fuse from 'fuse.js'
 import path from 'path'
 
@@ -94,8 +92,6 @@ export default {
         }]
       })
     },
-    // Filter out the routes that can be displayed in the sidebar
-    // And generate the internationalized title
     generateRoutes(routes, basePath = '/', prefixTitle = []) {
       let res = []
 
@@ -130,7 +126,7 @@ export default {
     },
     querySearch(query) {
       if (query !== '') {
-        this.options = this.fuse.search(query)
+        this.options = this.fuse.search(query).map(query=>query.item)
       } else {
         this.options = []
       }
