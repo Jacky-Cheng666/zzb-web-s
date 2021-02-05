@@ -42,24 +42,24 @@
             <el-option label="账本4" value="invoiced"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="订单号" label-width="70px">
+        <br/>
+        <el-form-item label="订单号" label-width="64px">
           <el-input v-model="queryParams.inputValue" placeholder="输入客户订单号" clearable size="small" style="width: 200px"/>
         </el-form-item>
         <el-form-item label="订单说明" label-width="78px">
           <el-input v-model="queryParams.remark" placeholder="输入订单说明" clearable size="small" style="width: 500px"/>
         </el-form-item>
-        <el-form-item label="不开票" label-width="70px">
-          <!-- <el-checkbox size="small" border v-model="queryParams.invoice">不开票</el-checkbox> -->
+        <br>
+        <el-form-item label="不开票" label-width="64px">
           <el-switch v-model="queryParams.invoice"></el-switch>
         </el-form-item>
         <el-form-item label="已付迄" label-width="70px">
-          <!-- <el-checkbox size="small" border v-model="queryParams.payed">已付迄</el-checkbox> -->
           <el-switch v-model="queryParams.payed"></el-switch>
         </el-form-item>
-        <el-form-item label="协议交货日期" label-width="100px">
+        <el-form-item label="协议交货日期" label-width="110px">
           <el-date-picker :clearable="false" style="width:140px" size="small" v-model="queryParams.deliver_time" type="date" placeholder="选择日期"></el-date-picker>
         </el-form-item>
-        <el-form-item label="预计发货日期" label-width="100px">
+        <el-form-item label="预计发货日期" label-width="110px">
           <el-date-picker :clearable="false" style="width:140px" size="small" v-model="queryParams.deliver_time" type="date" placeholder="选择日期"></el-date-picker>
         </el-form-item>
         <el-form-item label="付款计划" label-width="80px">
@@ -75,32 +75,11 @@
       </el-form>
     </fieldset>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button type="info" icon="el-icon-back" size="mini">取消</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button @click="batchAddClick" type="primary" icon="el-icon-plus" size="mini">批量新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button @click="addElement" type="primary" icon="el-icon-plus" size="mini">新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="info" icon="el-icon-upload2" size="mini">导入</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="danger" icon="el-icon-delete" size="mini">删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="success" icon="el-icon-folder-add" size="mini">暂存</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="success" icon="el-icon-check" size="mini">提交</el-button>
-      </el-col>
+    <!-- <el-row :gutter="10" class="mb8">
       <el-tooltip style="float:right;margin-right:6px" effect="dark" :content="showSearch ? '隐藏表单' : '显示表单'" placement="top">
         <el-button size="mini" circle icon="el-icon-view" @click="toggleSearch()" />
       </el-tooltip>
-    </el-row>
+    </el-row> -->
 
     <el-table v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="50" />
@@ -125,11 +104,20 @@
       </el-table-column>
     </el-table>
 
-    <pagination :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="getList"/>
+    <pagination :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="getList">
+      <div>
+        <el-button type="danger" icon="el-icon-delete" size="mini">删除</el-button>
+        <el-button @click="batchAddClick" type="primary" icon="el-icon-plus" size="mini">批量新增</el-button>
+        <el-button @click="addElement" type="primary" icon="el-icon-plus" size="mini">新增</el-button>
+        <el-button @click="handleImport" type="info" icon="el-icon-upload2" size="mini">导入</el-button>
+        <el-button type="success" icon="el-icon-folder-add" size="mini">暂存</el-button>
+        <el-button type="success" icon="el-icon-check" size="mini">提交</el-button>
+      </div>
+    </pagination>
 
-    <el-tooltip placement="top" content="返回顶部">
+    <!-- <el-tooltip placement="top" content="返回顶部">
       <back-to-top :custom-style="myBackToTopStyle" :visibility-height="300" :back-position="0" transition-name="fade" />
-    </el-tooltip>
+    </el-tooltip> -->
 
     <pay-plan v-model="plan_list" ref="payPlan"></pay-plan>
 
@@ -167,6 +155,8 @@
     </element-info>
 
     <battch-add ref="battchAdd"></battch-add>
+
+    <upload-file ref="uploadFile"></upload-file>
   </div>
 </template>
 
@@ -174,9 +164,10 @@
 import payPlan from './components/payPlanDialog'
 import elementInfo from '../../components/elementInfo'
 const battchAdd = ()=>import('./components/batchAdd')
+import uploadFile from '@/components/UploadFile/index'
 export default {
   name: 'createSalesOrder',
-  components:{payPlan,elementInfo,battchAdd},
+  components:{payPlan,elementInfo,battchAdd,uploadFile},
   data() {
     return {
       myBackToTopStyle: {
@@ -247,6 +238,9 @@ export default {
     },
     batchAddClick(){
       this.$refs.battchAdd.openBatchAdd = true;
+    },
+    handleImport(){
+      this.$refs.uploadFile.upload.open = true;
     }
   },
 }
