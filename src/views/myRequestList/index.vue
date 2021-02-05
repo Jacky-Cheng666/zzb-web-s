@@ -34,7 +34,7 @@
       <el-table-column align="center" type="selection" width="50" />
       <el-table-column align="center" label="请购单号" prop="request_name" width="140">
         <template slot-scope="scope">
-          <router-link :to="'/purchaseManage/requestOrder/'+scope.row.request_name">
+          <router-link :to="'/purchaseManage/RequestOrderManage/requestOrder/'+scope.row.request_name">
             <el-link :underline="false" type="primary">{{scope.row.request_name}}</el-link>
           </router-link>
         </template>

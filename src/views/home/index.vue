@@ -111,7 +111,7 @@ export default {
           {title: '产品管理', url:''},
       ],
       purchaseManage:[
-          {title: '我的请购', url:'/purchaseManage/myRequestList'},
+          {title: '我要请购', url:'/purchaseManage/RequestOrderManage'},
           {title: '我要询价', url:''},
           {title: '新建订单', url:'/purchaseManage/createPurchaseOrder'},
           {title: '我要收货', url:'/purchaseManage/receiveManage'},

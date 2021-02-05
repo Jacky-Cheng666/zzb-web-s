@@ -132,25 +132,41 @@ export const constantRoutes = [
     path: '/purchaseManage',
     component: Layout,
     meta: { title: '采购管理', icon: 'el-icon-shopping-cart-2' },
-    redirect: '/purchaseManage/createRequestOrder',
+    redirect: '/purchaseManage/requestOrderManage',
     children: [
       {
-        path: 'createRequestOrder',
-        name: 'createRequestOrder',
-        component: () => import('@/views/createRequestOrder/index'),
-        meta: { title: '新建请购',icon: 'el-icon-document-add' }
-      },
-      {
-        path: 'myRequestList',
-        name: 'myRequestList',
-        component: () => import('@/views/myRequestList/index'),
-        meta: { title: '我的请购',icon: 'el-icon-tickets' }
-      },
-      {
-        path: 'reqListFollow',
-        name: 'reqListFollow',
-        component: () => import('@/views/reqListFollow/index'),
-        meta: { title: '请购跟进',icon: 'el-icon-document-copy' }
+        path: 'requestOrderManage',
+        name: 'requestOrderManage',
+        component: () => import('@/views/requestOrderManage/index'),
+        redirect: '/purchaseManage/requestOrderManage/createRequestOrder',
+        meta: { title: '我要请购',icon: 'el-icon-collection' },
+        children: [
+          {
+            path: 'createRequestOrder',
+            name: 'createRequestOrder',
+            component: () => import('@/views/createRequestOrder/index'),
+            meta: { title: '新建请购',icon: 'el-icon-document-add' }
+          },
+          {
+            path: 'myRequestList',
+            name: 'myRequestList',
+            component: () => import('@/views/myRequestList/index'),
+            meta: { title: '我的请购',icon: 'el-icon-tickets' }
+          },
+          {
+            path: 'reqListFollow',
+            name: 'reqListFollow',
+            component: () => import('@/views/reqListFollow/index'),
+            meta: { title: '请购跟进',icon: 'el-icon-document-copy' }
+          },
+          {
+            path: 'requestOrder/:order_name',
+            name: 'requestOrder',
+            component: () => import('@/views/requestOrder/index'),
+            meta: { title: '请购单',icon: 'el-icon-takeaway-box',activeMenu: '/purchaseManage/requestOrderManage/myRequestList' },
+            hidden: true
+          }
+        ]
       },
       {
         path: 'createPurchaseOrder',
@@ -171,13 +187,7 @@ export const constantRoutes = [
         meta: { title: '采购订单',icon: 'el-icon-takeaway-box',activeMenu: '/purchaseManage/receiveManage' },
         hidden: true
       },
-      {
-        path: 'requestOrder/:order_name',
-        name: 'requestOrder',
-        component: () => import('@/views/requestOrder/index'),
-        meta: { title: '请购单',icon: 'el-icon-takeaway-box',activeMenu: '/purchaseManage/myRequestList' },
-        hidden: true
-      }
+      
     ]
   },
 
