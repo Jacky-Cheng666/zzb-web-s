@@ -20,9 +20,6 @@
                  <span class="mr20">请购人：陈道明</span>
                  <span class="mr20">请购时间：2021-01-06 09:23:37</span>
               </div>
-              <div class="f14">
-                 <span class="mr20">请购说明：这是一个请购单样板原型</span>
-              </div>
               <el-tag class="tag" type="success">待审批</el-tag>
           </div>
       </fieldset>
@@ -36,20 +33,9 @@
           </el-form-item>
       </el-form>
 
-      <el-row :gutter="10" class="mb8 mt20">
-        <el-col :span="1.5">
-            <el-button type="danger" icon="el-icon-delete" size="mini">删除</el-button>
-        </el-col>
-        <el-col :span="1.5">
-            <el-button type="primary" icon="el-icon-edit" size="mini">编辑</el-button>
-        </el-col>
-        <el-col :span="1.5">
-            <el-button type="success" icon="el-icon-check" size="mini">提交</el-button>
-        </el-col>
-        <el-col :span="1.5">
-            <el-button type="warning" size="mini">
-                <svg-icon icon-class="reback"></svg-icon>&nbsp;撤回
-            </el-button>
+      <el-row :gutter="10" class="mb8">
+        <el-col :span="12">
+            <span class="f14 table_tip">请购说明：这是一个请购单样板原型</span>
         </el-col>
 
         <right-toolbar :showSearch.sync="showSearch" @queryTable="getPayDemandList"></right-toolbar>
@@ -65,6 +51,17 @@
         <el-table-column align="center" label="数量" prop="num" width="100" />
         <el-table-column align="center" label="备注" prop="remark" />
       </el-table>
+
+      <pagination :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="handleCurrentChange">
+        <div>
+            <el-button type="danger" icon="el-icon-delete" size="mini">删除</el-button>
+            <el-button type="primary" icon="el-icon-edit" size="mini">编辑</el-button>
+            <el-button type="success" icon="el-icon-check" size="mini">提交</el-button>
+            <el-button type="warning" size="mini">
+                <svg-icon icon-class="reback"></svg-icon>&nbsp;撤回
+            </el-button>
+        </div>
+      </pagination>
   </div>
 </template>
 
@@ -86,5 +83,11 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
+.requestOrder {
+    .table_tip{
+        font-size: 14px;
+        color: #515a6e;
+  }
+}
 </style>

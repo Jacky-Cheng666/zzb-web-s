@@ -101,5 +101,11 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
+.AskPriceOrder {
+    .table_tip{
+        font-size: 14px;
+        color: #515a6e;
+  }
+}
 </style>
