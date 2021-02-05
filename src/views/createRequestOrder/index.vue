@@ -54,32 +54,12 @@
       </el-form>
     </fieldset>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button type="info" icon="el-icon-back" size="mini">取消</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="danger" icon="el-icon-delete" size="mini">删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button @click="batchAddClick" type="primary" icon="el-icon-plus" size="mini">批量新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button @click="addElement" type="primary" icon="el-icon-plus" size="mini">新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="info" icon="el-icon-upload2" size="mini">导入</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="success" icon="el-icon-folder-add" size="mini">暂存</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="success" icon="el-icon-check" size="mini">提交</el-button>
-      </el-col>
+    <!-- <el-row :gutter="10" class="mb8">
+      
       <el-tooltip style="float:right;margin-right:6px" effect="dark" :content="showSearch ? '隐藏表单' : '显示表单'" placement="top">
         <el-button size="mini" circle icon="el-icon-view" @click="toggleSearch()" />
       </el-tooltip>
-    </el-row>
+    </el-row> -->
 
     <el-table v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="50" />
@@ -96,6 +76,17 @@
         </template>
       </el-table-column>
     </el-table>
+
+    <pagination :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="getList">
+      <div>  
+        <el-button type="danger" icon="el-icon-delete" size="mini">删除</el-button>
+        <el-button @click="batchAddClick" type="primary" icon="el-icon-plus" size="mini">批量新增</el-button>
+        <el-button @click="addElement" type="primary" icon="el-icon-plus" size="mini">新增</el-button>
+        <el-button @click="handleImport" type="info" icon="el-icon-upload2" size="mini">导入</el-button>
+        <el-button type="success" icon="el-icon-folder-add" size="mini">暂存</el-button>
+        <el-button type="success" icon="el-icon-check" size="mini">提交</el-button>
+      </div>
+    </pagination>
 
     <element-info myElementTitleName="物料信息" ref="elementInfo">
       <template slot="content-wrap">
@@ -117,27 +108,34 @@
     </element-info>
 
     <batch-add ref="batchAdd"></batch-add>
+
+    <upload-file ref="uploadFile"></upload-file>
   </div>
 </template>
 
 <script>
 import elementInfo from '../../components/elementInfo'
 import batchAdd from './components/batchAdd'
+import uploadFile from '@/components/UploadFile'
 export default {
   name: "createRequestOrder",
-  components: {elementInfo,batchAdd},
+  components: {elementInfo,batchAdd,uploadFile},
   data() {
     return {
       showSearch: true,
       queryParams: {
-        fromProject: true
+        fromProject: true,
+        pageNum: 1,
+        pageSize: 20
       },
+      total: 0,
       tableData: [],
       loading: false,
       elementInfoForm: {}
     }
   },
   methods: {
+    getList(){},
     addElement(){
       this.$refs.elementInfo.openElementInfo = true;
     },
@@ -148,7 +146,10 @@ export default {
       this.showSearch = !this.showSearch
     },
     handleSelectionChange(){},
-    editElement(){}
+    editElement(){},
+    handleImport(){
+      this.$refs.uploadFile.upload.open = true;
+    }
   },
 }
 </script>
