@@ -1,15 +1,8 @@
 <template>
   <div class="app-container deliveryManage">
-    <el-form :model="queryParams" ref="queryForm" v-show="showSearch" :inline="true">
+    <el-form class="mb20" :model="queryParams" ref="queryForm" v-show="showSearch" :inline="true">
       <el-form-item label="关键字">
-        <el-input
-          v-model="queryParams.inputValue"
-          placeholder="输入关键字"
-          clearable
-          size="small"
-          style="width: 240px"
-          @keyup.enter.native="handleQuery"
-        />
+        <el-input v-model="queryParams.inputValue" placeholder="输入关键字" clearable size="small" style="width: 240px" @keyup.enter.native="handleQuery"/>
       </el-form-item>
       <el-form-item label="选择账本">
         <el-select v-model="queryParams.selectStatus" size="small" style="width: 102px">
@@ -24,29 +17,11 @@
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8 mt20">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          icon="el-icon-circle-check"
-          size="mini"
-        >所有页全选</el-button>
+    <el-row :gutter="10" class="mb8">
+      <el-col :span="6">
+        <svg-icon iconClass="tip" class="mr5" style="font-size:18px;"></svg-icon>
+        <span class="f14 table_tip">点击“订单号”可以进入订单页。</span>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="info"
-          icon="el-icon-download"
-          size="mini"
-        >批量下载附件</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          icon="el-icon-printer"
-          size="mini"
-        >批量打印</el-button>
-      </el-col>
-      
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getPayDemandList"></right-toolbar>
     </el-row>
 
@@ -68,12 +43,13 @@
       <el-table-column align="center" label="附件" width="60"></el-table-column>
     </el-table>
 
-    <pagination
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="handleCurrentChange"
-    />
+    <pagination :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="handleCurrentChange">
+      <div>
+        <el-button type="primary" icon="el-icon-circle-check" size="mini">所有页全选</el-button>
+        <el-button type="info" icon="el-icon-download" size="mini">批量下载附件</el-button>
+        <el-button type="warning" icon="el-icon-printer" size="mini">批量打印</el-button>
+      </div>
+    </pagination>
 
     <el-tooltip placement="top" content="返回顶部">
       <back-to-top :custom-style="myBackToTopStyle" :visibility-height="300" :back-position="0" transition-name="fade" />
