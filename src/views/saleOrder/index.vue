@@ -40,14 +40,10 @@
           </el-form-item>
       </el-form>
 
-      <el-row :gutter="10" class="mb8 mt20">
-        <el-col :span="1.5">
-            <el-button type="danger" size="mini">
-                <svg-icon icon-class="returnOrder"></svg-icon>&nbsp;退单
-            </el-button>
-        </el-col>
-        <el-col :span="1.5">
-            <el-button type="info" icon="el-icon-download" size="mini">导出</el-button>
+      <el-row :gutter="10" class="mb8">
+        <el-col :span="6">
+            <span class="mr20 table_tip">客户订单号：HJ-PU2012128</span>
+            <span class="table_tip">订单说明：这是一个订单样板原型</span>
         </el-col>
         
         <right-toolbar :showSearch.sync="showSearch" @queryTable="getPayDemandList"></right-toolbar>
@@ -72,6 +68,15 @@
         <el-table-column align="center" label="客户项目号" prop="total_money_with_tax" width="100" />
         <el-table-column align="center" label="备注" prop="remark" width="200" />
       </el-table>
+
+      <pagination :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="handleCurrentChange">
+        <div>
+            <el-button type="danger" size="mini">
+                <svg-icon icon-class="returnOrder"></svg-icon>&nbsp;退单
+            </el-button>
+            <el-button type="info" icon="el-icon-download" size="mini">导出</el-button>
+        </div>
+    </pagination>
   </div>
 </template>
 
@@ -81,17 +86,28 @@ export default {
   data() {
     return {
         showSearch: true,
-        queryParams: {},
+        queryParams: {
+            pageNum: 1,
+            pageSize: 100
+        },
+        total: 1000,
         getPayDemandList(){},
         loading: false,
         tableData: [],
         handleQuery(){},
         resetQuery(){},
-        handleSelectionChange(){}
+        handleSelectionChange(){},
+        handleCurrentChange(){}
     };
   },
 };
 </script>
 
-<style>
+<style lang="scss">
+.saleOrder {
+    .table_tip {
+        font-size: 14px;
+        color: #515a6e;
+  }
+}
 </style>
