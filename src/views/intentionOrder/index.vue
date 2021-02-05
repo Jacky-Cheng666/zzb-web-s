@@ -14,8 +14,8 @@
       <el-form-item label="状态">
         <el-select v-model="queryParams.invoiceStatus" size="small" style="width: 102px">
           <el-option label="全部" value="all"></el-option>
-          <el-option label="未提交" value="notSubmit"></el-option>
-          <el-option label="待审批" value="toBeApprove"></el-option>
+          <el-option label="未答复" value="notReplay"></el-option>
+          <el-option label="已答复" value="replayed"></el-option>
           <el-option label="已退回" value="alreadyReturn"></el-option>
         </el-select>
       </el-form-item>
@@ -31,7 +31,6 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getPayDemandList"></right-toolbar>
     </el-row>
     <el-table v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
-      <el-table-column align="center" type="selection" width="50" />
       <el-table-column align="center" label="订单号" prop="request_name" width="140">
         <template slot-scope="scope">
           <!-- <router-link :to="'/purchaseManage/requestOrder/'+scope.row.request_name"> -->

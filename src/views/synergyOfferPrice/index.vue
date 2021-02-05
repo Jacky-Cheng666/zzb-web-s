@@ -39,19 +39,14 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button type="success" icon="el-icon-check" size="mini">报价</el-button>
-      </el-col>
-       <el-col :span="1.5">
-        <el-button type="primary" icon="el-icon-folder-add" size="mini">保存</el-button>
-      </el-col>
-
+      <svg-icon iconClass="tip" class="mr5" style="font-size:18px;display:inline-block"></svg-icon>
+      <span class="table_tip">点击“客户物料型号”可以查看图纸。</span>
 
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getPayDemandList"></right-toolbar>
     </el-row>
 
 
-    <el-table v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
+    <el-table height="700" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="50" />
       <el-table-column align="center" label="客户物料名称" prop="guest_element_name" width="300"/>
       <el-table-column align="center" label="客户物料型号" prop="guest_spec_code" width="340" />
@@ -70,12 +65,20 @@
       </el-table-column>
     </el-table>
 
-    <pagination
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="handleCurrentChange"
-    />
+    <pagination :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="handleCurrentChange">
+      <div>
+        <el-select v-model="queryParams.tax_name" size="mini" style="width: 80px;margin-right:10px">
+          <el-option label="普票" value="all"></el-option>
+          <el-option label="1%" value="notVoice"></el-option>
+          <el-option label="6%" value="invoiced"></el-option>
+        </el-select>
+        
+        <el-switch style="margin-right:10px" v-model="value1" active-text="报未税价" inactive-text="报含税价"></el-switch>  
+        
+        <el-button type="success" icon="el-icon-check" size="mini">报价</el-button>
+        <el-button type="success" icon="el-icon-folder-add" size="mini">保存</el-button>
+      </div>
+    </pagination>
 
     <!-- you can add element-ui's tooltip -->
     <el-tooltip placement="top" content="返回顶部">
@@ -139,7 +142,8 @@ export default {
           }
         }]
       },
-      checked: false
+      checked: false,
+      value1: true
     }
   },
   methods: {
