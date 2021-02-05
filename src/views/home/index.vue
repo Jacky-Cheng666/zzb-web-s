@@ -104,7 +104,7 @@ export default {
       userName: "陈先生",
       saleManage:[
           {title: '新建销单', url:'/saleManage/createSaleOrder'},
-          {title: '协同接单', url:''},
+          {title: '协同接单', url:'/saleManage/synergyOrderManage'},
           {title: '我要发货', url:'/saleManage/deliveryManage'},
           {title: '销售记录', url:'/saleManage/saleRecords'},
           {title: '客户管理', url:''},
