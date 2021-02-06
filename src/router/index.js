@@ -86,7 +86,35 @@ export const constantRoutes = [
         path: 'deliveryManage',
         name: 'deliveryManage',
         component: () => import('@/views/deliveryManage/index'),
-        meta: { title: '发货管理',icon: 'el-icon-s-operation' }
+        redirect: '/saleManage/deliveryManage/deliveryList',
+        meta: { title: '发货管理',icon: 'el-icon-s-operation' },
+        children: [
+          {
+            path: 'deliveryList',
+            name: 'deliveryList',
+            component: () => import('@/views/deliveryList/index'),
+            meta: { title: '发货',icon: 'deliver' }
+          },
+          {
+            path: 'deliveryRecords',
+            name: 'deliveryRecords',
+            component: () => import('@/views/deliveryRecords/index'),
+            meta: { title: '发货记录',icon: 'el-icon-tickets' }
+          },
+          {
+            path: 'cusReturnRecords',
+            name: 'cusReturnRecords',
+            component: () => import('@/views/cusReturnRecords/index'),
+            meta: { title: '退货记录',icon: 'el-icon-tickets' }
+          },
+          {
+            path: 'deSaleOrder/:order_name',
+            name: 'deSaleOrder',
+            component: () => import('@/views/deSaleOrder/index'),
+            meta: { title: '销售订单',icon: '', activeMenu: '/saleManage/deliveryManage/deliveryList' },
+            hidden: true
+          },
+        ]
       },
       {
         path: 'saleOrder/:order_name',
