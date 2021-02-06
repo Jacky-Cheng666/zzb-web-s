@@ -131,6 +131,22 @@ export const constantRoutes = [
         ]
       },
       {
+        path: 'productManage',
+        name: 'productManage',
+        component: () => import('@/views/productManage/index'),
+        redirect: '/saleManage/productManage/productLibrary',
+        meta: { title: '产品管理',icon: 'el-icon-s-operation' },
+        alwaysShow: true,
+        children: [
+          {
+            path: 'productLibrary',
+            name: 'productLibrary',
+            component: () => import('@/views/productLibrary/index'),
+            meta: { title: '产品库',icon: 'el-icon-goods' }
+          },
+        ]
+      },
+      {
         path: 'saleOrder/:order_name',
         name: 'saleOrder',
         component: () => import('@/views/saleOrder/index'),
