@@ -89,7 +89,7 @@
 			word-break: break-word;
 			background-color: #f8f8f9;
 			color: #515a6e;
-			height: 40px;
+			height: 32px;
 			font-size: 13px;
 		}
 	}
@@ -101,6 +101,10 @@
 }
 
 /** 表单布局 **/
+.table-region {
+	height: 500px;
+	overflow: auto;
+}
 .form-header {
     font-size:15px;
 	color:#6379bb;
@@ -118,13 +122,7 @@
 	padding: 10px 20px !important;
 }
 
-/* tree border */
-.tree-border {
-    margin-top: 5px;
-    border: 1px solid #e5e6e7;
-    background: #FFFFFF none;
-    border-radius:4px;
-}
+
 
 .pagination-container .el-pagination {
 	// right: 0;
@@ -269,14 +267,14 @@
 	float: right;
 }
 .field{
-    padding-top: 20px;
-    margin-bottom:24px;
+    // padding-top: 20px;
+    margin-bottom:8px;
     border:1px dotted #BDBBBB;
     border-radius:4px
 }
 .order_basic_info{
 	position: relative;
-	padding-bottom: 10px;
+	// padding-bottom: 10px;
 	text-align: center;
 	.title{
 		font-size: 20px;
@@ -288,8 +286,8 @@
 		top: 0;
 	}
 }
-
-#icon-deliver {
-	width: 18px;
-	height: 18px;
+.btn_icon_svg{
+	width: 14px!important;
+	height: 14px!important;
+	margin-top: -4px!important;
 }

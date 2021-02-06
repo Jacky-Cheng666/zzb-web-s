@@ -47,3 +47,7 @@
 .el-range-separator {
   box-sizing: content-box;
 }
+
+.el-table .el-table__header-wrapper th, .el-table .el-table__fixed-header-wrapper th {
+  height: 32px!important;
+}
