@@ -114,6 +114,13 @@ export const constantRoutes = [
             meta: { title: '销售订单',icon: '', activeMenu: '/saleManage/deliveryManage/deliveryList' },
             hidden: true
           },
+          {
+            path: 'deliveryOrder/:deliver_name',
+            name: 'deliveryOrder',
+            component: () => import('@/views/deliveryOrder/index'),
+            meta: { title: '发货单',icon: '', activeMenu: '/saleManage/deliveryManage/deliveryRecords' },
+            hidden: true
+          },
         ]
       },
       {
