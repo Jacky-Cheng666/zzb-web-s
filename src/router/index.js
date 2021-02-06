@@ -111,7 +111,7 @@ export const constantRoutes = [
             path: 'deSaleOrder/:order_name',
             name: 'deSaleOrder',
             component: () => import('@/views/deSaleOrder/index'),
-            meta: { title: '销售订单',icon: '', activeMenu: '/saleManage/deliveryManage/deliveryList' },
+            meta: { title: '销售订单',icon: '', },
             hidden: true
           },
           {
@@ -119,6 +119,13 @@ export const constantRoutes = [
             name: 'deliveryOrder',
             component: () => import('@/views/deliveryOrder/index'),
             meta: { title: '发货单',icon: '', activeMenu: '/saleManage/deliveryManage/deliveryRecords' },
+            hidden: true
+          },
+          {
+            path: 'cusReturnOrder/:deliver_name',
+            name: 'cusReturnOrder',
+            component: () => import('@/views/cusReturnOrder/index'),
+            meta: { title: '退货单',icon: '', activeMenu: '/saleManage/deliveryManage/cusReturnRecords' },
             hidden: true
           },
         ]
