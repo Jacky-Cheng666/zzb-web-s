@@ -44,13 +44,8 @@
           </el-form-item>
       </el-form>
 
-      <!-- <el-row :gutter="10" class="mb8"> -->
-        
-        
-        <!-- <right-toolbar :showSearch.sync="showSearch" @queryTable="getPayDemandList"></right-toolbar> -->
-      <!-- </el-row> -->
         <div class="table-region">
-            <el-table v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
+            <el-table height="490" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
                 <el-table-column align="center" type="selection" width="50" />
                 <el-table-column align="center" label="名称" prop="element_name" width="180" />
                 <el-table-column align="center" label="型号" prop="spec_code" width="240" />
@@ -100,6 +95,26 @@ export default {
         getPayDemandList(){},
         loading: false,
         tableData: [
+            {element_name:"audi 奥迪Q5L 动感雅致型"},
+            {element_name:"audi 奥迪Q5L 动感雅致型"},
+            {element_name:"audi 奥迪Q5L 动感雅致型"},
+            {element_name:"audi 奥迪Q5L 动感雅致型"},
+            {element_name:"audi 奥迪Q5L 动感雅致型"},
+            {element_name:"audi 奥迪Q5L 动感雅致型"},
+            {element_name:"audi 奥迪Q5L 动感雅致型"},
+            {element_name:"audi 奥迪Q5L 动感雅致型"},
+            {element_name:"audi 奥迪Q5L 动感雅致型"},
+            {element_name:"audi 奥迪Q5L 动感雅致型"},
+            {element_name:"audi 奥迪Q5L 动感雅致型"},
+            {element_name:"audi 奥迪Q5L 动感雅致型"},
+            {element_name:"audi 奥迪Q5L 动感雅致型"},
+            {element_name:"audi 奥迪Q5L 动感雅致型"},
+            {element_name:"audi 奥迪Q5L 动感雅致型"},
+            {element_name:"audi 奥迪Q5L 动感雅致型"},
+            {element_name:"audi 奥迪Q5L 动感雅致型"},
+            {element_name:"audi 奥迪Q5L 动感雅致型"},
+            {element_name:"audi 奥迪Q5L 动感雅致型"},
+            {element_name:"audi 奥迪Q5L 动感雅致型"},
             {element_name:"audi 奥迪Q5L 动感雅致型"},
             {element_name:"audi 奥迪Q5L 动感雅致型"},
             {element_name:"audi 奥迪Q5L 动感雅致型"},

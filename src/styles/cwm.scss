@@ -89,7 +89,7 @@
 			word-break: break-word;
 			background-color: #f8f8f9;
 			color: #515a6e;
-			height: 32px;
+			height: 30px;
 			font-size: 13px;
 		}
 	}
@@ -101,10 +101,6 @@
 }
 
 /** 表单布局 **/
-.table-region {
-	height: 500px;
-	overflow: auto;
-}
 .form-header {
     font-size:15px;
 	color:#6379bb;
@@ -114,20 +110,22 @@
 }
 
 /** 表格布局 **/
+.table-region {
+	overflow: auto;
+	margin-bottom: 8px;
+}
+
+.el-table td, .el-table th {
+	padding: 0;
+	height: 32px;
+}
+
 .pagination-container {
 	position: relative;
-	// height: 250px;
 	margin-bottom: 10px;
-	margin-top: 15px;
-	padding: 10px 20px !important;
+	padding: 0px 0px !important;
 }
 
-
-
-.pagination-container .el-pagination {
-	// right: 0;
-	// position: absolute;
-}
 
 .pagination-container .el-button .el-button--mini{
 	height: 59px;
