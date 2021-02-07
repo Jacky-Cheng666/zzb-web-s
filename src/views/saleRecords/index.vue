@@ -1,18 +1,11 @@
 <template>
   <div class="app-container saleRecords">
     <el-form class="mb20" :model="queryParams" ref="queryForm" v-show="showSearch" :inline="true">
-      <el-form-item label="关键字">
-        <el-input
-          v-model="queryParams.inputValue"
-          placeholder="输入关键字"
-          clearable
-          size="small"
-          style="width: 240px"
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item>
+        <el-input v-model="queryParams.inputValue" placeholder="输入关键字" clearable size="small" style="width: 180px" @keyup.enter.native="handleQuery"/>
       </el-form-item>
-      <el-form-item label="付款状态">
-        <el-select v-model="queryParams.pay_period" size="small" style="width: 102px">
+      <el-form-item>
+        <el-select v-model="queryParams.pay_period" size="small" style="width: 100px">
           <el-option label="全部" value="全部"></el-option>
           <el-option label="预付" value="预付"></el-option>
           <el-option label="到付" value="到付"></el-option>
@@ -20,18 +13,18 @@
           <el-option label="自建" value="自建"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="退单状态">
-        <el-select v-model="queryParams.invoiceStatus" size="small" style="width: 102px">
+      <el-form-item>
+        <el-select v-model="queryParams.invoiceStatus" size="small" style="width: 100px">
           <el-option label="全部" value="all"></el-option>
           <el-option label="未开票" value="notVoice"></el-option>
           <el-option label="已开票" value="invoiced"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="日期范围">
+      <el-form-item>
         <el-date-picker size="small" v-model="value2" type="daterange" align="right" unlink-panels range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions"></el-date-picker>
       </el-form-item>
-      <el-form-item label="选择账本">
-        <el-select v-model="queryParams.selectStatus" size="small" style="width: 102px">
+      <el-form-item>
+        <el-select v-model="queryParams.selectStatus" size="small" style="width: 100px">
           <el-option label="默认账本" value="all"></el-option>
           <el-option label="账本1" value="notVoice"></el-option>
           <el-option label="账本4" value="invoiced"></el-option>
@@ -44,11 +37,11 @@
     </el-form>
 
     <el-row :gutter="2" class="mb8">
-      <el-col :span="6">
+      <el-col :span="12">
        <svg-icon iconClass="tip" class="mr5" style="font-size:18px;"></svg-icon>
        <span class="f14 table_tip">点击“订单号”可以查看订单详情，点击“附件”可以打印订单。</span>
       </el-col>
-      <el-col :span="6">
+      <el-col :span="12" style="text-align:right">
         <span class="table_tip">图示：</span>
         <span class="mr10 table_tip">
           <svg-icon style="color:#3894FF;font-size:16px;margin-right:4px" icon-class="pdf" />订单正常
@@ -61,10 +54,9 @@
         </span>
       </el-col>
       
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getPayDemandList"></right-toolbar>
     </el-row>
     
-    <el-table v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
+    <el-table class="mb8" height="490" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="50" />
       <el-table-column align="center" label="订单号" prop="order_name" width="160">
         <template slot-scope="scope">
