@@ -1,18 +1,18 @@
 <template>
   <div class="app-container intentionOrder">
-    <el-form class="mb20" :model="queryParams" ref="queryForm" v-show="showSearch" :inline="true">
-      <el-form-item label="关键字">
-        <el-input v-model="queryParams.inputValue" placeholder="输入关键字" clearable size="small" style="width: 240px" @keyup.enter.native="handleQuery"/>
+    <el-form class="mb10" :model="queryParams" ref="queryForm" v-show="showSearch" :inline="true">
+      <el-form-item>
+        <el-input v-model="queryParams.inputValue" placeholder="输入关键字" clearable size="small" style="width: 180px" @keyup.enter.native="handleQuery"/>
       </el-form-item>
-      <el-form-item label="选择账本">
-        <el-select v-model="queryParams.selectStatus" size="small" style="width: 102px">
+      <el-form-item>
+        <el-select v-model="queryParams.selectStatus" size="small" style="width: 100px">
           <el-option label="默认账本" value="all"></el-option>
           <el-option label="账本1" value="notVoice"></el-option>
           <el-option label="账本4" value="invoiced"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="状态">
-        <el-select v-model="queryParams.invoiceStatus" size="small" style="width: 102px">
+      <el-form-item>
+        <el-select v-model="queryParams.invoiceStatus" size="small" style="width: 100px">
           <el-option label="全部" value="all"></el-option>
           <el-option label="未答复" value="notReplay"></el-option>
           <el-option label="已答复" value="replayed"></el-option>
@@ -28,9 +28,10 @@
     <el-row :gutter="10" class="mb8">
       <svg-icon iconClass="tip" class="mr5" style="font-size:18px;display:inline-block"></svg-icon>
       <span class="table_tip">点击“订单号”可以查看意向订单详情。</span>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getPayDemandList"></right-toolbar>
     </el-row>
-    <el-table v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
+
+    
+    <el-table class="mb8" height="490" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
       <el-table-column align="center" label="订单号" prop="request_name" width="140">
         <template slot-scope="scope">
           <!-- <router-link :to="'/purchaseManage/requestOrder/'+scope.row.request_name"> -->
@@ -48,12 +49,11 @@
       <el-table-column align="center" label="备注" prop="remark" />
     </el-table>
 
-    <pagination
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="handleCurrentChange"
-    />
+    <pagination :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="handleCurrentChange">
+      <el-tooltip class="item" effect="dark" content="刷新" placement="top">
+          <el-button size="mini" circle icon="el-icon-refresh"/>
+      </el-tooltip>
+    </pagination>
 
     <!-- you can add element-ui's tooltip -->
     <el-tooltip placement="top" content="返回顶部">

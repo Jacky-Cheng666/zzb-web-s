@@ -1,7 +1,6 @@
 <template>
   <div class="app-container AskPriceOrder">
       <fieldset class="field">
-          <legend>订单信息：</legend>
           <div class="order_basic_info">
               <div class="title mb12">深圳市智造帮科技有限公司-询价单</div>
               <div class="mb12 f14">
@@ -30,17 +29,13 @@
               <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
               <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
           </el-form-item>
+          <el-form-item style="float:right">
+              <span class="f14 table_tip">询价单说明：这是一个xxxxxxx</span>
+          </el-form-item>
       </el-form>
 
-      <el-row :gutter="10" class="mb8">
-        <el-col :span="12">
-            <span class="f14 table_tip">询价单说明：这是一个xxxxxxx</span>
-        </el-col>
 
-        <right-toolbar :showSearch.sync="showSearch" @queryTable="getPayDemandList"></right-toolbar>
-      </el-row>
-
-      <el-table v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
+      <el-table class="mb8" height="490" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
         <el-table-column align="center" type="selection" width="50" />
         <el-table-column align="center" label="客户物料名称" prop="guest_element_name" width="300" />
         <el-table-column align="center" label="客户物料型号" prop="guest_spec_code" width="300" />

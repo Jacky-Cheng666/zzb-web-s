@@ -1,6 +1,6 @@
 <template>
   <div class="app-container saleRecords">
-    <el-form class="mb20" :model="queryParams" ref="queryForm" v-show="showSearch" :inline="true">
+    <el-form class="mb10" :model="queryParams" ref="queryForm" v-show="showSearch" :inline="true">
       <el-form-item>
         <el-input v-model="queryParams.inputValue" placeholder="输入关键字" clearable size="small" style="width: 180px" @keyup.enter.native="handleQuery"/>
       </el-form-item>
@@ -83,6 +83,9 @@
         <el-button type="primary" icon="el-icon-circle-check" size="mini">所有页全选</el-button>
         <el-button type="info" icon="el-icon-download" size="mini">批量下载附件</el-button>
         <el-button type="info" icon="el-icon-download" size="mini">导出</el-button>
+        <el-tooltip class="item" effect="dark" content="刷新" placement="top">
+            <el-button size="mini" circle icon="el-icon-refresh"/>
+        </el-tooltip>
       </div>
     </pagination>
 
