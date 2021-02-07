@@ -29,7 +29,7 @@
               <el-tag class="tag" type="success">已收迄</el-tag>
           </div>
       </fieldset>
-      <el-form v-show="showSearch" :model="queryParams" ref="queryForm" :inline="true">
+      <el-form :model="queryParams" ref="queryForm" :inline="true">
           <el-form-item label="关键字">
               <el-input v-model="queryParams.inputValue" placeholder="输入关键字" clearable size="small" style="width: 180px" @keyup.enter.native="handleQuery"/>
           </el-form-item>
@@ -44,27 +44,26 @@
           </el-form-item>
       </el-form>
 
-        <div class="table-region">
-            <el-table height="490" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
-                <el-table-column align="center" type="selection" width="50" />
-                <el-table-column align="center" label="名称" prop="element_name" width="180" />
-                <el-table-column align="center" label="型号" prop="spec_code" width="240" />
-                <el-table-column align="center" label="品牌" prop="brand" width="100" />
-                <el-table-column align="center" label="单位" prop="unit" width="60" />
-                <el-table-column align="center" label="下单数量" prop="num" width="80" />
-                <el-table-column align="center" label="退单数量" prop="num" width="80" />
-                <el-table-column align="center" label="成交数量" prop="num" width="80" />
-                <el-table-column align="center" label="未税价格" prop="total_money" width="100" />
-                <el-table-column align="center" label="税金" prop="tax_amount" width="100" ></el-table-column>
-                <el-table-column align="center" label="税价合计" prop="total_money_with_tax" width="100" />
-                <el-table-column align="center" label="物料代码" prop="total_money_with_tax" width="100" />
-                <el-table-column align="center" label="客户物料名称" prop="total_money_with_tax" width="100" />
-                <el-table-column align="center" label="客户物料型号" prop="total_money_with_tax" width="100" />
-                <el-table-column align="center" label="客户物料代码" prop="total_money_with_tax" width="100" />
-                <el-table-column align="center" label="客户项目号" prop="total_money_with_tax" width="100" />
-                <el-table-column align="center" label="备注" prop="remark" width="200" />
-            </el-table>
-        </div>
+        
+      <el-table class="mb8" height="490" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
+        <el-table-column align="center" type="selection" width="50" />
+        <el-table-column align="center" label="名称" prop="element_name" width="180" />
+        <el-table-column align="center" label="型号" prop="spec_code" width="240" />
+        <el-table-column align="center" label="品牌" prop="brand" width="100" />
+        <el-table-column align="center" label="单位" prop="unit" width="60" />
+        <el-table-column align="center" label="下单数量" prop="num" width="80" />
+        <el-table-column align="center" label="退单数量" prop="num" width="80" />
+        <el-table-column align="center" label="成交数量" prop="num" width="80" />
+        <el-table-column align="center" label="未税价格" prop="total_money" width="100" />
+        <el-table-column align="center" label="税金" prop="tax_amount" width="100" ></el-table-column>
+        <el-table-column align="center" label="税价合计" prop="total_money_with_tax" width="100" />
+        <el-table-column align="center" label="物料代码" prop="total_money_with_tax" width="100" />
+        <el-table-column align="center" label="客户物料名称" prop="total_money_with_tax" width="100" />
+        <el-table-column align="center" label="客户物料型号" prop="total_money_with_tax" width="100" />
+        <el-table-column align="center" label="客户物料代码" prop="total_money_with_tax" width="100" />
+        <el-table-column align="center" label="客户项目号" prop="total_money_with_tax" width="100" />
+        <el-table-column align="center" label="备注" prop="remark" width="200" />
+      </el-table>
       
 
       <pagination :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="handleCurrentChange">

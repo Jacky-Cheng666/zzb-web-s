@@ -1,9 +1,8 @@
 <template>
   <div class="app-container createSalesOrder">
     <fieldset class="field" v-show="showSearch">
-      <legend>销售订单信息：</legend>
       <el-form :model="queryParams" ref="queryForm" :inline="true">
-        <el-form-item label="客户" label-width="50px">
+        <el-form-item>
           <el-select placeholder="选择客户" v-model="queryParams.pay_period" size="small" style="width: 310px">
             <el-option label="全部" value="全部"></el-option>
             <el-option label="预付" value="预付"></el-option>
@@ -12,15 +11,15 @@
             <el-option label="自建" value="自建"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="类型" label-width="50px">
-          <el-select v-model="queryParams.type" size="small" style="width: 102px">
+        <el-form-item>
+          <el-select placeholder="用途" v-model="queryParams.type" size="small" style="width: 100px">
             <el-option label="销售" value="销售"></el-option>
             <el-option label="借用" value="借用"></el-option>
             <el-option label="租赁" value="租赁"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="结款方式" label-width="80px">
-          <el-select v-model="queryParams.pay_period" size="small" style="width: 102px">
+        <el-form-item>
+          <el-select v-model="queryParams.pay_period" size="small" style="width: 100px">
             <el-option label="全部" value="全部"></el-option>
             <el-option label="预付" value="预付"></el-option>
             <el-option label="到付" value="到付"></el-option>
@@ -28,26 +27,26 @@
             <el-option label="自建" value="自建"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="税率" label-width="50px">
+        <el-form-item>
           <el-select v-model="queryParams.tax_name" size="small" style="width: 100px">
             <el-option label="普票" value="all"></el-option>
             <el-option label="1%" value="notVoice"></el-option>
             <el-option label="6%" value="invoiced"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="选择账本" label-width="80px">
-          <el-select v-model="queryParams.finance_book_no" size="small" style="width: 102px">
+        <el-form-item>
+          <el-select v-model="queryParams.finance_book_no" size="small" style="width: 120px">
             <el-option label="默认账本" value="all"></el-option>
             <el-option label="账本1" value="notVoice"></el-option>
             <el-option label="账本4" value="invoiced"></el-option>
           </el-select>
         </el-form-item>
         <br/>
-        <el-form-item label="订单号" label-width="64px">
+        <el-form-item>
           <el-input v-model="queryParams.inputValue" placeholder="输入客户订单号" clearable size="small" style="width: 200px"/>
         </el-form-item>
-        <el-form-item label="订单说明" label-width="78px">
-          <el-input v-model="queryParams.remark" placeholder="输入订单说明" clearable size="small" style="width: 500px"/>
+        <el-form-item>
+          <el-input v-model="queryParams.remark" placeholder="输入订单说明" clearable size="small" style="width: 561px"/>
         </el-form-item>
         <br>
         <el-form-item label="不开票" label-width="64px">
@@ -75,13 +74,7 @@
       </el-form>
     </fieldset>
 
-    <!-- <el-row :gutter="10" class="mb8">
-      <el-tooltip style="float:right;margin-right:6px" effect="dark" :content="showSearch ? '隐藏表单' : '显示表单'" placement="top">
-        <el-button size="mini" circle icon="el-icon-view" @click="toggleSearch()" />
-      </el-tooltip>
-    </el-row> -->
-
-    <el-table v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
+    <el-table class="mb8" height="490" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="50" />
       <el-table-column align="center" label="名称" prop="element_name" width="180" />
       <el-table-column align="center" label="型号" prop="spec_code" width="240" />
