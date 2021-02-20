@@ -18,11 +18,11 @@
                   <span class="mr20">协议交货日期：2021-01-06</span>
               </div>
               <div class="f14">
-                  <!-- <span>付款计划：</span>
+                  <span>付款计划：</span>
                   <el-tooltip placement="top" content="点击查看付款计划">
                       <svg-icon iconClass="eye-open" style="font-size:16px;color:#3894FF;cursor:pointer"></svg-icon>
-                  </el-tooltip> -->
-                  <span>收货地址：</span>
+                  </el-tooltip>
+                  <span class="ml20">收货地址：</span>
                   <el-tooltip placement="top" content="点击查看收货地址">
                       <svg-icon iconClass="receiving_address" style="font-size:18px;color:#3894FF;cursor:pointer"></svg-icon>
                   </el-tooltip>
@@ -31,24 +31,21 @@
           </div>
       </fieldset>
       <el-form v-show="showSearch" :model="queryParams" ref="queryForm" :inline="true">
-          <el-form-item label="关键字">
-              <el-input v-model="queryParams.inputValue" placeholder="输入关键字" clearable size="small" style="width: 240px" @keyup.enter.native="handleQuery"/>
+          <el-form-item>
+              <el-input v-model="queryParams.inputValue" placeholder="输入关键字" clearable size="small" style="width: 180px" @keyup.enter.native="handleQuery"/>
           </el-form-item>
           <el-form-item>
               <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
               <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
           </el-form-item>
+
+          <el-form-item style="float:right">
+                <span class="table_tip">订单说明：这是一个订单样板原型</span>
+          </el-form-item>
       </el-form>
 
-      <el-row :gutter="10" class="mb8">
-        <el-col :span="6">
-            <span class="table_tip">订单说明：这是一个订单样板原型</span>
-        </el-col>
-        
-        <right-toolbar :showSearch.sync="showSearch" @queryTable="getPayDemandList"></right-toolbar>
-      </el-row>
 
-      <el-table v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
+      <el-table class="mb8" height="490" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
         <el-table-column align="center" type="selection" width="50" />
         <el-table-column align="center" label="名称" prop="element_name" width="200" />
         <el-table-column align="center" label="型号" prop="spec_code" width="300" />
@@ -56,25 +53,24 @@
         <el-table-column align="center" label="单位" prop="unit" width="60" />
         <el-table-column align="center" label="成交数量" prop="num" width="80" />
         <el-table-column align="center" label="已收数量" prop="num" width="80" />
-        <el-table-column align="center" label="待收数量" prop="num" width="80" />
-        <!-- <el-table-column align="center" label="未税价格" prop="total_money" width="100" />
-        <el-table-column align="center" label="税金" prop="tax_amount" width="100" ></el-table-column>
-        <el-table-column align="center" label="税价合计" prop="total_money_with_tax" width="100" />
-        <el-table-column align="center" label="物料代码" prop="total_money_with_tax" width="100" />
-        <el-table-column align="center" label="客户物料名称" prop="total_money_with_tax" width="100" />
-        <el-table-column align="center" label="客户物料型号" prop="total_money_with_tax" width="100" />
-        <el-table-column align="center" label="客户物料代码" prop="total_money_with_tax" width="100" />
-        <el-table-column align="center" label="客户项目号" prop="total_money_with_tax" width="100" /> -->
+        <el-table-column align="center" label="待收数量" prop="num" width="100" />
         <el-table-column align="center" label="备注" prop="remark" />
       </el-table>
 
       <pagination :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="handleCurrentChange">
         <div>
-            <el-button type="primary" size="mini">
-                <svg-icon icon-class="receive"></svg-icon>收货
+            <!-- <el-button type="primary" size="mini">
+                <svg-icon icon-class="receive" class-name="btn_icon_svg"/>&nbsp;收货
             </el-button>
             <el-button type="warning" icon="el-icon-printer" size="mini">打印发货单</el-button>
-            <el-button type="warning" icon="el-icon-printer" size="mini">打印物料卡</el-button>
+            <el-button type="warning" icon="el-icon-printer" size="mini">打印物料卡</el-button> -->
+            <el-button type="danger" size="mini">
+                <svg-icon icon-class="returnOrder" class-name="btn_icon_svg"></svg-icon>&nbsp;退单
+            </el-button>
+            <el-button type="info" icon="el-icon-download" size="mini">导出</el-button>
+            <el-tooltip class="item" effect="dark" content="刷新" placement="top">
+                <el-button size="mini" circle icon="el-icon-refresh"/>
+            </el-tooltip>
         </div>
     </pagination>
   </div>

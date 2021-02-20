@@ -217,7 +217,7 @@ export const constantRoutes = [
         path: 'purchaseOrder/:order_name',
         name: 'purchaseOrder',
         component: () => import('@/views/purchaseOrder/index'),
-        meta: { title: '采购订单',icon: 'el-icon-takeaway-box',activeMenu: '/purchaseManage/receiveManage' },
+        meta: { title: '采购订单',icon: 'el-icon-takeaway-box',activeMenu: '/purchaseManage/purchaseRecords' },
         hidden: true
       },
       
