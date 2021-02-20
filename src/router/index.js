@@ -247,6 +247,13 @@ export const constantRoutes = [
             component: () => import('@/views/reReturnRecords/index'),
             meta: { title: '退货记录',icon: 'el-icon-tickets' }
           },
+          {
+            path: 'reReturnOrder/:order_name',
+            name: 'reReturnOrder',
+            component: () => import('@/views/reReturnOrder/index'),
+            meta: { title: '退货单',activeMenu: '/purchaseManage/receiveManage/reReturnRecords' },
+            hidden: true
+          },
         ]
       },
       {

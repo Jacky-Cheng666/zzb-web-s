@@ -38,9 +38,9 @@
       <el-table-column align="center" type="selection" width="50" />
       <el-table-column sortable align="center" label="退货单号" prop="deliver_name" width="140">
         <template slot-scope="scope">
-          <!-- <router-link :to="'/saleManage/deliveryManage/cusReturnOrder/'+scope.row.deliver_name"> -->
+          <router-link :to="'/purchaseManage/receiveManage/reReturnOrder/'+scope.row.deliver_name">
             <el-link :underline="false" type="primary">{{scope.row.deliver_name}}</el-link>
-          <!-- </router-link> -->
+          </router-link>
         </template>
       </el-table-column>
       <el-table-column sortable align="center" label="订单号" prop="order_name" width="140">
