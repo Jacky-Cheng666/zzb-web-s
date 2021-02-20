@@ -36,9 +36,9 @@
       <el-table-column align="center" type="selection" width="50" />
       <el-table-column align="center" label="订单号" prop="order_name" width="140">
         <template slot-scope="scope">
-          <!-- <router-link :to="'/purchaseManage/purchaseOrder/'+scope.row.order_name"> -->
+          <router-link :to="'/purchaseManage/receiveManage/rePurchaseOrder/'+scope.row.order_name">
             <el-link :underline="false" type="primary">{{scope.row.order_name}}</el-link>
-          <!-- </router-link> -->
+          </router-link>
         </template>
       </el-table-column>
       <el-table-column align="center" label="供应商名称" prop="receive_side_name" width="240" />
