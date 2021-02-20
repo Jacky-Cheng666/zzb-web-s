@@ -211,7 +211,17 @@ export const constantRoutes = [
         path: 'receiveManage',
         name: 'receiveManage',
         component: () => import('@/views/receiveManage/index'),
-        meta: { title: '收货管理',icon: 'el-icon-s-operation' }
+        redirect: '/purchaseManage/receiveManage/receiveList',
+        meta: { title: '收货管理',icon: 'el-icon-s-operation' },
+        alwaysShow: true,
+        children: [
+          {
+            path: 'receiveList',
+            name: 'receiveList',
+            component: () => import('@/views/receiveList/index'),
+            meta: { title: '收货',icon: 'deliver' }
+          },
+        ]
       },
       {
         path: 'purchaseOrder/:order_name',
