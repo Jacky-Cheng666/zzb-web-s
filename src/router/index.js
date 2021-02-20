@@ -228,6 +228,12 @@ export const constantRoutes = [
             hidden: true,
             meta: { title: '采购订单',activeMenu: '/purchaseManage/receiveManage/receiveList'}
           },
+          {
+            path: 'receiveRecords',
+            name: 'receiveRecords',
+            component: () => import('@/views/receiveRecords/index'),
+            meta: { title: '收货记录',icon: 'el-icon-tickets' }
+          },
         ]
       },
       {
