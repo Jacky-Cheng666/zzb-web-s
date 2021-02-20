@@ -98,9 +98,9 @@ export default {
         color: #515a6e;
     }
     .btn_icon_svg{
-      width: 14px;
-      height: 14px;
-      margin-top: -4px;
+      width: 12px!important;
+      height: 12px!important;
+      margin-top: -4px!important;
     }
 }
 </style>
