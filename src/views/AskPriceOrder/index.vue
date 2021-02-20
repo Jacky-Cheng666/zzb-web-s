@@ -22,8 +22,8 @@
           </div>
       </fieldset>
       <el-form v-show="showSearch" :model="queryParams" ref="queryForm" :inline="true">
-          <el-form-item label="关键字">
-              <el-input v-model="queryParams.inputValue" placeholder="输入关键字" clearable size="small" style="width: 240px" @keyup.enter.native="handleQuery"/>
+          <el-form-item>
+              <el-input v-model="queryParams.inputValue" placeholder="输入关键字" clearable size="small" style="width: 180px" @keyup.enter.native="handleQuery"/>
           </el-form-item>
           <el-form-item>
               <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>

@@ -30,7 +30,7 @@
           </div>
       </fieldset>
       <el-form :model="queryParams" ref="queryForm" :inline="true">
-          <el-form-item label="关键字">
+          <el-form-item>
               <el-input v-model="queryParams.inputValue" placeholder="输入关键字" clearable size="small" style="width: 180px" @keyup.enter.native="handleQuery"/>
           </el-form-item>
           <el-form-item>

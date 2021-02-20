@@ -1,11 +1,11 @@
 <template>
   <div class="app-container deliveryManage">
-    <el-form class="mb20" :model="queryParams" ref="queryForm" v-show="showSearch" :inline="true">
-      <el-form-item label="关键字">
-        <el-input v-model="queryParams.inputValue" placeholder="输入关键字" clearable size="small" style="width: 240px" @keyup.enter.native="handleQuery"/>
+    <el-form class="mb10" :model="queryParams" ref="queryForm" v-show="showSearch" :inline="true">
+      <el-form-item>
+        <el-input v-model="queryParams.inputValue" placeholder="输入关键字" clearable size="small" style="width: 180px" @keyup.enter.native="handleQuery"/>
       </el-form-item>
-      <el-form-item label="选择账本">
-        <el-select v-model="queryParams.selectStatus" size="small" style="width: 102px">
+      <el-form-item>
+        <el-select v-model="queryParams.selectStatus" size="small" style="width: 100px">
           <el-option label="默认账本" value="all"></el-option>
           <el-option label="账本1" value="notVoice"></el-option>
           <el-option label="账本4" value="invoiced"></el-option>
@@ -22,10 +22,10 @@
         <svg-icon iconClass="tip" class="mr5" style="font-size:18px;"></svg-icon>
         <span class="f14 table_tip">点击“订单号”可以进入订单页。</span>
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getPayDemandList"></right-toolbar>
+      <!-- <right-toolbar :showSearch.sync="showSearch" @queryTable="getPayDemandList"></right-toolbar> -->
     </el-row>
 
-    <el-table v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
+    <el-table class="mb8" height="490" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="50" />
       <el-table-column align="center" label="订单号" prop="order_name" width="140">
         <template slot-scope="scope">
@@ -48,12 +48,12 @@
         <el-button type="primary" icon="el-icon-circle-check" size="mini">所有页全选</el-button>
         <el-button type="info" icon="el-icon-download" size="mini">批量下载附件</el-button>
         <el-button type="warning" icon="el-icon-printer" size="mini">批量打印</el-button>
+        <el-tooltip class="item" effect="dark" content="刷新" placement="top">
+            <el-button size="mini" circle icon="el-icon-refresh"/>
+        </el-tooltip>
       </div>
     </pagination>
 
-    <el-tooltip placement="top" content="返回顶部">
-      <back-to-top :custom-style="myBackToTopStyle" :visibility-height="300" :back-position="0" transition-name="fade" />
-    </el-tooltip>
   </div>
 </template>
 
