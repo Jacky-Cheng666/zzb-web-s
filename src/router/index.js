@@ -202,6 +202,12 @@ export const constantRoutes = [
         meta: { title: '新建订单',icon: 'el-icon-document-add' }
       },
       {
+        path: 'purchaseRecords',
+        name: 'purchaseRecords',
+        component: () => import('@/views/purchaseRecords/index'),
+        meta: { title: '采购记录',icon: 'el-icon-tickets' }
+      },
+      {
         path: 'receiveManage',
         name: 'receiveManage',
         component: () => import('@/views/receiveManage/index'),

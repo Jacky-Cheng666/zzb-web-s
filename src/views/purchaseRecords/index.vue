@@ -60,9 +60,9 @@
       <el-table-column align="center" type="selection" width="50" />
       <el-table-column align="center" label="订单号" prop="order_name" width="160">
         <template slot-scope="scope">
-          <router-link :to="'/saleManage/saleOrder/'+scope.row.order_name">
+          <!-- <router-link :to="'/saleManage/saleOrder/'+scope.row.order_name"> -->
             <el-link :underline="false" type="primary">{{scope.row.order_name}}</el-link>
-          </router-link>
+          <!-- </router-link> -->
         </template>
       </el-table-column>
       <el-table-column align="center" label="客户名称" prop="purchase_name" />
@@ -89,10 +89,6 @@
       </div>
     </pagination>
 
-    <!-- you can add element-ui's tooltip -->
-    <el-tooltip placement="top" content="返回顶部">
-      <back-to-top :custom-style="myBackToTopStyle" :visibility-height="300" :back-position="0" transition-name="fade" />
-    </el-tooltip>
   </div>
 </template>
 
@@ -101,15 +97,6 @@ export default {
   name: 'saleRecords',
   data() {
     return {
-      myBackToTopStyle: {
-        right: '70px',
-        bottom: '80px',
-        width: '40px',
-        height: '40px',
-        'border-radius': '4px',
-        'line-height': '45px', // Please keep consistent with height to center vertically
-        background: '#e7eaf1'//  The background color of the button
-      },
       queryParams: {
         inputValue: "",
         pay_period: "全部",
