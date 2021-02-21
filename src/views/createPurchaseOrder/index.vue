@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container createSalesOrder">
+  <div class="app-container createPurchaseOrder">
     <fieldset class="field">
       <el-form :model="queryParams" ref="queryForm" :inline="true">
         <el-form-item>
@@ -142,7 +142,7 @@ import elementInfo from '../../components/elementInfo'
 const battchAdd = ()=>import('./components/batchAdd')
 import uploadFile from '@/components/UploadFile'
 export default {
-  name: 'createSalesOrder',
+  name: 'createPurchaseOrder',
   components: {elementInfo,battchAdd,uploadFile},
   data() {
     return {

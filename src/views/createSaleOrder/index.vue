@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container createSalesOrder">
+  <div class="app-container createSaleOrder">
     <fieldset class="field" v-show="showSearch">
       <el-form :model="queryParams" ref="queryForm" :inline="true">
         <el-form-item>
@@ -159,7 +159,7 @@ import elementInfo from '../../components/elementInfo'
 const battchAdd = ()=>import('./components/batchAdd')
 import uploadFile from '@/components/UploadFile/index'
 export default {
-  name: 'createSalesOrder',
+  name: 'createSaleOrder',
   components:{payPlan,elementInfo,battchAdd,uploadFile},
   data() {
     return {
@@ -240,7 +240,7 @@ export default {
 </script>
 
 <style lang="scss">
-.createSalesOrder{
+.createSaleOrder{
  position: relative;
 }
 </style>
