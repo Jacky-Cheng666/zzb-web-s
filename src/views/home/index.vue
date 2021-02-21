@@ -108,14 +108,14 @@ export default {
           {title: '我要发货', url:'/saleManage/deliveryManage'},
           {title: '销售记录', url:'/saleManage/saleRecords'},
           {title: '客户管理', url:''},
-          {title: '产品管理', url:''},
+          {title: '产品管理', url:'/saleManage/productManage'},
       ],
       purchaseManage:[
           {title: '我要请购', url:'/purchaseManage/RequestOrderManage'},
           {title: '我要询价', url:''},
           {title: '新建订单', url:'/purchaseManage/createPurchaseOrder'},
           {title: '我要收货', url:'/purchaseManage/receiveManage'},
-          {title: '采购记录', url:''},
+          {title: '采购记录', url:'/purchaseManage/purchaseRecords'},
           {title: '供应商管理', url:''},
       ],
       manufactureManage: [
