@@ -1,6 +1,6 @@
 <template>
   <div class="app-container myRequestList">
-    <el-form class="mb10" :model="queryParams" ref="queryForm" v-show="showSearch" :inline="true">
+    <el-form class="mb10" :model="queryParams" ref="queryForm" :inline="true">
       <el-form-item>
         <el-input v-model="queryParams.inputValue" placeholder="输入关键字" clearable size="small" style="width: 180px" @keyup.enter.native="handleQuery"/>
       </el-form-item>
@@ -58,10 +58,6 @@
       </div>
     </pagination>
 
-    <!-- you can add element-ui's tooltip -->
-    <el-tooltip placement="top" content="返回顶部">
-      <back-to-top :custom-style="myBackToTopStyle" :visibility-height="300" :back-position="0" transition-name="fade" />
-    </el-tooltip>
   </div>
 </template>
 
@@ -70,15 +66,6 @@ export default {
   name: 'myRequestList',
   data() {
     return {
-      myBackToTopStyle: {
-        right: '70px',
-        bottom: '70px',
-        width: '40px',
-        height: '40px',
-        'border-radius': '4px',
-        'line-height': '45px', // Please keep consistent with height to center vertically
-        background: '#e7eaf1'//  The background color of the button
-      },
       queryParams: {
         inputValue: "",
         pay_period: "全部",
@@ -87,7 +74,6 @@ export default {
         pageNum: 1,
         pageSize: 100,
       },
-      showSearch: true,
       loading: false,
       tableData: [{request_name: "RQ144415422"}],
       total: 0,
