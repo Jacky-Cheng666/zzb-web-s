@@ -65,7 +65,7 @@
       <pagination :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="handleCurrentChange">
         <div>
             <el-button type="primary" size="mini">
-                <svg-icon icon-class="deliver" class-name="deliver-icon"></svg-icon>&nbsp;发货
+                <svg-icon icon-class="deliver" class-name="btn_icon_svg"></svg-icon>&nbsp;发货
             </el-button>
             <el-button type="warning" icon="el-icon-printer" size="mini">打印发货单</el-button>
             <el-button type="warning" icon="el-icon-printer" size="mini">打印物料卡</el-button>
@@ -102,10 +102,6 @@ export default {
     .table_tip {
         font-size: 14px;
         color: #515a6e;
-    }
-    .deliver-icon{
-      width: 16px;
-      height: 16px;
     }
 }
 </style>
