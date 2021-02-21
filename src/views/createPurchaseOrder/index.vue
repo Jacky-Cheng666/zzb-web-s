@@ -1,9 +1,8 @@
 <template>
   <div class="app-container createSalesOrder">
-    <fieldset class="field" v-show="showSearch">
-      <legend>采购订单信息：</legend>
+    <fieldset class="field">
       <el-form :model="queryParams" ref="queryForm" :inline="true">
-        <el-form-item label="供应商">
+        <el-form-item>
           <el-select placeholder="选择供应商" v-model="queryParams.pay_period" size="small" style="width: 310px">
             <el-option label="全部" value="全部"></el-option>
             <el-option label="预付" value="预付"></el-option>
@@ -35,15 +34,15 @@
             <el-option label="6%" value="invoiced"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="选择账本">
-          <el-select v-model="queryParams.finance_book_no" size="small" style="width: 102px">
+        <el-form-item label="账本">
+          <el-select v-model="queryParams.finance_book_no" size="small" style="width: 100px">
             <el-option label="默认账本" value="all"></el-option>
             <el-option label="账本1" value="notVoice"></el-option>
             <el-option label="账本4" value="invoiced"></el-option>
           </el-select>
         </el-form-item>
         <br>
-        <el-form-item label="订单说明">
+        <el-form-item>
           <el-input v-model="queryParams.remark" placeholder="输入订单说明" clearable size="small" style="width: 500px"/>
         </el-form-item>
         <el-form-item label="交货日期">
@@ -68,14 +67,7 @@
       </el-form>
     </fieldset>
 
-    <!-- <el-row :gutter="10" class="mb8">
-      
-      <el-tooltip style="float:right;margin-right:6px" effect="dark" :content="showSearch ? '隐藏表单' : '显示表单'" placement="top">
-        <el-button size="mini" circle icon="el-icon-view" @click="toggleSearch()" />
-      </el-tooltip>
-    </el-row> -->
-
-    <el-table v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
+    <el-table class="mb8" height="490" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="50" />
       <el-table-column align="center" label="名称" prop="element_name" width="180" />
       <el-table-column align="center" label="型号" prop="spec_code" width="240" />
@@ -109,9 +101,6 @@
       </div>
     </pagination>
 
-    <el-tooltip placement="top" content="返回顶部">
-      <back-to-top :custom-style="myBackToTopStyle" :visibility-height="300" :back-position="0" transition-name="fade" />
-    </el-tooltip>
 
     <element-info v-model="elementInfoForm" ref="elementInfo">
       <template slot="my_element_sub">
@@ -157,15 +146,6 @@ export default {
   components: {elementInfo,battchAdd,uploadFile},
   data() {
     return {
-      myBackToTopStyle: {
-        right: '90px',
-        bottom: '70px',
-        width: '40px',
-        height: '40px',
-        'border-radius': '4px',
-        'line-height': '45px', // Please keep consistent with height to center vertically
-        background: '#e7eaf1'//  The background color of the button
-      },
       queryParams:{
         pay_period: '',
         tax_name: 'all',
@@ -179,7 +159,6 @@ export default {
         pageSize: 20,
         type: ''
       },
-      showSearch: true,
       loading: false,
       tableData: [{element_name:'特斯拉汽车',spec_code:'Model3 高级版 磨砂黑',brand:'特斯拉',unit: '个',num:999,total_money:9999,remark:'我是一条备注'},
         {element_name:'特斯拉汽车',spec_code:'Model3 高级版 磨砂黑',brand:'特斯拉',unit: '个',num:999,total_money:9999,remark:'我是一条备注'},

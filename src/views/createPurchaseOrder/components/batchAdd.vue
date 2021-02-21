@@ -1,6 +1,6 @@
 <template>
   <div class="batchAdd">
-    <el-dialog center title="查找物料" :visible.sync="openBatchAdd" width="960px" append-to-body>
+    <el-dialog center title="查找物料" :visible.sync="openBatchAdd" width="70%" append-to-body>
         <el-form class="mb10" ref="batch_add-form" :model="queryParams" label-width="60px" :inline="true">
             <el-form-item label="关键字" label-width="64px">
               <el-input v-model="queryParams.pay_money" placeholder="输入产品信息" clearable size="small" style="width: 240px"/>
@@ -27,7 +27,7 @@
             </el-form-item>
         </el-form>
         <div class="table-content">
-            <el-table height="600" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
+            <el-table height="500" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
                 <el-table-column align="center" type="selection" width="50" />
                 <el-table-column align="center" label="名称" prop="element_name" width="200" />
                 <el-table-column align="center" label="产品代码" prop="element_code" width="200" />
