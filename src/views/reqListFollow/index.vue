@@ -1,18 +1,18 @@
 <template>
   <div class="app-container reqListFollow">
-    <el-form class="mb20" :model="queryParams" ref="queryForm" v-show="showSearch" :inline="true">
-      <el-form-item label="关键字">
-        <el-input v-model="queryParams.inputValue" placeholder="输入关键字" clearable size="small" style="width: 240px" @keyup.enter.native="handleQuery"/>
+    <el-form class="mb10" :model="queryParams" ref="queryForm" :inline="true">
+      <el-form-item>
+        <el-input v-model="queryParams.inputValue" placeholder="输入关键字" clearable size="small" style="width: 180px" @keyup.enter.native="handleQuery"/>
       </el-form-item>
-      <el-form-item label="选择账本">
-        <el-select v-model="queryParams.selectStatus" size="small" style="width: 102px">
+      <el-form-item label="账本">
+        <el-select v-model="queryParams.selectStatus" size="small" style="width: 100px">
           <el-option label="默认账本" value="all"></el-option>
           <el-option label="账本1" value="notVoice"></el-option>
           <el-option label="账本4" value="invoiced"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="状态">
-        <el-select v-model="queryParams.invoiceStatus" size="small" style="width: 102px">
+        <el-select v-model="queryParams.invoiceStatus" size="small" style="width: 100px">
           <el-option label="全部" value="all"></el-option>
           <el-option label="未提交" value="notSubmit"></el-option>
           <el-option label="待审批" value="toBeApprove"></el-option>
@@ -26,11 +26,14 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <svg-icon iconClass="tip" class="mr5" style="font-size:18px;display:inline-block"></svg-icon>
-      <span class="table_tip">点击“请购单号”可以查看请购单详情。</span>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getPayDemandList"></right-toolbar>
+      <el-col :span="12">
+        <svg-icon iconClass="tip" class="mr5" style="font-size:18px;display:inline-block"></svg-icon>
+        <span class="table_tip">点击“请购单号”可以查看请购单详情。</span>
+      </el-col>
     </el-row>
-    <el-table v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
+
+
+    <el-table class="mb8" height="490" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="50" />
       <el-table-column align="center" label="请购单号" prop="request_name" width="140">
         <template slot-scope="scope">
@@ -39,27 +42,23 @@
           </router-link>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="需求人" prop="demander" width="80" />
-      <el-table-column align="center" label="请购人" prop="requester" width="80" />
-      <el-table-column align="center" label="部门" prop="department" width="120" />
-      <el-table-column align="center" label="项目" prop="task_code" width="160" />
-      <el-table-column align="center" label="请购时间" prop="request_time" width="160"></el-table-column>
-      <el-table-column align="center" label="状态" prop="status" width="80" />
+      <el-table-column align="center" label="名称" prop="element_name" width="200" />
+      <el-table-column align="center" label="型号" prop="spec_code" width="300" />
+      <el-table-column align="center" label="品牌" prop="brand" width="120" />
+      <el-table-column align="center" label="单位" prop="unit" width="60" />
+      <el-table-column align="center" label="数量" prop="num" width="80" />
       <el-table-column align="center" label="用途" prop="use_type" width="120" />
       <el-table-column align="center" label="备注" prop="remark" />
     </el-table>
 
-    <pagination
-      :total="total"
-      :page.sync="queryParams.pageNum"
-      :limit.sync="queryParams.pageSize"
-      @pagination="handleCurrentChange"
-    />
-
-    <!-- you can add element-ui's tooltip -->
-    <el-tooltip placement="top" content="返回顶部">
-      <back-to-top :custom-style="myBackToTopStyle" :visibility-height="300" :back-position="0" transition-name="fade" />
-    </el-tooltip>
+    <pagination :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="handleCurrentChange">
+      <div>
+        <el-tooltip class="item" effect="dark" content="刷新" placement="top">
+            <el-button size="mini" circle icon="el-icon-refresh"/>
+        </el-tooltip>
+      </div>
+    </pagination>
+    
   </div>
 </template>
 

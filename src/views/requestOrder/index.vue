@@ -1,7 +1,6 @@
 <template>
   <div class="app-container requestOrder">
       <fieldset class="field">
-          <legend>订单信息：</legend>
           <div class="order_basic_info">
               <div class="title mb12">深圳市智造帮科技有限公司-请购单</div>
               <div class="mb12 f14">
@@ -24,24 +23,20 @@
           </div>
       </fieldset>
       <el-form v-show="showSearch" :model="queryParams" ref="queryForm" :inline="true">
-          <el-form-item label="关键字">
-              <el-input v-model="queryParams.inputValue" placeholder="输入关键字" clearable size="small" style="width: 240px" @keyup.enter.native="handleQuery"/>
+          <el-form-item>
+              <el-input v-model="queryParams.inputValue" placeholder="输入关键字" clearable size="small" style="width: 180px" @keyup.enter.native="handleQuery"/>
           </el-form-item>
           <el-form-item>
               <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
               <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
           </el-form-item>
+
+          <el-form-item style="float:right">
+              <span class="table_tip">请购说明：这是一个订单样板原型</span>
+          </el-form-item>
       </el-form>
 
-      <el-row :gutter="10" class="mb8">
-        <el-col :span="12">
-            <span class="f14 table_tip">请购说明：这是一个请购单样板原型</span>
-        </el-col>
-
-        <right-toolbar :showSearch.sync="showSearch" @queryTable="getPayDemandList"></right-toolbar>
-      </el-row>
-
-      <el-table v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
+      <el-table class="mb8" height="490" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
         <el-table-column align="center" type="selection" width="50" />
         <el-table-column align="center" label="名称" prop="element_name" width="200" />
         <el-table-column align="center" label="型号" prop="spec_code" width="320" />
@@ -58,7 +53,7 @@
             <el-button type="primary" icon="el-icon-edit" size="mini">编辑</el-button>
             <el-button type="success" icon="el-icon-check" size="mini">提交</el-button>
             <el-button type="warning" size="mini">
-                <svg-icon icon-class="reback"></svg-icon>&nbsp;撤回
+                <svg-icon icon-class="reback" class-name="btn_icon_svg"></svg-icon>&nbsp;撤回
             </el-button>
         </div>
       </pagination>
@@ -88,6 +83,7 @@ export default {
     .table_tip{
         font-size: 14px;
         color: #515a6e;
-  }
+    }
+   
 }
 </style>
