@@ -1,21 +1,21 @@
 <template>
   <div class="app-container cusReturnRecords">
-    <el-form class="mb20" :model="queryParams" ref="queryForm" v-show="showSearch" :inline="true">
-      <el-form-item label="关键字">
-        <el-input v-model="queryParams.inputValue" placeholder="输入关键字" clearable size="small" style="width: 240px" @keyup.enter.native="handleQuery"/>
+    <el-form class="mb10" :model="queryParams" ref="queryForm" v-show="showSearch" :inline="true">
+      <el-form-item>
+        <el-input v-model="queryParams.inputValue" placeholder="输入关键字" clearable size="small" style="width: 180px" @keyup.enter.native="handleQuery"/>
       </el-form-item>
-      <el-form-item label="日期范围">
+      <el-form-item>
         <el-date-picker size="small" v-model="queryParams.time_range" type="daterange" align="right" unlink-panels range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions"></el-date-picker>
       </el-form-item>
-      <el-form-item label="选择账本">
-        <el-select v-model="queryParams.selectStatus" size="small" style="width: 102px">
+      <el-form-item label="账本">
+        <el-select v-model="queryParams.selectStatus" size="small" style="width: 100px">
           <el-option label="默认账本" value="all"></el-option>
           <el-option label="账本1" value="notVoice"></el-option>
           <el-option label="账本4" value="invoiced"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="状态">
-        <el-select v-model="queryParams.invoiceStatus" size="small" style="width: 102px">
+        <el-select v-model="queryParams.invoiceStatus" size="small" style="width: 100px">
           <el-option label="全部" value="all"></el-option>
           <el-option label="未收货" value="notVoice"></el-option>
           <el-option label="已收货" value="invoiced"></el-option>
@@ -28,14 +28,13 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="7">
+      <el-col :span="12">
         <svg-icon iconClass="tip" class="mr5" style="font-size:18px;"></svg-icon>
         <span class="f14 table_tip">点击“发货单号”可以进入发货单页，点击“订单号”可以进入订单页。</span>
       </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getPayDemandList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
+    <el-table class="mb8" height="490" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="50" />
       <el-table-column sortable align="center" label="退货单号" prop="deliver_name" width="140">
         <template slot-scope="scope">
@@ -61,6 +60,11 @@
     </el-table>
 
     <pagination :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="handleCurrentChange">
+      <div>
+        <el-tooltip class="item" effect="dark" content="刷新" placement="top">
+            <el-button size="mini" circle icon="el-icon-refresh"/>
+        </el-tooltip>
+      </div>
     </pagination>
 
     <el-tooltip placement="top" content="返回顶部">

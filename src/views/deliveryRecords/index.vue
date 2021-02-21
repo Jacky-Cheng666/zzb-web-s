@@ -7,14 +7,14 @@
       <el-form-item>
         <el-date-picker size="small" v-model="queryParams.time_range" type="daterange" align="right" unlink-panels range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" :picker-options="pickerOptions"></el-date-picker>
       </el-form-item>
-      <el-form-item>
+      <el-form-item label="账本">
         <el-select v-model="queryParams.selectStatus" size="small" style="width: 100px">
           <el-option label="默认账本" value="all"></el-option>
           <el-option label="账本1" value="notVoice"></el-option>
           <el-option label="账本4" value="invoiced"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item>
+      <el-form-item label="状态">
         <el-select v-model="queryParams.invoiceStatus" size="small" style="width: 100px">
           <el-option label="全部" value="all"></el-option>
           <el-option label="未收货" value="notVoice"></el-option>

@@ -1,7 +1,6 @@
 <template>
   <div class="app-container cusReturnOrder">
       <fieldset class="field">
-          <legend>订单信息：</legend>
           <div class="order_basic_info">
               <div class="title mb12">深圳市智造帮科技有限公司-退货单</div>
               <div class="mb12 f14">
@@ -24,25 +23,21 @@
           </div>
       </fieldset>
       <el-form v-show="showSearch" :model="queryParams" ref="queryForm" :inline="true">
-          <el-form-item label="关键字">
-              <el-input v-model="queryParams.inputValue" placeholder="输入关键字" clearable size="small" style="width: 240px" @keyup.enter.native="handleQuery"/>
+          <el-form-item>
+              <el-input v-model="queryParams.inputValue" placeholder="输入关键字" clearable size="small" style="width: 180px" @keyup.enter.native="handleQuery"/>
           </el-form-item>
           <el-form-item>
               <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
               <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
           </el-form-item>
+
+          <el-form-item style="float:right;margin-right:0">
+              <span class="mr20 table_tip">客户订单号：HJ-PU2012128</span>
+              <span class="table_tip">订单说明：这是一个订单样板原型</span>
+          </el-form-item>
       </el-form>
 
-      <el-row :gutter="10" class="mb8">
-        <el-col :span="6">
-            <span class="mr20 table_tip">客户订单号：HJ-PU2012128</span>
-            <span class="table_tip">订单说明：这是一个订单样板原型</span>
-        </el-col>
-        
-        <right-toolbar :showSearch.sync="showSearch" @queryTable="getPayDemandList"></right-toolbar>
-      </el-row>
-
-      <el-table v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
+      <el-table class="mb8" height="490" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
         <el-table-column align="center" type="selection" width="50" />
         <el-table-column sortable align="center" label="名称" prop="element_name" width="180" />
         <el-table-column sortable align="center" label="型号" prop="spec_code" width="240" />
@@ -66,7 +61,9 @@
             <el-button type="primary" size="mini">
                 <svg-icon icon-class="receiveGoods" class-name="btn_icon_svg"></svg-icon>&nbsp;转备货
             </el-button>
-            
+            <el-tooltip class="item" effect="dark" content="刷新" placement="top">
+                <el-button size="mini" circle icon="el-icon-refresh"/>
+            </el-tooltip>
         </div>
     </pagination>
   </div>
