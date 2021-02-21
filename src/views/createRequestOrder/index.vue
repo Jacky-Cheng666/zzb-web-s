@@ -1,12 +1,11 @@
 <template>
   <div class="app-container createRequestOrder">
     <fieldset class="field" v-show="showSearch">
-      <legend>请购订单信息：</legend>
       <el-form :model="queryParams" ref="queryForm" :inline="true">
-        <el-form-item label="订单说明" label-width="80px">
+        <el-form-item>
           <el-input v-model="queryParams.remark" placeholder="输入请购说明" clearable size="small" style="width: 438px"/>
         </el-form-item>
-        <el-form-item label="需求人" label-width="70px">
+        <el-form-item label="需求人" label-width="60px">
           <el-select placeholder="请选择" v-model="queryParams.pay_period" size="small" style="width: 100px">
             <el-option label="全部" value="全部"></el-option>
             <el-option label="预付" value="预付"></el-option>
@@ -15,17 +14,17 @@
             <el-option label="自建" value="自建"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="用途" label-width="50px">
+        <el-form-item label="用途" label-width="40px">
           <el-select placeholder="请选择" v-model="queryParams.type" size="small" style="width: 120px">
             <el-option label="销售" value="销售"></el-option>
             <el-option label="借用" value="借用"></el-option>
             <el-option label="租赁" value="租赁"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="需求日期" label-width="80px">
+        <el-form-item>
           <el-date-picker :clearable="false" style="width:140px" size="small" v-model="queryParams.deliver_time" type="date" placeholder="选择日期"></el-date-picker>
         </el-form-item>
-        <el-form-item label="选择账本" label-width="80px">
+        <el-form-item>
           <el-select v-model="queryParams.finance_book_no" size="small" style="width: 102px">
             <el-option label="默认账本" value="all"></el-option>
             <el-option label="账本1" value="notVoice"></el-option>
@@ -33,13 +32,13 @@
           </el-select>
         </el-form-item>
         <br>
-        <el-form-item label="项目请购" label-width="80px">
+        <el-form-item label="项目请购" label-width="70px">
           <el-switch v-model="queryParams.fromProject"></el-switch>
         </el-form-item>
-        <el-form-item label="项目号" label-width="70px">
+        <el-form-item>
           <el-input v-model="queryParams.remark" placeholder="输入项目号" clearable size="small" style="width:240px"/>
         </el-form-item>
-        <el-form-item label="项目变更" label-width="80px">
+        <el-form-item label="项目变更" label-width="70px">
           <el-switch v-model="queryParams.fromProject"></el-switch>
         </el-form-item>
         <el-form-item label="变更原因" label-width="80px">
@@ -54,14 +53,7 @@
       </el-form>
     </fieldset>
 
-    <!-- <el-row :gutter="10" class="mb8">
-      
-      <el-tooltip style="float:right;margin-right:6px" effect="dark" :content="showSearch ? '隐藏表单' : '显示表单'" placement="top">
-        <el-button size="mini" circle icon="el-icon-view" @click="toggleSearch()" />
-      </el-tooltip>
-    </el-row> -->
-
-    <el-table v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
+    <el-table class="mb8" height="490" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="50" />
       <el-table-column align="center" label="名称" prop="element_name" width="200" />
       <el-table-column align="center" label="型号" prop="spec_code" width="280" />
