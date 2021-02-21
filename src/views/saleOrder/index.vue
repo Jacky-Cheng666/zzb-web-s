@@ -38,7 +38,7 @@
               <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
           </el-form-item>
 
-          <el-form-item style="float:right">
+          <el-form-item style="float:right;margin-right:0">
                 <span class="mr20 table_tip">客户订单号：HJ-PU2012128</span>
                 <span class="table_tip">订单说明：这是一个订单样板原型</span>
           </el-form-item>

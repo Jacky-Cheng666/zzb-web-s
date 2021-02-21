@@ -31,7 +31,7 @@
           </el-form-item>
 
 
-          <el-form-item style="float:right">
+          <el-form-item style="float:right;margin-right:0">
                 <span class="table_tip">订单说明：这是一个订单样板原型</span>
           </el-form-item>
       </el-form>
