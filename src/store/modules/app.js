@@ -5,7 +5,8 @@ const state = {
     opened: Cookies.get('sidebarStatus') ? !!+Cookies.get('sidebarStatus') : true,
     withoutAnimation: false
   },
-  device: 'desktop'
+  device: 'desktop',
+  screenHeight: 0
 }
 
 const mutations = {
@@ -25,6 +26,9 @@ const mutations = {
   },
   TOGGLE_DEVICE: (state, device) => {
     state.device = device
+  },
+  CALCULATE_SCREEN_HEIGHT: (state)=>{
+    state.screenHeight = screen.height
   }
 }
 
