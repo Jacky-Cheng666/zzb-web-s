@@ -54,14 +54,14 @@
         <el-form-item label="不开票">
           <el-switch v-model="queryParams.invoice"></el-switch>
         </el-form-item>
-        <el-form-item label="付款计划">
+        <el-form-item>
           <el-badge :value="0" class="item" type="primary">
-            <el-button type="primary" size="mini">编辑</el-button>
+            <el-button type="primary" size="mini">付款计划</el-button>
           </el-badge>
         </el-form-item>
-        <el-form-item label="收货地址">
+        <el-form-item>
           <el-badge :value="1" class="item" type="primary">
-            <el-button type="primary" size="mini">编辑</el-button>
+            <el-button type="primary" size="mini">收货地址</el-button>
           </el-badge>
         </el-form-item>
       </el-form>

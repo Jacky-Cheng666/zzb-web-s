@@ -61,14 +61,14 @@
         <el-form-item label="预计发货日期" label-width="110px">
           <el-date-picker :clearable="false" style="width:140px" size="small" v-model="queryParams.deliver_time" type="date" placeholder="选择日期"></el-date-picker>
         </el-form-item>
-        <el-form-item label="付款计划" label-width="80px">
+        <el-form-item>
           <el-badge :value="plan_list.length" class="item" type="primary">
-            <el-button @click="editPlan" type="primary" size="mini">编辑</el-button>
+            <el-button @click="editPlan" type="primary" size="mini">付款计划</el-button>
           </el-badge>
         </el-form-item>
-        <el-form-item label="收货地址" label-width="80px">
+        <el-form-item>
           <el-badge :value="1" class="item" type="primary">
-            <el-button type="primary" size="mini">编辑</el-button>
+            <el-button type="primary" size="mini">收货地址</el-button>
           </el-badge>
         </el-form-item>
       </el-form>

@@ -6,7 +6,7 @@
 
     <div class="right-menu">
       <search id="header-search" class="right-menu-item" />
-      <screenfull id="screenfull" class="right-menu-item hover-effect" />
+      <!-- <screenfull id="screenfull" class="right-menu-item hover-effect" /> -->
         <el-tooltip class="item" effect="dark" content="返回主页" placement="bottom">
             <router-link to="/">
               <svg-icon icon-class="home" class="right-menu-item homeIcon"></svg-icon>
