@@ -4,7 +4,7 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 import Layout from '@/layout'
-
+import EmptyLayout from '@/layout/empty'
 export const constantRoutes = [
   {
     path: '/login',
@@ -44,7 +44,7 @@ export const constantRoutes = [
       {
         path: 'synergyOrderManage',
         name: 'synergyOrderManage',
-        component: () => import('@/views/synergyOrderManage/index'),
+        component: EmptyLayout,
         redirect: '/saleManage/synergyOrderManage/intentionOrder',
         alwaysShow: true,
         meta: { title: '协同接单',icon: 'el-icon-connection' },
@@ -85,7 +85,7 @@ export const constantRoutes = [
       {
         path: 'deliveryManage',
         name: 'deliveryManage',
-        component: () => import('@/views/deliveryManage/index'),
+        component: EmptyLayout,
         redirect: '/saleManage/deliveryManage/deliveryList',
         meta: { title: '发货管理',icon: 'el-icon-s-operation' },
         children: [
@@ -133,7 +133,7 @@ export const constantRoutes = [
       {
         path: 'productManage',
         name: 'productManage',
-        component: () => import('@/views/productManage/index'),
+        component: EmptyLayout,
         redirect: '/saleManage/productManage/productLibrary',
         meta: { title: '产品管理',icon: 'el-icon-s-operation' },
         alwaysShow: true,
@@ -164,7 +164,7 @@ export const constantRoutes = [
       {
         path: 'requestOrderManage',
         name: 'requestOrderManage',
-        component: () => import('@/views/requestOrderManage/index'),
+        component: EmptyLayout,
         redirect: '/purchaseManage/requestOrderManage/createRequestOrder',
         meta: { title: '我要请购',icon: 'el-icon-collection' },
         children: [
@@ -210,7 +210,7 @@ export const constantRoutes = [
       {
         path: 'receiveManage',
         name: 'receiveManage',
-        component: () => import('@/views/receiveManage/index'),
+        component: EmptyLayout,
         redirect: '/purchaseManage/receiveManage/receiveList',
         meta: { title: '收货管理',icon: 'el-icon-s-operation' },
         alwaysShow: true,
