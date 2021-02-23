@@ -74,7 +74,7 @@
       </el-form>
     </fieldset>
 
-    <el-table class="mb8" height="490" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
+    <el-table class="mb8" :height="screen_height-410" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="50" />
       <el-table-column align="center" label="名称" prop="element_name" width="180" />
       <el-table-column align="center" label="型号" prop="spec_code" width="240" />
@@ -158,6 +158,7 @@ import payPlan from './components/payPlanDialog'
 import elementInfo from '../../components/elementInfo'
 const battchAdd = ()=>import('./components/batchAdd')
 import uploadFile from '@/components/UploadFile/index'
+import { mapGetters } from 'vuex'
 export default {
   name: 'createSaleOrder',
   components:{payPlan,elementInfo,battchAdd,uploadFile},
@@ -213,6 +214,9 @@ export default {
       plan_list:[{pay_time:new Date(),pay_money:"",percent:"",remark:"",payed:false}],
       elementInfoForm:{}
     }
+  },
+  computed: {
+    ...mapGetters(['screen_height'])
   },
   methods: {
     handleSelectionChange(){},
