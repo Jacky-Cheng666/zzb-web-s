@@ -1,6 +1,6 @@
 <template>
   <div class="app-container receiveRecords">
-    <el-form class="mb20" :model="queryParams" ref="queryForm" v-show="showSearch" :inline="true">
+    <el-form class="mb10" :model="queryParams" ref="queryForm" v-show="showSearch" :inline="true">
       <el-form-item>
         <el-input v-model="queryParams.inputValue" placeholder="输入关键字" clearable size="small" style="width: 180px" @keyup.enter.native="handleQuery"/>
       </el-form-item>
