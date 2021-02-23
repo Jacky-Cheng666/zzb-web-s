@@ -56,7 +56,7 @@
       
     </el-row>
     
-    <el-table class="mb8" height="490" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
+    <el-table class="mb8" :height="screen_height-350" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="50" />
       <el-table-column align="center" label="订单号" prop="order_name" width="160">
         <template slot-scope="scope">
@@ -93,6 +93,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'saleRecords',
   data() {
@@ -140,6 +141,9 @@ export default {
       },
       checked: false
     }
+  },
+  computed: {
+    ...mapGetters(['screen_height'])
   },
   methods: {
     handleQuery(){},

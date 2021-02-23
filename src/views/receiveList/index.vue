@@ -32,7 +32,7 @@
       
     </el-row>
 
-    <el-table class="mb8" height="490" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
+    <el-table class="mb8" :height="screen_height-350" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="50" />
       <el-table-column align="center" label="订单号" prop="order_name" width="140">
         <template slot-scope="scope">
@@ -56,26 +56,15 @@
         </el-tooltip>
     </pagination>
 
-    <el-tooltip placement="top" content="返回顶部">
-      <back-to-top :custom-style="myBackToTopStyle" :visibility-height="300" :back-position="0" transition-name="fade" />
-    </el-tooltip>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: "receiveManage",
   data() {
     return {
-      myBackToTopStyle: {
-        right: '50px',
-        bottom: '70px',
-        width: '40px',
-        height: '40px',
-        'border-radius': '4px',
-        'line-height': '45px', // Please keep consistent with height to center vertically
-        background: '#e7eaf1'//  The background color of the button
-      },
       queryParams:{
         inputValue: '',
         selectStatus: 'all'
@@ -86,6 +75,9 @@ export default {
       total: 0,
       allRows: [],
     };
+  },
+  computed: {
+    ...mapGetters(['screen_height'])
   },
   methods: {
     handleQuery(){},

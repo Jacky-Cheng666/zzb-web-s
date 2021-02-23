@@ -34,7 +34,7 @@
       </el-col>
     </el-row>
 
-    <el-table class="mb8" height="490" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
+    <el-table class="mb8" :height="screen_height-350" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="50" />
       <el-table-column sortable align="center" label="退货单号" prop="deliver_name" width="140">
         <template slot-scope="scope">
@@ -70,19 +70,11 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: "reReturnRecords",
   data() {
     return {
-      myBackToTopStyle: {
-        right: '50px',
-        bottom: '70px',
-        width: '40px',
-        height: '40px',
-        'border-radius': '4px',
-        'line-height': '45px', // Please keep consistent with height to center vertically
-        background: '#e7eaf1'//  The background color of the button
-      },
       queryParams:{
         inputValue: '',
         selectStatus: 'all',
@@ -122,6 +114,9 @@ export default {
         }]
       },
     };
+  },
+  computed: {
+    ...mapGetters(['screen_height'])
   },
   methods: {
     handleQuery(){},

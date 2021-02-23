@@ -44,7 +44,7 @@
       </el-form>
 
 
-      <el-table class="mb8" height="490" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
+      <el-table class="mb8" :height="screen_height-470" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
         <el-table-column align="center" type="selection" width="50" />
         <el-table-column align="center" label="名称" prop="element_name" width="200" />
         <el-table-column align="center" label="型号" prop="spec_code" width="300" />
@@ -76,6 +76,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: "purchaseOrder",
   data() {
@@ -94,6 +95,9 @@ export default {
         handleCurrentChange(){}
     };
   },
+  computed: {
+    ...mapGetters(['screen_height'])
+  }
 };
 </script>
 

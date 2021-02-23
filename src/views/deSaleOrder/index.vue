@@ -44,7 +44,7 @@
           </el-form-item>
       </el-form>
 
-      <el-table class="mb8" height="490" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
+      <el-table class="mb8" :height="screen_height-470" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
         <el-table-column align="center" type="selection" width="50" />
         <el-table-column align="center" label="名称" prop="element_name" width="180" />
         <el-table-column align="center" label="型号" prop="spec_code" width="240" />
@@ -69,12 +69,16 @@
             </el-button>
             <el-button type="warning" icon="el-icon-printer" size="mini">打印发货单</el-button>
             <el-button type="warning" icon="el-icon-printer" size="mini">打印物料卡</el-button>
+            <el-tooltip class="item" effect="dark" content="刷新" placement="top">
+                <el-button size="mini" circle icon="el-icon-refresh"/>
+            </el-tooltip>
         </div>
     </pagination>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: "deSaleOrder",
   data() {
@@ -94,6 +98,9 @@ export default {
         handleCurrentChange(){}
     };
   },
+  computed: {
+    ...mapGetters(['screen_height'])
+  }
 };
 </script>
 

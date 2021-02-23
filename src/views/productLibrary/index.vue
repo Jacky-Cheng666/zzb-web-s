@@ -26,7 +26,7 @@
     </el-row>
 
     
-    <el-table class="mb8" height="490" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
+    <el-table class="mb8" :height="screen_height-350" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="50" />
       <el-table-column align="center" label="名称" prop="element_name" width="180" />
       <el-table-column align="center" label="规格型号" prop="spec_code" width="240" />
@@ -54,19 +54,11 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'intentionOrder',
   data() {
     return {
-      myBackToTopStyle: {
-        right: '70px',
-        bottom: '70px',
-        width: '40px',
-        height: '40px',
-        'border-radius': '4px',
-        'line-height': '45px', // Please keep consistent with height to center vertically
-        background: '#e7eaf1'//  The background color of the button
-      },
       queryParams: {
         inputValue: "",
         pay_period: "全部",
@@ -110,6 +102,9 @@ export default {
       },
       checked: false
     }
+  },
+  computed: {
+    ...mapGetters(['screen_height'])
   },
   methods: {
     handleQuery(){},

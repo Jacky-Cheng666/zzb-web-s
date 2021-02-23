@@ -35,7 +35,7 @@
       
     </el-row>
 
-    <el-table class="mb8" height="490" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
+    <el-table class="mb8" :height="screen_height-350" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="50" />
       <el-table-column sortable align="center" label="发货单号" prop="deliver_name" width="140">
         <template slot-scope="scope">
@@ -51,7 +51,7 @@
           <!-- </router-link> -->
         </template>
       </el-table-column>
-      <el-table-column align="center" label="供应商名称" prop="receive_side_name" width="280" />
+      <el-table-column align="center" label="供应商名称" prop="receive_side_name" />
       <el-table-column sortable align="center" label="销售人" prop="saler" width="100" />
       <el-table-column sortable align="center" label="协议交期" prop="receiver" width="100" />
       <el-table-column sortable align="center" label="发货人" prop="consiger_name" width="100" />
@@ -68,26 +68,15 @@
         </template>
     </pagination>
 
-    <el-tooltip placement="top" content="返回顶部">
-      <back-to-top :custom-style="myBackToTopStyle" :visibility-height="300" :back-position="0" transition-name="fade" />
-    </el-tooltip>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: "receiveRecords",
   data() {
     return {
-      myBackToTopStyle: {
-        right: '50px',
-        bottom: '70px',
-        width: '40px',
-        height: '40px',
-        'border-radius': '4px',
-        'line-height': '45px', // Please keep consistent with height to center vertically
-        background: '#e7eaf1'//  The background color of the button
-      },
       queryParams:{
         inputValue: '',
         selectStatus: 'all',
@@ -127,6 +116,9 @@ export default {
         }]
       },
     };
+  },
+  computed: {
+    ...mapGetters(['screen_height'])
   },
   methods: {
     handleQuery(){},

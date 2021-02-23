@@ -22,10 +22,9 @@
         <svg-icon iconClass="tip" class="mr5" style="font-size:18px;"></svg-icon>
         <span class="f14 table_tip">点击“订单号”可以进入订单页。</span>
       </el-col>
-      <!-- <right-toolbar :showSearch.sync="showSearch" @queryTable="getPayDemandList"></right-toolbar> -->
     </el-row>
 
-    <el-table class="mb8" height="490" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
+    <el-table class="mb8" :height="screen_height-350" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="50" />
       <el-table-column align="center" label="订单号" prop="order_name" width="140">
         <template slot-scope="scope">
@@ -58,19 +57,11 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: "deliveryManage",
   data() {
     return {
-      myBackToTopStyle: {
-        right: '50px',
-        bottom: '70px',
-        width: '40px',
-        height: '40px',
-        'border-radius': '4px',
-        'line-height': '45px', // Please keep consistent with height to center vertically
-        background: '#e7eaf1'//  The background color of the button
-      },
       queryParams:{
         inputValue: '',
         selectStatus: 'all'
@@ -81,6 +72,9 @@ export default {
       total: 0,
       allRows: [],
     };
+  },
+  computed: {
+    ...mapGetters(['screen_height'])
   },
   methods: {
     handleQuery(){},

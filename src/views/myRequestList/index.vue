@@ -31,7 +31,7 @@
         <span class="table_tip">点击“请购单号”可以查看请购单详情。</span>
       </el-col>
     </el-row>
-    <el-table class="mb8" height="490" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
+    <el-table class="mb8" :height="screen_height-350" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="50" />
       <el-table-column align="center" label="请购单号" prop="request_name" width="140">
         <template slot-scope="scope">
@@ -62,6 +62,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'myRequestList',
   data() {
@@ -108,6 +109,9 @@ export default {
       },
       checked: false
     }
+  },
+  computed: {
+    ...mapGetters(['screen_height'])
   },
   methods: {
     handleQuery(){},

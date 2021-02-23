@@ -53,7 +53,7 @@
       </el-form>
     </fieldset>
 
-    <el-table class="mb8" height="490" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
+    <el-table class="mb8" :height="screen_height-370" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="50" />
       <el-table-column align="center" label="名称" prop="element_name" width="200" />
       <el-table-column align="center" label="型号" prop="spec_code" width="280" />
@@ -109,6 +109,7 @@
 import elementInfo from '../../components/elementInfo'
 import batchAdd from './components/batchAdd'
 import uploadFile from '@/components/UploadFile'
+import { mapGetters } from 'vuex'
 export default {
   name: "createRequestOrder",
   components: {elementInfo,batchAdd,uploadFile},
@@ -125,6 +126,9 @@ export default {
       loading: false,
       elementInfoForm: {}
     }
+  },
+  computed: {
+    ...mapGetters(['screen_height'])
   },
   methods: {
     getList(){},
