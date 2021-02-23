@@ -26,6 +26,7 @@ router.beforeEach(async(to, from, next) => {
         try {
           const { roles } = await store.dispatch('user/getInfo')
           const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
+          console.log('accessRoutes',accessRoutes);
           router.addRoutes(accessRoutes)
           store.commit('app/CALCULATE_SCREEN_HEIGHT')
           next({ ...to, replace: true })

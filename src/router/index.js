@@ -29,6 +29,9 @@ export const constantRoutes = [
     hidden: true
   },
 
+  
+]
+export const asyncRoutes = [
   {
     path: '/saleManage',
     component: Layout,
@@ -275,7 +278,6 @@ export const constantRoutes = [
 
   { path: '*', redirect: '/404', hidden: true }
 ]
-export const asyncRoutes = []
 const createRouter = () => new Router({
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes
