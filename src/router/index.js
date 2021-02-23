@@ -208,6 +208,12 @@ export const constantRoutes = [
         meta: { title: '采购记录',icon: 'el-icon-tickets' }
       },
       {
+        path: 'monthBillCheck',
+        name: 'monthBillCheck',
+        component: () => import('@/views/monthBillCheck/index'),
+        meta: { title: '月结对账',icon: 'el-icon-document' }
+      },
+      {
         path: 'receiveManage',
         name: 'receiveManage',
         component: EmptyLayout,
