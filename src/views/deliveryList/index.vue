@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container deliveryManage">
+  <div class="app-container deliveryList">
     <el-form class="mb10" :model="queryParams" ref="queryForm" v-show="showSearch" :inline="true">
       <el-form-item>
         <el-input v-model="queryParams.inputValue" placeholder="输入关键字" clearable size="small" style="width: 180px" @keyup.enter.native="handleQuery"/>
@@ -59,7 +59,7 @@
 <script>
 import { mapGetters } from 'vuex'
 export default {
-  name: "deliveryManage",
+  name: "deliveryList",
   data() {
     return {
       queryParams:{

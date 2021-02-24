@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container intentionOrder">
+  <div class="app-container productLibrary">
     <el-form class="mb10" :model="queryParams" ref="queryForm" v-show="showSearch" :inline="true">
       <el-form-item>
         <el-input v-model="queryParams.inputValue" placeholder="输入关键字" clearable size="small" style="width: 180px" @keyup.enter.native="handleQuery"/>
@@ -56,7 +56,7 @@
 <script>
 import { mapGetters } from 'vuex'
 export default {
-  name: 'intentionOrder',
+  name: 'productLibrary',
   data() {
     return {
       queryParams: {
@@ -121,7 +121,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.intentionOrder{
+.productLibrary{
   .table_tip{
     font-size: 14px;
     color: #515a6e;
