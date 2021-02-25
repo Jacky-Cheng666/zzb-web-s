@@ -48,8 +48,10 @@
       <el-table-column sortable align="center" label="对账人" prop="saler" width="100" />
       <el-table-column sortable align="center" label="对账时间" width="200"></el-table-column>
       <el-table-column align="center" label="附件" width="60">
-        <template>
-          <svg-icon style="color:#3894FF;font-size:16px;cursor:pointer" icon-class="pdf" />
+        <template slot-scope="scope">
+          <router-link :to="'/purchaseManage/monthBill/'+scope.row.order_name">
+            <svg-icon style="color:#3894FF;font-size:16px;cursor:pointer" icon-class="pdf" />
+          </router-link>
         </template>
       </el-table-column>
     </el-table>

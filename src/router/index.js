@@ -217,6 +217,13 @@ export const asyncRoutes = [
         meta: { title: '月结对账',icon: 'el-icon-document' }
       },
       {
+        path: 'monthBill/:order_no',
+        name: 'monthBill',
+        component: () => import('@/views/monthBill/index'),
+        meta: { title: '对账单' ,activeMenu: '/purchaseManage/monthBillCheck' },
+        hidden: true
+      },
+      {
         path: 'receiveManage',
         name: 'receiveManage',
         component: EmptyLayout,
