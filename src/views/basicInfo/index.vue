@@ -14,7 +14,7 @@
       <div class="info">
         <div class="title">
           <div style="color: #333;font-weight: bold">基本信息</div>
-          <el-button size="mini" type="primary" style="margin-right:-14px">保存</el-button>
+          <el-button size="mini" type="primary" style="margin-right:-14px;height:29px">保存</el-button>
         </div>
         <div class="content">
           <el-row style="margin-bottom:15px">
