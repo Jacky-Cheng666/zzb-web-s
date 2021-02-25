@@ -7,14 +7,14 @@
           <el-input style="width:120px" size="mini" placeholder="输入账本名称"></el-input>
           <el-button size="mini" type="primary">保存账本名称</el-button>
         </div>
-        <el-select style="width:102px" size="mini" v-model="value" placeholder="请选择">
+        <el-select style="width:102px;margin-right:10px" size="mini" v-model="value" placeholder="请选择">
           <el-option label="默认账本" value="001"></el-option>
         </el-select>
       </div>
       <div class="info">
         <div class="title">
           <div style="color: #333;font-weight: bold">基本信息</div>
-          <el-button size="mini" type="primary" style="margin-right:-14px;height:29px">保存</el-button>
+          <el-button size="mini" type="primary" style="height:29px">保存</el-button>
         </div>
         <div class="content">
           <el-row style="margin-bottom:15px">
@@ -22,7 +22,7 @@
               <el-input size="mini" disabled style="width:680px" placeholder="公司名称"/>
             </el-col>
             <el-col :offset="4" :span="10">
-              <el-input size="mini" style="width:680px;margin-left:20px" placeholder="公司简称"></el-input>
+              <el-input size="mini" style="width:680px;margin-left:4px" placeholder="公司简称"></el-input>
             </el-col>
           </el-row>
           <el-row>
@@ -30,7 +30,7 @@
               <el-input size="mini" style="width:680px" placeholder="注册地址"></el-input>
             </el-col>
             <el-col :offset="4" :span="10">
-              <el-input size="mini" style="width:680px;margin-left:20px" placeholder="纳税识别码"></el-input>
+              <el-input size="mini" style="width:680px;margin-left:4px" placeholder="纳税识别码"></el-input>
             </el-col>
           </el-row>
         </div>
@@ -41,7 +41,7 @@
           <div style="color: #333;font-weight: bold">资金账户</div>
           <div>
             <el-button size="mini" type="primary" icon="el-icon-plus">新增</el-button>
-            <el-button size="mini" type="success" icon="el-icon-folder">保存</el-button>
+            <el-button size="mini" type="success" icon="el-icon-check">保存</el-button>
           </div>
         </div>
         <div class="content">
@@ -64,7 +64,19 @@
       </div>
     </div>
     <div class="setTax">
-      
+      <div class="left">
+          <div class="tipWord">发票税率</div>
+          <el-radio-group v-model="currentTax">
+            <el-radio
+              v-for="(item, index) in tax_list"
+              :key="index"
+              :label="item.tax_name"
+            >{{item.tax_name}}</el-radio>
+          </el-radio-group>
+        </div>
+        <div class="right">
+          <el-button size="mini" icon="el-icon-check" type="success">保存税率</el-button>
+        </div>
     </div>
     <div class="receiveAddress"></div>
   </div>
@@ -78,7 +90,9 @@ export default {
       value: "001",
       currentBookInfo: {
         bank_account_list: [{},{}]
-      }
+      },
+      tax_list: [{tax_name:"96%"},{tax_name:"3%"}],
+      currentTax: "96%"
     };
   },
 };
@@ -88,6 +102,7 @@ export default {
 .basicInfo {
   .bookInfo {
     border: 1px solid #e5e5e5;
+    margin-bottom: 25px;
     .header {
       height: 50px;
       background-color: #f8f8f8;
@@ -109,7 +124,7 @@ export default {
     .title{
       font-size: 14px;
       height: 24px;
-      padding: 0 24px;
+      padding: 0 20px;
       border-left: 4px solid #00a0e9;
       display: flex;
       align-items: center;
@@ -119,6 +134,21 @@ export default {
     .content{
       padding: 0 20px;
       margin-bottom: 24px;
+    }
+  }
+  .setTax {
+    height: 52px;
+    border: 1px solid #e5e5e5;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .left {
+      display: flex;
+      align-items: center;
+    }
+    .right{
+      margin-right: 10px;
     }
   }
   .tipWord{
