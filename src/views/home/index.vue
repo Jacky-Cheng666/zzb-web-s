@@ -131,11 +131,11 @@ export default {
         {title: '收款统计', url:''},
       ],
       companyManage: [
-        {title: '通讯录', url:''},
-        {title: '流程管理', url:''},
-        {title: '库存管理', url:''},
-        {title: '品类管理', url:''},
-        {title: '基本信息', url:''},
+        {title: '通讯录', url:'/enterpriseManage/addressBook'},
+        {title: '流程管理', url:'/enterpriseManage/processManage'},
+        {title: '库存管理', url:'/enterpriseManage/inventoryManage'},
+        {title: '品类管理', url:'/enterpriseManage/categoryManage'},
+        {title: '基本信息', url:'/enterpriseManage/basicInfo'},
       ]
     };
   },
