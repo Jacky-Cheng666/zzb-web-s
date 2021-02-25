@@ -282,6 +282,61 @@ export const asyncRoutes = [
       
     ]
   },
+  {
+    path: '/enterpriseManage',
+    component: Layout,
+    meta: { title: '企业管理',icon: 'el-icon-office-building' },
+    redirect: '/enterpriseManage/basicInfo',
+    alwaysShow: true,
+    children: [
+      {
+        path: 'basicInfo',
+        name: 'basicInfo',
+        component: () => import('@/views/basicInfo/index'),
+        meta: { title: '基本信息',icon: 'el-icon-info' }
+      },
+      {
+        path: 'addressBook',
+        name: 'addressBook',
+        component: () => import('@/views/addressBook/index'),
+        meta: { title: '通讯录',icon: 'el-icon-notebook-2' }
+      },
+      {
+        path: 'processManage',
+        name: 'processManage',
+        component: () => import('@/views/processManage/index'),
+        meta: { title: '流程管理',icon: 'el-icon-refresh' }
+      },
+      {
+        path: 'inventoryManage',
+        name: 'inventoryManage',
+        component: EmptyLayout,
+        meta: { title: '库存管理',icon: 'el-icon-house' },
+        redirect: '/enterpriseManage/inventoryManage/safeStock',
+        alwaysShow: true,
+        children: [
+          {
+            path: 'elementsManage',
+            name: 'elementsManage',
+            component: () => import('@/views/elementsManage/index'),
+            meta: { title: '物料管理',icon: 'el-icon-coin' },
+          },
+          {
+            path: 'safeStock',
+            name: 'safeStock',
+            component: () => import('@/views/safeStock/index'),
+            meta: { title: '安全库存',icon: 'el-icon-lock' },
+          }
+        ]
+      },
+      {
+        path: 'categoryManage',
+        name: 'categoryManage',
+        component: () => import('@/views/categoryManage/index'),
+        meta: { title: '品类管理',icon: 'el-icon-set-up' }
+      },
+    ]
+  },
 
   { path: '*', redirect: '/404', hidden: true }
 ]
