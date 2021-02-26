@@ -77,7 +77,29 @@
           <el-button size="mini" icon="el-icon-check" type="success">保存税率</el-button>
         </div>
     </div>
-    <div class="receiveAddress"></div>
+    <div class="receiveAddress">
+      <div class="title">
+        <div style="color: #333;font-weight: bold">收货地址</div>
+        <div>
+          <el-button size="mini" type="primary" icon="el-icon-plus">新增</el-button>
+          <el-button size="mini" type="success" icon="el-icon-check" style="height:29px">保存</el-button>
+        </div>
+      </div>
+      <el-row v-for="(item,index) in receive_info_list" :key="index" type="flex" style="margin-bottom: 10px;padding: 0 20px" :gutter="10">
+        <el-col :span="15">
+          <el-input size="mini" v-model="item.receive_addr" auto-complete="off" placeholder="收货地址" />
+        </el-col>
+        <el-col :span="9">
+          <el-input size="mini" style="width: 80px" v-model="item.receiver_name" auto-complete="off" placeholder="收货人" />
+          <el-input size="mini" style="width:120px;margin-left:10px" v-model="item.receiver_phone" maxlength="11" auto-complete="off" placeholder="收货人手机" />
+          <span style="margin-left: 20px;font-size: 13px;" v-show="item.default">默认地址</span>
+          <el-button style="margin-left: 10px;" type="primary" size="mini" @click="defaultAddr(index)" v-show="!item.default">设为默认</el-button>
+          <el-button type="danger" size="mini" plain @click="deleteAddr(index)" v-show="!item.default">删除</el-button>
+        </el-col>
+      </el-row>
+      <div class="content">
+      </div>
+    </div>
   </div>
 </template>
 
@@ -91,8 +113,13 @@ export default {
         bank_account_list: [{},{}]
       },
       tax_list: [{tax_name:"96%"},{tax_name:"3%"}],
-      currentTax: "96%"
+      currentTax: "96%",
+      receive_info_list: [{default:true},{}]
     };
+  },
+  methods: {
+    defaultAddr(){},
+    deleteAddr(){}
   },
 };
 </script>
@@ -142,6 +169,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin-bottom: 25px;
     .left {
       display: flex;
       align-items: center;
@@ -150,10 +178,23 @@ export default {
       margin-right: 10px;
     }
   }
+  .receiveAddress {
+    border: 1px solid #e5e5e5;
+    padding: 20px 0;
+    .title {
+      font-size: 14px;
+      height: 24px;
+      padding: 0 20px;
+      border-left: 4px solid #00a0e9;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+  }
   .tipWord{
     font-size: 16px;
     margin-right: 60px;
-    // color: #333;
   }
 }
 </style>
