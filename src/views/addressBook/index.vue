@@ -74,6 +74,7 @@
           </div>
         </div>
       </div>
+      <div class="contentWrap" v-show="label_type=='second'">角色设置部分模块</div>
     </div>
   </div>
 </template>
@@ -825,8 +826,18 @@ export default {
     };
   },
   methods: {
-    handleOpen(){},
-    clickSelect(){},
+    handleOpen(key){
+      this.label_type = key;
+    },
+    clickSelect(index,indexPath){
+      console.log(index);
+      if(this.label_type==='first'){
+        this.department_name = index;
+      }else if(this.label_type==='second'){
+        this.job_id = parseInt(index);
+      }
+      
+    },
     handleClose(){},
     delDepartment(){},
     renameDepartment(){},
