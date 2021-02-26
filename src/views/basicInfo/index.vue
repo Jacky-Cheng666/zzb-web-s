@@ -86,10 +86,10 @@
         </div>
       </div>
       <el-row v-for="(item,index) in receive_info_list" :key="index" type="flex" style="margin-bottom: 10px;padding: 0 20px" :gutter="10">
-        <el-col :span="15">
+        <el-col style="flex: 1;">
           <el-input size="mini" v-model="item.receive_addr" auto-complete="off" placeholder="收货地址" />
         </el-col>
-        <el-col :span="9">
+        <el-col style="width:380px;margin-right:-4px">
           <el-input size="mini" style="width: 80px" v-model="item.receiver_name" auto-complete="off" placeholder="收货人" />
           <el-input size="mini" style="width:120px;margin-left:10px" v-model="item.receiver_phone" maxlength="11" auto-complete="off" placeholder="收货人手机" />
           <span style="margin-left: 20px;font-size: 13px;" v-show="item.default">默认地址</span>
