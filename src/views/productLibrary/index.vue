@@ -36,7 +36,7 @@
       <el-table-column align="center" label="操作" width="120">
         <template>
           <el-button size="mini" icon="el-icon-money" type="text">报价</el-button>
-          <el-button size="mini" icon="el-icon-delete" type="text" style="color:#F56C6C">删除</el-button>
+          <el-button size="mini" icon="el-icon-delete" type="text" class="text-danger">删除</el-button>
         </template>
       </el-table-column>
     </el-table>

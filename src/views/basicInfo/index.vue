@@ -14,7 +14,7 @@
       <div class="info">
         <div class="title">
           <div style="color: #333;font-weight: bold">基本信息</div>
-          <el-button size="mini" type="primary" style="height:29px">保存</el-button>
+          <el-button size="mini" type="success" icon="el-icon-check" style="height:29px">保存</el-button>
         </div>
         <div class="content">
           <el-row style="margin-bottom:15px">
@@ -22,7 +22,7 @@
               <el-input size="mini" disabled style="width:680px" placeholder="公司名称"/>
             </el-col>
             <el-col :offset="4" :span="10">
-              <el-input size="mini" style="width:680px;margin-left:4px" placeholder="公司简称"></el-input>
+              <el-input size="mini" style="width:680px;margin-left:12px" placeholder="公司简称"></el-input>
             </el-col>
           </el-row>
           <el-row>
@@ -30,7 +30,7 @@
               <el-input size="mini" style="width:680px" placeholder="注册地址"></el-input>
             </el-col>
             <el-col :offset="4" :span="10">
-              <el-input size="mini" style="width:680px;margin-left:4px" placeholder="纳税识别码"></el-input>
+              <el-input size="mini" style="width:680px;margin-left:12px" placeholder="纳税识别码"></el-input>
             </el-col>
           </el-row>
         </div>
@@ -41,7 +41,6 @@
           <div style="color: #333;font-weight: bold">资金账户</div>
           <div>
             <el-button size="mini" type="primary" icon="el-icon-plus">新增</el-button>
-            <el-button size="mini" type="success" icon="el-icon-check">保存</el-button>
           </div>
         </div>
         <div class="content">
@@ -56,7 +55,7 @@
             <el-table-column align="center" prop label="操作" width="120">
               <template slot-scope="scope">
                 <el-button size="mini" type="text" icon="el-icon-edit">编辑</el-button>
-                <el-button size="mini" type="text" icon="el-icon-delete" style="color:#F56C6C">删除</el-button>
+                <el-button size="mini" type="text" icon="el-icon-delete" class="text-danger">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
