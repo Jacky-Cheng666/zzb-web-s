@@ -1,6 +1,6 @@
 <template>
   <div class="app-container staffEdit">
-    <div class="titleEdit">新增成员</div>
+    <div class="titleEdit">添加成员</div>
     <el-form :model="ruleFormAdd" ref="ruleFormAdd" label-width="120px">
       <el-form-item label="姓名" prop="staff.name" :rules="{ required: true, message: '姓名为必填项', trigger: 'blur' }">
         <el-input size="mini" style="width: 340px" v-model="ruleFormAdd.staff.name" auto-complete="off" placeholder="姓名" />
@@ -86,7 +86,7 @@ export default {
 
 <style lang="scss">
 .staffEdit {
-  background-color: #f6f6f6;
+//   background-color: #f6f6f6;
   .titleEdit {
     color: #333333;
     font-size: 16px;
