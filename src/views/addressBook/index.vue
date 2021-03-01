@@ -24,7 +24,7 @@
     <div class="mainContent">
       <div class="contentWrap" v-show="label_type=='first'">
         <el-input size='mini' style="width: 120px;" v-model="depart_form.new_department_name" auto-complete="off" placeholder="新部门名"></el-input>
-        <el-button style="margin-left: -6px;" type="primary" size="mini" @click="renameDepartment()">修改部门名称</el-button>
+        <el-button style="margin-left: -2px;" type="primary" size="mini" @click="renameDepartment()">修改部门名称</el-button>
         <div style="float: right;margin-right: 0px;">
           <el-button size="mini" type="primary" icon="el-icon-plus" @click="toStaffEdit(true)" >添加成员</el-button>
           <el-button style="margin-left: 10px;" icon="el-icon-plus" type="primary" size="mini" @click="addDepart()">新增部门</el-button>
@@ -74,7 +74,28 @@
           </div>
         </div>
       </div>
-      <div class="contentWrap" v-show="label_type=='second'">角色设置部分模块</div>
+      <div class="contentWrap" v-show="label_type=='second'">
+        <div class="titleEdit">{{txt_title}}</div>
+
+        <div style="line-height: 43px;margin-bottom:20px;">
+          <el-input size='mini' style="width: 160px;margin-left: 20px;" v-model="new_job_name" auto-complete="off" placeholder="新角色名"></el-input>
+          <el-button style="margin-left: -2px;" type="primary" size="mini" @click="submitJob()">提交</el-button>
+          <div style="float: right;margin-right: 10px;">
+            <el-button v-show="!add_model" type="danger" icon="el-icon-minus" size="mini" @click="deleteJob()">删除角色</el-button>
+            <el-button v-show="!add_model" type="primary" icon="el-icon-plus" size="mini" @click="addJob(true)">新增角色</el-button>
+            <el-button v-show="add_model" size="mini" @click="addJob(false)">取消</el-button>
+          </div>
+        </div>
+
+        <el-row style="line-height: 25px;padding-left: 0px;box-sizing: border-box;font-size: 13px;">
+          <el-checkbox-group v-model="checkList">
+            <el-col v-for="(item, index) in auth_list" :key="index" :span="(item.id < 100)?24:6">
+              <span class="titleCaption" v-show="item.id < 100">{{auth_title_list[item.id]}}</span>
+              <el-checkbox style="padding-left:25px" :label="item.id" v-show="100 <= item.id"> {{item.name}}</el-checkbox>
+            </el-col>
+          </el-checkbox-group>
+        </el-row>
+      </div>
     </div>
   </div>
 </template>
@@ -823,6 +844,12 @@ export default {
           job_id: 15,
         },
       ],
+      txt_title: "设置角色",
+      new_job_name: "",
+      checkList: [101,103,105,200,202,204,205,300,100,301,305,304,306,303,307,402,405,401,400,404,403,503,507,506,502,505,504,500,601,602,603,308,501,302,209,108,104,107,109,110,102,201,206,210,211,207,203,213,212,208,508,512,513,509,510,514,511,310],
+      add_model: false,
+      auth_title_list: ['企业管理权限', '项目管理权限', '采购管理权限', '销售管理权限', '仓库管理权限', '财务管理权限', '报表查看权限'],
+      auth_list: [{"id":0,"name":"全部权限"},{"id":100,"name":"修改企业信息"},{"id":101,"name":"管理供应商"},{"id":102,"name":"管理采购商"},{"id":103,"name":"管理品类、品牌"},{"id":108,"name":"添加物料"},{"id":109,"name":"修改物料"},{"id":110,"name":"删除物料"},{"id":105,"name":"设备管理"},{"id":104,"name":"设置加工价格","need_check_conflicts":true},{"id":107,"name":"查看加工价格","need_check_conflicts":true},{"id":1,"name":"全部权限"},{"id":200,"name":"审批请购单"},{"id":201,"name":"上传图纸"},{"id":202,"name":"转为库存"},{"id":203,"name":"删除需求"},{"id":204,"name":"再次购买"},{"id":205,"name":"分类跟踪"},{"id":206,"name":"产出管理"},{"id":207,"name":"产品管理"},{"id":208,"name":"工艺设置"},{"id":209,"name":"导出项目清单"},{"id":210,"name":"项目管理"},{"id":211,"name":"变更审批"},{"id":212,"name":"查看实时成本"},{"id":213,"name":"项目结案"},{"id":2,"name":"全部权限"},{"id":300,"name":"管理购物车"},{"id":301,"name":"管理安全库存"},{"id":302,"name":"询价比价","need_check_conflicts":true},{"id":303,"name":"发布订单","need_check_conflicts":true},{"id":304,"name":"审核订单"},{"id":305,"name":"审批订单"},{"id":307,"name":"导出订单"},{"id":308,"name":"工艺评估","need_check_conflicts":true},{"id":309,"name":"查看成交履历"},{"id":310,"name":"显示供应商"},{"id":311,"name":"查看退单","need_check_conflicts":true},{"id":306,"name":"管理退单","need_check_conflicts":true},{"id":312,"name":"自主发货","need_check_conflicts":true},{"id":313,"name":"请购管理"},{"id":314,"name":"询价比价"},{"id":315,"name":"订单管理"},{"id":316,"name":"查看归档订单"},{"id":317,"name":"直接入库"},{"id":3,"name":"全部权限"},{"id":400,"name":"管理报价"},{"id":401,"name":"订单管理"},{"id":402,"name":"批准订单"},{"id":403,"name":"管理退单"},{"id":404,"name":"管理发货"},{"id":405,"name":"管理退货"},{"id":406,"name":"报价管理"},{"id":407,"name":"订单管理"},{"id":408,"name":"特采管理"},{"id":409,"name":"直接发货"},{"id":4,"name":"全部权限"},{"id":500,"name":"管理收货"},{"id":501,"name":"品质检测"},{"id":502,"name":"退货管理"},{"id":503,"name":"导出流水"},{"id":504,"name":"导出库存"},{"id":505,"name":"导入库存"},{"id":506,"name":"管理盘点"},{"id":507,"name":"管理报废"},{"id":508,"name":"出库管理"},{"id":509,"name":"入库管理"},{"id":510,"name":"查找库存"},{"id":511,"name":"新建出库"},{"id":512,"name":"导出入库记录"},{"id":513,"name":"导出出库记录"},{"id":514,"name":"新建入库"},{"id":5,"name":"全部权限"},{"id":600,"name":"查看报表"},{"id":601,"name":"对账单"},{"id":602,"name":"下载报表"},{"id":603,"name":"设置对账配置"},{"id":604,"name":"付款管理"},{"id":605,"name":"收款管理"},{"id":606,"name":"应付对账"},{"id":607,"name":"应收对账"},{"id":608,"name":"报销管理"},{"id":609,"name":"一键付款"},{"id":610,"name":"一键收款"},{"id":6,"name":"全部权限"},{"id":700,"name":"付款统计表"},{"id":701,"name":"收款统计表"},{"id":702,"name":"收支报表"},{"id":703,"name":"出入库报表"},{"id":704,"name":"进销存报表"},{"id":705,"name":"采购统计表"},{"id":706,"name":"供应商考评表"},{"id":707,"name":"销售统计表"},{"id":708,"name":"客户考评表"}]
     };
   },
   methods: {
@@ -847,7 +874,10 @@ export default {
     setDepartmentDirector(){},
     changeFun(){},
     handleSizeChange(){},
-    handleCurrentChange(){}
+    handleCurrentChange(){},
+    submitJob(){},
+    deleteJob(){},
+    addJob(){}
   },
 };
 </script>
@@ -869,6 +899,24 @@ export default {
       .table_container {
         width: 100%;
         margin-top: 10px;
+      }
+      .titleEdit {
+        color: #333333;
+        font-size: 16px;
+        font-weight: bold;
+        margin-top: 20px;
+        margin-bottom: 30px;
+        border-left: 4px solid #00a0e9;
+        padding-left: 24px;
+      }
+      .titleCaption {
+        display: block;
+        color: #333333;
+        font-size: 13px;
+        font-weight: bold;
+        background-color: #f5f5f5;
+        padding-left: 24px;
+        height: 31px;
       }
     }
   }
