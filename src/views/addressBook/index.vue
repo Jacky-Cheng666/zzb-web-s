@@ -892,11 +892,11 @@ export default {
   background-color: #f6f6f6;
   display: flex;
   .sideNav {
-    flex: 1;
+    width: 170px;
   }
   .mainContent {
     margin-left: 10px;
-    flex: 7;
+    flex: 1;
     background-color: #fff;
     padding: 10px;
     .contentWrap{
@@ -931,9 +931,13 @@ export default {
   .el-submenu__title {
     background-color: #00A0E9 !important;
     color: #ffffff;
+    width: 170px;
     &:first-child {
       border-bottom: 1px solid #fff;
     }
+  }
+  .el-submenu .el-menu-item {
+    min-width: 170px!important;
   }
       
 }
