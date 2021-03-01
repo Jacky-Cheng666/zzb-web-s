@@ -302,6 +302,20 @@ export const asyncRoutes = [
         meta: { title: '通讯录',icon: 'el-icon-notebook-2' }
       },
       {
+        path: 'addStaff',
+        name: 'addStaff',
+        component: () => import('@/views/staffEdit/index'),
+        meta: { title: '添加成员', activeMenu: '/enterpriseManage/addressBook'},
+        hidden: true
+      },
+      {
+        path: 'staffEdit/:staff_id',
+        name: 'staffEdit',
+        component: () => import('@/views/staffEdit/index'),
+        meta: { title: '编辑成员', activeMenu: '/enterpriseManage/addressBook'},
+        hidden: true
+      },
+      {
         path: 'processManage',
         name: 'processManage',
         component: () => import('@/views/processManage/index'),
