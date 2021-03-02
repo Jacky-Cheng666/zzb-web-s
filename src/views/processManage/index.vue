@@ -31,7 +31,7 @@
             <div>
               <el-button size="mini" icon="el-icon-refresh">重置</el-button>
               <el-button size="mini" type="success">
-                <svg-icon icon-class="save" class-name="btn_icon_svg"></svg-icon>&nbsp;保存
+                <svg-icon icon-class="save" class-name="btn_icon_svg" />&nbsp;保存
               </el-button>
               <el-button size="mini" type="danger" icon="el-icon-close">关闭</el-button>
             </div>
@@ -49,7 +49,9 @@
             <div class="menuName">{{changeName}}</div>
             <div>
               <el-button icon="el-icon-refresh" size="mini">重置</el-button>
-              <el-button icon="el-icon-check" type="success" size="mini">保存</el-button>
+              <el-button type="success" size="mini">
+                <svg-icon icon-class="save" class-name="btn_icon_svg" />&nbsp;保存
+              </el-button>
             </div>
           </div>
           <div style="height:1px;background-color:#BBBBBB;width:100%"></div>

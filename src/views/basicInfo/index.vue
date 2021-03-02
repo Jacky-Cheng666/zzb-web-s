@@ -14,7 +14,9 @@
       <div class="info">
         <div class="title">
           <div style="color: #333;font-weight: bold">基本信息</div>
-          <el-button size="mini" type="success" icon="el-icon-check" style="height:29px">保存</el-button>
+          <el-button size="mini" type="success" style="height:29px">
+            <svg-icon icon-class="save" class-name="btn_icon_svg" />&nbsp;保存
+          </el-button>
         </div>
         <div class="content">
           <el-row style="margin-bottom:15px">
@@ -74,7 +76,9 @@
           </el-radio-group>
         </div>
         <div class="right">
-          <el-button size="mini" icon="el-icon-check" type="success">保存税率</el-button>
+          <el-button size="mini" type="success">
+            <svg-icon icon-class="save" class-name="btn_icon_svg" />&nbsp;保存税率
+          </el-button>
         </div>
     </div>
     <div class="receiveAddress">
@@ -82,7 +86,9 @@
         <div style="color: #333;font-weight: bold">收货地址</div>
         <div>
           <el-button size="mini" type="primary" icon="el-icon-plus">新增</el-button>
-          <el-button size="mini" type="success" icon="el-icon-check" style="height:29px">保存</el-button>
+          <el-button size="mini" type="success" style="height:29px">
+            <svg-icon icon-class="save" class-name="btn_icon_svg" />&nbsp;保存
+          </el-button>
         </div>
       </div>
       <el-row v-for="(item,index) in receive_info_list" :key="index" type="flex" style="margin-bottom: 10px;padding: 0 20px" :gutter="10">

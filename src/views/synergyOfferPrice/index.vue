@@ -75,7 +75,9 @@
         <el-switch style="margin-right:10px" v-model="value1" active-text="报未税价" inactive-text="报含税价"></el-switch>  
         
         <el-button type="success" icon="el-icon-check" size="mini">报价</el-button>
-        <el-button type="success" icon="el-icon-folder-add" size="mini">保存</el-button>
+        <el-button type="success" size="mini">
+          <svg-icon icon-class="save" class-name="btn_icon_svg" />&nbsp;保存
+        </el-button>
         <el-tooltip class="item" effect="dark" content="刷新" placement="top">
             <el-button size="mini" circle icon="el-icon-refresh"/>
         </el-tooltip>
