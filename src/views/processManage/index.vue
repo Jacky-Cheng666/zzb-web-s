@@ -30,7 +30,9 @@
             <div class="menuName">{{currentWorkFlow.name}}</div>
             <div>
               <el-button size="mini" icon="el-icon-refresh">重置</el-button>
-              <el-button size="mini" type="success" icon="el-icon-check">保存</el-button>
+              <el-button size="mini" type="success">
+                <svg-icon icon-class="save" class-name="btn_icon_svg"></svg-icon>&nbsp;保存
+              </el-button>
               <el-button size="mini" type="danger" icon="el-icon-close">关闭</el-button>
             </div>
           </div>
