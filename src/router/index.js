@@ -299,11 +299,11 @@ export const asyncRoutes = [
         path: 'addressBook',
         name: 'addressBook',
         component: () => import('@/views/addressBook/index'),
-        meta: { title: '通讯录',icon: 'el-icon-notebook-2' }
+        meta: { title: '通讯录',icon: 'el-icon-notebook-2', noCache: true}
       },
       {
         path: 'addStaff',
-        name: 'addStaff',
+        name: 'staffEdit',
         component: () => import('@/views/staffEdit/index'),
         meta: { title: '添加成员', activeMenu: '/enterpriseManage/addressBook'},
         hidden: true
