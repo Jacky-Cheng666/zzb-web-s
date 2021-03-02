@@ -76,7 +76,7 @@
           </el-radio-group>
         </div>
         <div class="right">
-          <el-button size="mini" type="success">
+          <el-button size="mini" type="success" style="height:29px">
             <svg-icon icon-class="save" class-name="btn_icon_svg" />&nbsp;保存税率
           </el-button>
         </div>
