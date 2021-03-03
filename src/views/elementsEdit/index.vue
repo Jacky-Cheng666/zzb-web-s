@@ -1,7 +1,7 @@
 <template>
   <div class="app-container elementsEdit">
     <div>
-      <div class="titleEdit">{{$route.params.element_code?'编辑物料':'添加物料'}}</div>
+      <div class="titleEdit">{{isEdit?'编辑物料':'添加物料'}}</div>
       <el-form :model="ruleFormAdd" ref="ruleFormAdd" label-width="120px">
         <el-form-item label="型号" prop="spec_code" :rules="{required: true, message: '规格型号为必填项', trigger: 'blur',}">
           <el-input size="mini" style="width: 320px" v-model="ruleFormAdd.spec_code" auto-complete="off" placeholder="规格型号" />
@@ -112,6 +112,11 @@ export default {
         isNameOk: "",
         isNickNameOk: ""
     };
+  },
+  computed: {
+      isEdit(){
+          return this.$route.meta.isEdit
+      }
   },
   methods: {
       boxChange(){},

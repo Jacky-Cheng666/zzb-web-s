@@ -352,7 +352,7 @@ export const asyncRoutes = [
             path: 'elementsEdit/:element_code',
             name: 'elementsEdit',
             component: () => import('@/views/elementsEdit/index'),
-            meta: { title: '编辑物料', activeMenu: '/enterpriseManage/inventoryManage/elementsManage'},
+            meta: { title: '编辑物料', activeMenu: '/enterpriseManage/inventoryManage/elementsManage', isEdit: true},
             hidden: true
           }
         ]
