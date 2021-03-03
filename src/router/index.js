@@ -353,6 +353,13 @@ export const asyncRoutes = [
             meta: { title: '安全库存',icon: 'el-icon-lock' },
           },
           {
+            path: 'setSafeStock',
+            name: 'safeStock',
+            component: () => import('@/views/safeStock/index'),
+            meta: { title: '设置安全库存',isChecked:true },
+            hidden: true
+          },
+          {
             path: 'addElements',
             name: 'elementsEdit',
             component: () => import('@/views/elementsEdit/index'),

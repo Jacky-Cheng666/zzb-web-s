@@ -164,11 +164,7 @@ export default {
     handleSizeChange(){},
     handleCurrentChange(){},
     setSafeStorage(){
-      this.$notify({
-          title: '成功',
-          message: '设置安全库操作成功',
-          type: 'success'
-        });
+      this.$router.push('/enterpriseManage/inventoryManage/setSafeStock')
     }
   },
 }
