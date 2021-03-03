@@ -1,6 +1,6 @@
 <template>
   <div class="app-container elementsManage">
-    <div class="elementsWrap">
+    <div class="header">
       <div class="middle">
         <span class="topCtrlTile">分类</span>
         <span v-show="1==check_type" style="display:inline-block;margin-left: 16px;line-height: 36px;vertical-align: middle;">
@@ -47,7 +47,8 @@
           </router-link>
     
           <span class="downloadSty" @click="exportTemplate">
-            <svg-icon icon-class="download2" style="margin-top:-4px"></svg-icon>
+            <!-- <svg-icon icon-class="download2" style="margin-top:-4px"></svg-icon> -->
+            <img style="vertical-align:middle;margin-top:-4px;margin-right:4px" src="@/assets/imgs/download.png" alt="">
             <span style="font-size: 14px;color:#333333;">下载模板</span>
           </span>
           <!-- <importBtn
@@ -64,62 +65,61 @@
           <el-button icon="el-icon-refresh" size="mini" type="danger" @click="deleteAllElements(false)">清空所有</el-button>
         </div> 
       </div>
+    </div>
+    <div class="table_container">
+      <el-table ref="multipleTable" :data="rows" stripe :height="screen_height-400" @selection-change="changeFun" style="width: 100%" @sort-change="changeSort">
+        <el-table-column align="center" type="selection" width="60" />
+        <el-table-column align="center" prop="element_code" label="物料代码" show-overflow-tooltip width="140" sortable="custom">
+          <template slot-scope="scope">
+            <i style="float: left;margin-left: 10px;color: gray;" class="iconfont icon-guansuo" v-show="scope.row.disable"></i>
+            {{scope.row.element_code}}
+          </template>
+        </el-table-column>
+        <el-table-column align="center" prop="element_name" label="物料名称" show-overflow-tooltip width="180" sortable="custom" />
+        <el-table-column align="center" prop="brand" label="材质/品牌" show-overflow-tooltip width="140" sortable="custom" />
+        <el-table-column align="center" prop="spec_code" label="图号/规格型号" show-overflow-tooltip width="180" sortable="custom" />
+        <el-table-column align="center" prop="version" label="版本" show-overflow-tooltip width="50" />
+        <el-table-column align="center" prop="unit" label="单位" width="80" show-overflow-tooltip />
+        <el-table-column align="center" prop="min_pack_num" label="最小包装" width="80" show-overflow-tooltip />
+        <el-table-column align="center" prop="content_name" label="品类" width="120" show-overflow-tooltip sortable="custom" />
+        <el-table-column align="center" prop="create_time" label="创建时间" width="120" show-overflow-tooltip />
+        <el-table-column align="center" prop="major" label="关键物料" width="80" show-overflow-tooltip>
+          <template slot-scope="scope">{{scope.row.major?"是":"否"}}</template>
+        </el-table-column>
+        <el-table-column align="center" prop="remark" label="备注" show-overflow-tooltip></el-table-column>
 
-      <div class="table_container">
-        <el-table ref="multipleTable" :data="rows" stripe :height="screen_height-400" @selection-change="changeFun" style="width: 100%" @sort-change="changeSort">
-          <el-table-column align="center" type="selection" width="30" fixed />
-          <el-table-column align="center" prop="element_code" label="物料代码" show-overflow-tooltip width="140" sortable="custom">
-            <template slot-scope="scope">
-              <i style="float: left;margin-left: 10px;color: gray;" class="iconfont icon-guansuo" v-show="scope.row.disable"></i>
-              {{scope.row.element_code}}
-            </template>
-          </el-table-column>
-          <el-table-column align="center" prop="element_name" label="物料名称" show-overflow-tooltip width="180" sortable="custom" />
-          <el-table-column align="center" prop="brand" label="材质/品牌" show-overflow-tooltip width="140" sortable="custom" />
-          <el-table-column align="center" prop="spec_code" label="图号/规格型号" show-overflow-tooltip width="180" sortable="custom" />
-          <el-table-column align="center" prop="version" label="版本" show-overflow-tooltip width="50" />
-          <el-table-column align="center" prop="unit" label="单位" width="80" show-overflow-tooltip />
-          <el-table-column align="center" prop="min_pack_num" label="最小包装" width="80" show-overflow-tooltip />
-          <el-table-column align="center" prop="content_name" label="品类" width="120" show-overflow-tooltip sortable="custom" />
-          <el-table-column align="center" prop="create_time" label="创建时间" width="120" show-overflow-tooltip />
-          <el-table-column align="center" prop="major" label="关键物料" width="80" show-overflow-tooltip>
-            <template slot-scope="scope">{{scope.row.major?"是":"否"}}</template>
-          </el-table-column>
-          <el-table-column align="center" prop="remark" label="备注" show-overflow-tooltip></el-table-column>
+        <el-table-column align="center" label="操作" width="160px" fixed="right">
+          <template slot-scope="scope">
+            <el-button @click="toElementsEdit(scope.row)" size="mini" type="text" icon="el-icon-edit">编辑</el-button>
+            <el-button size="mini" type="text" icon="el-icon-delete" class="text-danger">删除</el-button>    
+          </template>
+        </el-table-column>
+      </el-table>
+      
+      <div style="text-align: center;margin-top: 5px;background:#fff;padding-bottom:18px">
+        <el-row>
+          <el-col :span="22" style="margin-top: 6px;">
+            <el-pagination
+              prev-text="上一页"
+              next-text	="下一页"
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :current-page="currentPage"
+              :page-sizes="[10, 30, 50, 100,200]"
+              :page-size="pageSize"
+              layout="prev, pager, next, sizes, total, jumper"
+              :total="count"
+            ></el-pagination>
+          </el-col>
 
-          <el-table-column align="center" label="操作" width="160px" fixed="right">
-            <template slot-scope="scope">
-              <el-button @click="toElementsEdit(scope.row)" size="mini" type="text" icon="el-icon-edit">编辑</el-button>
-              <el-button size="mini" type="text" icon="el-icon-delete" class="text-danger">删除</el-button>    
-            </template>
-          </el-table-column>
-        </el-table>
-        
-        <div style="text-align: center;margin-top: 5px;background:#fff;padding-bottom:18px">
-          <el-row>
-            <el-col :span="22" style="margin-top: 6px;">
-              <el-pagination
-                prev-text="上一页"
-                next-text	="下一页"
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-                :current-page="currentPage"
-                :page-sizes="[10, 30, 50, 100,200]"
-                :page-size="pageSize"
-                layout="prev, pager, next, sizes, total, jumper"
-                :total="count"
-              ></el-pagination>
-            </el-col>
-
-            <el-col :span="2">
-              <div style="margin-top: 6px;float:right;">
-                <el-button icon="el-icon-lock" size="mini" @click="setSafeStorage" type="primary">设置安全库存</el-button>
-              </div>
-            </el-col>
-          </el-row>
-        </div>
-
+          <el-col :span="2">
+            <div style="margin-top: 6px;float:right;">
+              <el-button icon="el-icon-lock" size="mini" @click="setSafeStorage" type="primary">设置安全库存</el-button>
+            </div>
+          </el-col>
+        </el-row>
       </div>
+
     </div>
   </div>
 </template>
@@ -176,10 +176,11 @@ export default {
 
 <style lang="scss">
 .elementsManage {
-  .elementsWrap {
+  .header {
     height: 104px;
     border: 1px solid #e5e5e5;
     background-color: #f8f8f8;
+    margin-bottom: 10px;
     .topCtrlTile {
       font-size: 15px;
       color: #333333;
