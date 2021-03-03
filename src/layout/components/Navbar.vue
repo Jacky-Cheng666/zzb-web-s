@@ -7,11 +7,25 @@
     <div class="right-menu">
       <search id="header-search" class="right-menu-item" />
       <!-- <screenfull id="screenfull" class="right-menu-item hover-effect" /> -->
-        <el-tooltip class="item" effect="dark" content="返回主页" placement="bottom">
-            <router-link to="/">
-              <svg-icon icon-class="home" class="right-menu-item homeIcon"></svg-icon>
-            </router-link>
-        </el-tooltip>
+      
+      <el-tooltip effect="dark" content="切换公司主体" placement="bottom" class="right-menu-item">
+        <el-dropdown trigger="click" @command="switchCompany">
+          <div>
+            <svg-icon class-name="company-icon" icon-class="company" />
+          </div>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item v-for="item of company_list" :key="item.value" :disabled="currentCompany===item.value" :command="item.value">
+              {{item.label }}
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </el-tooltip>
+
+      <el-tooltip class="item" effect="dark" content="返回主页" placement="bottom">
+          <router-link to="/">
+            <svg-icon icon-class="home" class="right-menu-item homeIcon"></svg-icon>
+          </router-link>
+      </el-tooltip>
       
       <!-- <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
@@ -54,6 +68,15 @@ export default {
       'avatar'
     ])
   },
+  data() {
+    return {
+      company_list: [
+        { label: '深圳市测试专用有限公司', value: 'company1' },
+        { label: '第二测试有限公司', value: 'company2' },
+      ],
+      currentCompany: "company1"
+    }
+  },
   methods: {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
@@ -61,6 +84,26 @@ export default {
     async logout() {
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    },
+    switchCompany(val) {
+      this.currentCompany = val;
+      this.refreshView()
+      this.$message({
+        message: '切换成功',
+        type: 'success'
+      })
+    },
+    refreshView() {
+      // In order to make the cached page re-rendered
+      this.$store.dispatch('tagsView/delAllCachedViews', this.$route)
+
+      const { fullPath } = this.$route
+
+      this.$nextTick(() => {
+        this.$router.replace({
+          path: '/redirect' + fullPath
+        })
+      })
     }
   }
 }
@@ -115,6 +158,9 @@ export default {
         &:hover {
           background: rgba(0, 0, 0, .025)
         }
+      }
+      .company-icon {
+        cursor: pointer;
       }
     }
     .homeIcon {
