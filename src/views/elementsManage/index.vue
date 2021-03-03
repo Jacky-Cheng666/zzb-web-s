@@ -42,7 +42,9 @@
           <el-checkbox v-model="unusable" @change="unusableClick">无效物料</el-checkbox>
           <el-checkbox v-model="major" @change="majorClick">关键物料</el-checkbox>
           
-          <el-button icon="el-icon-plus" size="mini" style="background-color: #2ED0C2;border-color:#2ED0C2;" type="success" @click="toElementsEdit(true)">添加物料</el-button>
+          <router-link to="/enterpriseManage/inventoryManage/addElements">
+            <el-button icon="el-icon-plus" size="mini" style="background-color: #2ED0C2;border-color:#2ED0C2;" type="success">添加物料</el-button>
+          </router-link>
     
           <span class="downloadSty" @click="exportTemplate">
             <svg-icon icon-class="download2" style="margin-top:-4px"></svg-icon>
@@ -87,7 +89,7 @@
 
           <el-table-column align="center" label="操作" width="160px" fixed="right">
             <template slot-scope="scope">
-              <el-button size="mini" type="text" icon="el-icon-edit">编辑</el-button>
+              <el-button @click="toElementsEdit(scope.row)" size="mini" type="text" icon="el-icon-edit">编辑</el-button>
               <el-button size="mini" type="text" icon="el-icon-delete" class="text-danger">删除</el-button>    
             </template>
           </el-table-column>
@@ -152,13 +154,22 @@ export default {
     searchElement(){},
     unusableClick(){},
     majorClick(){},
-    toElementsEdit(){},
+    toElementsEdit(row){
+      console.log('row', row);
+      this.$router.push('/enterpriseManage/inventoryManage/elementsEdit/' + row.element_code)
+    },
     exportTemplate(){},
     changeFun(){},
     changeSort(){},
     handleSizeChange(){},
     handleCurrentChange(){},
-    setSafeStorage(){}
+    setSafeStorage(){
+      this.$notify({
+          title: '成功',
+          message: '设置安全库操作成功',
+          type: 'success'
+        });
+    }
   },
 }
 </script>
