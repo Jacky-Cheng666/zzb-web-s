@@ -22,51 +22,27 @@
                 <div><img src="../../assets/imgs/login-logo.png" style="height: 65px;margin-top:82px;" alt="logo"></div>
                 <div style="padding-top: 50px;">
                   <div class="loginInfoInner" style="width: 320px;margin: 0 auto;">
-                    <div style="color:#333333;font-size: 20px;font-weight: bold;text-align: left;">
-                      欢迎登录
-                    </div>
+                    <div style="color:#333333;font-size: 20px;font-weight: bold;text-align: left;">欢迎登录</div>
                     <div style="margin-top: 30px;">
-                      <el-input
-                        @input="onChangePhone"
-                        size="small"
-                        placeholder="请输入手机号码"
-                        v-model="phone">
-                      </el-input>
+                      <el-input @input="onChangePhone" size="small" placeholder="请输入手机号码" v-model="phone" />
                     </div>
                     <div style="text-align: left;line-height: 48px;margin-top: 20px;overflow: hidden;">
                       <span style="display: inline-block;">
-                        <el-input
-                          style="width: 143px;"
-                          size="small"
-                          placeholder="请输入图形验证码"
-                          v-model="image_code">
-                        </el-input>
+                        <el-input style="width: 143px;" size="small" placeholder="请输入图形验证码" v-model="image_code" />
                       </span>
-                      <span class="svgCode" @click="getImagecode" style="float: right;cursor: pointer;"
-                            v-html="codeImage"></span>
+                      <span class="svgCode" @click="getImagecode" style="float: right;cursor: pointer;" v-html="codeImage"></span>
                     </div>
                     <div style="text-align: left;line-height: 36px;margin-top: 3px;">
                       <span style="display: inline-block;">
-                        <el-input
-                          style="width: 178px;"
-                          size="small"
-                          placeholder="请输入验证码"
-                          v-model="verify_code">
-                        </el-input>
+                        <el-input style="width: 178px;" size="small" placeholder="请输入验证码" v-model="verify_code" />
                       </span>
-                      <el-button v-show="!isNUm" style="float: right;" size="medium" type="primary"
-                                 :disabled="disabledTime" @click="getCode">{{time}}
-                      </el-button>
-                      <el-button v-show="isNUm"
-                                 style="float: right;background-color: #eeeeee !important;border-color: #eeeeee !important;color:#757575 !important; "
-                                 size="medium" type="primary" :disabled="disabledTime" @click="getCode">{{time}}
-                      </el-button>
+                      <el-button v-show="!isNUm" style="float: right;" size="medium" type="primary" :disabled="disabledTime" @click="getCode">{{time}}</el-button>
+                      <el-button v-show="isNUm" style="float: right;background-color: #eeeeee !important;border-color: #eeeeee !important;color:#757575 !important; " size="medium" type="primary" :disabled="disabledTime" @click="getCode">{{time}}</el-button>
                     </div>
-                    <el-button style="width: 100%;margin-top: 35px;" size="medium" type="primary" @click="submit">登 录
-                    </el-button>
+                    <el-button style="width: 100%;margin-top: 35px;" size="medium" type="primary" @click="submit">登 录</el-button>
                     <div style="font-size: 12px;color: #333333;text-align: left;margin-top: 30px;">
-                      <span  @click="handleJoinCompany" style="float: right;cursor: pointer;">还没有账号？<span
-                        style="color:#00A0E9;">免费注册</span></span></div>
+                      <span @click="handleJoinCompany" style="float: right;cursor: pointer;">还没有账号？<span style="color:#00A0E9;">免费注册</span></span>
+                    </div>
                   </div>
                 </div>
               </div>
