@@ -13,12 +13,12 @@
             <span @click="handleJoinCompany" style="cursor: pointer" class="user-company-link">还未加入公司，前去注册</span>
           </div>
         </div>
-        <div class="right" v-if="userName">
-          <span class="userInfoName" style="margin-right: 20px" :underline="false">{{ userName }}</span>
+        <div class="right" v-if="name">
+          <span class="userInfoName" style="margin-right: 20px" :underline="false">{{ name }}</span>
           <span @click="handleLogOut" style="margin-right: 20px; cursor: pointer" class="logout-btn" :underline="false">登出</span>
         </div>
         <div v-else>
-          <span @click="goToLogin" style="margin-right: 20px; cursor: pointer" class="logout-btn" :underline="false">登出</span>
+          <span @click="handleLogOut" style="margin-right: 20px; cursor: pointer" class="logout-btn" :underline="false">登出</span>
         </div>
       </div>
     </div>
@@ -96,12 +96,12 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: "home",
   data() {
     return {
       isJoinCompany: true,
-      userName: "陈先生",
       saleManage:[
           {title: '新建销单', url:'/saleManage/createSaleOrder'},
           {title: '协同接单', url:'/saleManage/synergyOrderManage'},
@@ -138,6 +138,9 @@ export default {
         {title: '基本信息', url:'/enterpriseManage/basicInfo'},
       ]
     };
+  },
+  computed: {
+    ...mapGetters(['name'])
   },
   methods: {
     toDetailPage(item){
