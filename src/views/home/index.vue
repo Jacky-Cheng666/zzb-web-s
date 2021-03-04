@@ -26,13 +26,13 @@
       <div class="ad-wrap">
         <el-carousel :interval="5000" trigger="click" >
           <el-carousel-item v-for="item in 4" :key="item">
-            <img style="width:1440px;height:340px" src="../../assets/imgs/banner.png" alt="">
+            <img style="width:100%;height:300px" src="../../assets/imgs/banner.png" alt="">
           </el-carousel-item>
         </el-carousel>
       </div>
 
       <div class="hot-link">
-        <el-card class="box-card" style="width:320px">
+        <el-card class="box-card" style="width:300px">
             <div slot="header" class="clearfix">
                 <span>我的任务</span>
                 <i style="float: right" class="el-icon-plus"></i>
@@ -158,7 +158,7 @@ export default {
     background-color: #303f56;
     margin-bottom: 24px;
     .nav {
-      width: 1440px;
+      width: 80%;
       height: 100%;
       margin: 0 auto;
       display: flex;
@@ -176,7 +176,7 @@ export default {
     }
   }
   .content-wrap {
-    width: 1440px;
+    width: 80%;
     margin: 0 auto;
     .ad-wrap {
       width: 100%;
@@ -191,7 +191,7 @@ export default {
   }
   .dsasbord-content{
       height: 300px;
-      margin-bottom: 24px;
+      margin-bottom: 10px;
   }
   .bottom{
       text-align: center;
