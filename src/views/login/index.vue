@@ -59,7 +59,8 @@
 import axios from "axios"
 // import Bus from "./common/bus.js"
 // import common from "./common/common.js"
-import { get_image_check_code_info } from '@/api/user.js'
+import { get_image_check_code_info, login, login_get_code } from '@/api/user.js'
+import { setToken } from '@/utils/auth.js'
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 
 export default {
@@ -87,32 +88,34 @@ export default {
         verify_code: "",
         interval: "",
         checkPhone: false,
-        isNUm: false
+        isNUm: false,
+        redirect: undefined,
+        otherQuery: {}
       }
     },
-    beforeRouteEnter(to,from,next){
-      //判断url是否带参数
-      let url = window.location.href
-      let query = url.split('?')[1]
-      let rlt = ''
-      if(query){
-        //带参数
-        rlt = query.split('=')[1].split('#')[0]
-        //执行注销
-        if(rlt === 'logout'){
-          axios.post('/user/logout',{
-            access_token: this.$store.state.access_token
-          })
-          window.localStorage.clear()
-          next()
-        } else{
-          next()
-        }
-      } else {
-        //不带参数
-        next()
-      }
-    },
+    // beforeRouteEnter(to,from,next){
+    //   //判断url是否带参数
+    //   let url = window.location.href
+    //   let query = url.split('?')[1]
+    //   let rlt = ''
+    //   if(query){
+    //     //带参数
+    //     rlt = query.split('=')[1].split('#')[0]
+    //     //执行注销
+    //     if(rlt === 'logout'){
+    //       axios.post('/user/logout',{
+    //         access_token: this.$store.state.access_token
+    //       })
+    //       window.localStorage.clear()
+    //       next()
+    //     } else{
+    //       next()
+    //     }
+    //   } else {
+    //     //不带参数
+    //     next()
+    //   }
+    // },
     created(){
       this.getImagecode()
     },
@@ -146,7 +149,7 @@ export default {
           this.disabledTime = false
         }
       },
-      getCode(){
+      async getCode(){
         if (!this.image_code) {
           this.$message({
             showClose: true,
@@ -157,37 +160,27 @@ export default {
         }
         let _this = this
         // 手机验证码
-        axios.post('/user/login_get_code', {
+        let res = await login_get_code({
           phone: this.phone,
           terminal_id: this.phone,
           code_id: this.code_id,
           image_code: this.image_code,
-        })
-          .then(response => {
-            const result = response.data
-            if (result.code == 0) {
-              this.disabledTime = true
-              this.interval = setInterval(() => {
-                this.currentTime--;
-                this.time = this.currentTime + '秒'
-                if (this.currentTime <= 0) {
-                  clearInterval(_this.interval)
-                  this.time = '重新发送'
-                  this.currentTime = 61
-                  this.disabledTime = false
-                }
-              }, 1000)
-            } 
-            // else if (result.code == 255){
-            //   this.$message({
-            //     type: 'warning',
-            //     message: '图片验证码错误!'
-            //   })
-            //   return
-            // }
-          })
+        });
+        if(res.code===0){
+          this.disabledTime = true
+          this.interval = setInterval(() => {
+            this.currentTime--;
+            this.time = this.currentTime + '秒'
+            if (this.currentTime <= 0) {
+              clearInterval(_this.interval)
+              this.time = '重新发送'
+              this.currentTime = 61
+              this.disabledTime = false
+            }
+          }, 1000)
+        }
       },
-      submit(){
+      async submit(){
         if (!this.checkPhone) {
           this.$message({
             showClose: true,
@@ -204,33 +197,13 @@ export default {
           return
         }
         //登录请求
-        axios.post('/user/register_with_code', {
+        this.$store.dispatch('user/login', {
           phone: this.phone,
           terminal_id: this.phone,
           verify_code: this.verify_code
+        }).then(()=>{
+          this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
         })
-          .then(response => {
-            let result = response.data
-            if (result.code == 0){
-              this.access_token = result.access_token
-              localStorage.setItem('token', this.access_token)
-              localStorage.setItem('userInfo', JSON.stringify(result.profile))
-              //登录完之后跳转
-              this.$store.commit("setUserInfo", JSON.parse(localStorage.getItem('userInfo')))
-              this.$store.commit("setAccessToken", localStorage.getItem('token'))
-              this.$router.replace({
-                path: '/home'
-              })
-            } 
-            // else if(result.code == 1){
-            //   this.$message({
-            //     type: 'warning',
-            //     message: '验证码错误或已过期!'
-            //   });
-            //   return
-            // }
-          })
-
       },
       loginBtn(e){
         let _this = this
@@ -245,7 +218,15 @@ export default {
       handleJoinCompany(){
         let tmp = corpUrl + '?linkLogin=true'
         window.location.href = (tmp)
-      }
+      },
+      getOtherQuery(query) {
+      return Object.keys(query).reduce((acc, cur) => {
+        if (cur !== 'redirect') {
+          acc[cur] = query[cur]
+        }
+        return acc
+      }, {})
+    }
     },
     components: {},
     mounted(){
@@ -259,6 +240,16 @@ export default {
     watch: {
       time(){
         this.hasNum()
+      },
+      $route: {
+        handler: function(route) {
+          const query = route.query
+          if (query) {
+            this.redirect = query.redirect
+            this.otherQuery = this.getOtherQuery(query)
+          }
+        },
+        immediate: true
       }
     }
 }

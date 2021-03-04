@@ -8,9 +8,17 @@ export function get_image_check_code_info(data) {
   })
 }
 
+export function login_get_code(data) {
+  return request({
+    url: '/user/login_get_code',
+    method: 'post',
+    data
+  })
+}
+
 export function login(data) {
   return request({
-    url: '/vue-admin-template/user/login',
+    url: '/user/register_with_code',
     method: 'post',
     data
   })
