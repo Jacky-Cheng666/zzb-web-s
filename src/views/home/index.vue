@@ -140,11 +140,21 @@ export default {
     };
   },
   methods: {
-    handleLogOut() {},
     toDetailPage(item){
       if(item.url){
         this.$router.push(item.url)
       }
+    },
+    handleLogOut() {
+      this.$confirm('确定登出吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async()=>{
+        await this.$store.dispatch('user/logout')
+        this.$router.replace(`/login`)
+      }).catch(()=>{})
+      
     }
   },
 };
