@@ -1,14 +1,16 @@
 import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
+import Cookies from 'js-cookie'
 
 const getDefaultState = () => {
   return {
     token: getToken(),
-    name: '',
+    name: Cookies.getJSON('profile').name,
     avatar: '',
     introduction: '',
-    roles: []
+    roles: [],
+    profile: Cookies.getJSON('profile')
   }
 }
 
@@ -32,6 +34,9 @@ const mutations = {
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
+  },
+  SET_PROFILE: (state, profile) => {
+    state.profile = profile
   }
 }
 
@@ -40,8 +45,12 @@ const actions = {
   login({ commit }, userInfo) {
     return new Promise((resolve, reject) => {
       login({ ...userInfo }).then(response => {
+        // console.log('登录',response);
         commit('SET_TOKEN', response.access_token)
+        commit('SET_NAME', response.profile.name)
+        commit('SET_PROFILE', response.profile)
         setToken(response.access_token)
+        Cookies.set('profile', response.profile)
         resolve(response)
       }).catch(error => {
         reject(error)
@@ -53,9 +62,9 @@ const actions = {
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
       let data = {
-        avatar: "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif",
-        introduction: "I am a super administrator",
-        name: "Super Admin",
+        avatar: state.avatar,
+        introduction: state.introduction,
+        name: state.name,
         roles: ["admin"]
       }
       const { roles, name, avatar, introduction } = data
