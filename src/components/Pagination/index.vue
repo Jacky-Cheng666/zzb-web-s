@@ -10,7 +10,9 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
     />
-    <slot></slot>
+    <div>
+      <slot></slot>
+    </div>
   </div>
 </template>
 

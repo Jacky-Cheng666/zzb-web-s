@@ -43,7 +43,7 @@
       </el-form-item>
     </el-form>
 
-    <el-table v-loading="loading" ref="multipleTable" :data="rows" stripe :height="screen_height-340" @selection-change="changeFun" style="width: 100%" :default-sort="{prop:'element_code', order: 'ascending'}">
+    <el-table class="mb8" v-loading="loading" ref="multipleTable" :data="rows" stripe :height="screen_height-340" @selection-change="changeFun" style="width: 100%" :default-sort="{prop:'element_code', order: 'ascending'}">
       <el-table-column align="center" type="selection" width="50" fixed />
       <el-table-column align="center" prop="element_code" label="物料代码" show-overflow-tooltip width="120px" sortable />
       <el-table-column align="center" prop="element_name" label="名称" show-overflow-tooltip width="360px" sortable />
@@ -65,41 +65,56 @@
       </el-table-column>
     </el-table>
 
-    <div class="footer">
-        <el-row>
-          <el-col :span="18" style="margin-top: 6px;">
-            <el-pagination
-              style="margin-left:220px"
-              prev-text="上一页"
-              next-text	="下一页"
-              @size-change="handleSizeChange"
-              @current-change="handleCurrentChange"
-              :current-page="currentPage"
-              :page-sizes="[10, 30, 50, 100,200]"
-              :page-size="pageSize"
-              layout="prev, pager, next, sizes, total, jumper"
-              :total="count"
-            ></el-pagination>
-          </el-col>
+    <!-- <div class="footer">
+      <el-row>
+        <el-col :span="18" style="margin-top: 6px;">
+          <el-pagination
+            style="margin-left:220px"
+            prev-text="上一页"
+            next-text	="下一页"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-sizes="[10, 30, 50, 100,200]"
+            :page-size="pageSize"
+            layout="prev, pager, next, sizes, total, jumper"
+            :total="count"
+          ></el-pagination>
+        </el-col>
 
-          <el-col :span="6">
-            <div style="margin-top: 6px;float:right;">
-              <span class="downloadSty" @click="exportTemplate">
-                <img style="vertical-align:middle;margin-top:-4px;margin-right:4px" src="@/assets/imgs/download.png" alt="">
-                <span style="font-size: 14px;color:#333333;">下载模板</span>
-              </span>
+        <el-col :span="6">
+          <div style="margin-top: 6px;float:right;">
+            <span class="downloadSty" @click="exportTemplate">
+              <img style="vertical-align:middle;margin-top:-4px;margin-right:4px" src="@/assets/imgs/download.png" alt="">
+              <span style="font-size: 14px;color:#333333;">下载模板</span>
+            </span>
 
-              <span class="downloadSty" @click="uploadFile">
-                <img style="vertical-align:middle;margin-top:-4px;margin-right:4px" src="@/assets/imgs/import.png" alt="">
-                <span style="font-size: 14px;color:#333333;">批量导入</span>
-              </span>
-              <el-button style="margin-left:5px" icon="el-icon-delete" size="mini" @click="deleteSafeElements" type="danger">删除</el-button>
-              <el-button icon="el-icon-check" size="mini" @click="submit" type="success">提交</el-button>
-              <!-- <el-button icon="el-icon-back" size="mini" @click="goToElementsManage">退出</el-button> -->
-            </div>
-          </el-col>
-        </el-row>
-      </div>
+            <span class="downloadSty" @click="uploadFile">
+              <img style="vertical-align:middle;margin-top:-4px;margin-right:4px" src="@/assets/imgs/import.png" alt="">
+              <span style="font-size: 14px;color:#333333;">批量导入</span>
+            </span>
+            <el-button style="margin-left:5px" icon="el-icon-delete" size="mini" @click="deleteSafeElements" type="danger">删除</el-button>
+            <el-button icon="el-icon-check" size="mini" @click="submit" type="success">提交</el-button>
+            <el-button icon="el-icon-back" size="mini" @click="goToElementsManage">退出</el-button>
+          </div>
+        </el-col>
+      </el-row>
+    </div> -->
+
+    <pagination :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="handleCurrentChange">
+      <span class="downloadSty" @click="exportTemplate">
+        <img style="vertical-align:middle;margin-top:-4px;margin-right:4px" src="@/assets/imgs/download.png" alt="">
+        <span style="font-size: 14px;color:#333333;">下载模板</span>
+      </span>
+
+      <span class="downloadSty" @click="uploadFile">
+        <img style="vertical-align:middle;margin-top:-4px;margin-right:4px" src="@/assets/imgs/import.png" alt="">
+        <span style="font-size: 14px;color:#333333;">批量导入</span>
+      </span>
+      <el-button style="margin-left:5px" icon="el-icon-delete" size="mini" @click="deleteSafeElements" type="danger">删除</el-button>
+      <el-button icon="el-icon-check" size="mini" @click="submit" type="success">提交</el-button>
+      <!-- <el-button icon="el-icon-back" size="mini" @click="goToElementsManage">退出</el-button> -->
+    </pagination>
   </div>
 </template>
 
@@ -110,7 +125,11 @@ export default {
   data() {
     return {
       loading: false,
-      queryParams: {},
+      queryParams: {
+        pageNum: 1,
+        pageSize: 100,
+      },
+      total: 120,
       inputValue: "",
       status: "全部",
       currentPage: 1,
@@ -172,9 +191,9 @@ export default {
   .footer {
     text-align: center;
     margin-top: 5px;
-    .downloadSty {
-      margin: 0 5px;
-    }
+  }
+  .downloadSty {
+    margin: 0 5px;
   }
 }
 </style>
