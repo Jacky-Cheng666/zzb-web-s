@@ -32,11 +32,22 @@ module.exports = {
   devServer: {
     port: port,
     open: true,
+    host: '0.0.0.0',
     overlay: {
       warnings: false,
       errors: true
     },
-    before: require('./mock/mock-server.js')
+    proxy: {//配置跨域
+      '/api': {
+          target: process.env.VUE_APP_BASE_API,//填写你们真实的后台接口
+          ws: true,
+          changOrigin: true,//允许跨域
+          secure: false,
+          pathRewrite: {
+            '^/api': ''//请求的时候使用这个api就可以
+          }
+      }
+    }
   },
   lintOnSave: false,
   configureWebpack: {

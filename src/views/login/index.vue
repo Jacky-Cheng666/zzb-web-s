@@ -59,6 +59,7 @@
 import axios from "axios"
 // import Bus from "./common/bus.js"
 // import common from "./common/common.js"
+import { get_image_check_code_info } from '@/api/user.js'
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 
 export default {
@@ -116,16 +117,12 @@ export default {
       this.getImagecode()
     },
     methods: {
-      getImagecode(){
-        // 图形验证码
-        axios.post('/user/get_image_check_code_info', {})
-          .then(response => {
-            let result = response.data
-            if (result.code == 0) {
-              this.code_id = result.message.codeID
-              this.codeImage = result.message.codeImage
-            }
-          })
+      async getImagecode(){
+        let res = await get_image_check_code_info({})
+        if (res.code == 0) {
+          this.code_id = res.message.codeID
+          this.codeImage = res.message.codeImage
+        }
       },
       herfBlank(){
         window.open("http://www.beian.miit.gov.cn/state/outPortal/loginPortal.action")
