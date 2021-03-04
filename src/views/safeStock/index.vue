@@ -1,6 +1,6 @@
 <template>
   <div class="app-container safeStock">
-    <div class="header">
+    <!-- <div class="header" style="display:none">
       <div class="left">
         <span class="topCtrlTile">安全库存</span>
         <el-input style="width: 180px; margin-left: 10px" placeholder="输入任意内容搜索" suffix-icon="el-icon-search" size="mini" v-model="inputValue" @input="searchSafeStorage" />
@@ -23,9 +23,27 @@
           <el-option key="已设置" label="已设置" value="已设置"></el-option>
         </el-select>
       </div>
-    </div>
+    </div> -->
 
-    <el-table ref="multipleTable" :data="rows" stripe :height="screen_height-340" @selection-change="changeFun" style="width: 100%" :default-sort="{prop:'element_code', order: 'ascending'}">
+    <el-form class="mb10" :model="queryParams" ref="queryForm" :inline="true">
+      <el-form-item>
+        <el-input v-model="queryParams.inputValue" placeholder="输入关键字" clearable size="small" style="width: 180px" @keyup.enter.native="handleQuery"/>
+      </el-form-item>
+
+      <el-form-item>
+        <el-select @change="isSetChange" v-model="queryParams.invoiceStatus" size="small" style="width: 100px">
+          <el-option key="全部" label="全部" value="全部"></el-option>
+          <el-option key="未设置" label="未设置" value="未设置"></el-option>
+          <el-option key="已设置" label="已设置" value="已设置"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+      </el-form-item>
+    </el-form>
+
+    <el-table v-loading="loading" ref="multipleTable" :data="rows" stripe :height="screen_height-340" @selection-change="changeFun" style="width: 100%" :default-sort="{prop:'element_code', order: 'ascending'}">
       <el-table-column align="center" type="selection" width="50" fixed />
       <el-table-column align="center" prop="element_code" label="物料代码" show-overflow-tooltip width="120px" sortable />
       <el-table-column align="center" prop="element_name" label="名称" show-overflow-tooltip width="360px" sortable />
@@ -39,7 +57,7 @@
           <i class="el-icon-edit"></i>
         </template>
       </el-table-column>
-      <el-table-column prop="max_storage" label="库存上限" width="140px" show-overflow-tooltip>
+      <el-table-column align="center" prop="max_storage" label="库存上限" width="140px" show-overflow-tooltip>
         <template slot-scope="scope">
           <input @change="limitMaxStorage($event,scope.row)" type="number" class="table_input" v-model.number="scope.row.max_storage"/>
           <i class="el-icon-edit"></i>
@@ -66,7 +84,16 @@
 
           <el-col :span="6">
             <div style="margin-top: 6px;float:right;">
-              <el-button icon="el-icon-delete" size="mini" @click="deleteSafeElements" type="danger">删除</el-button>
+              <span class="downloadSty" @click="exportTemplate">
+                <img style="vertical-align:middle;margin-top:-4px;margin-right:4px" src="@/assets/imgs/download.png" alt="">
+                <span style="font-size: 14px;color:#333333;">下载模板</span>
+              </span>
+
+              <span class="downloadSty" @click="uploadFile">
+                <img style="vertical-align:middle;margin-top:-4px;margin-right:4px" src="@/assets/imgs/import.png" alt="">
+                <span style="font-size: 14px;color:#333333;">批量导入</span>
+              </span>
+              <el-button style="margin-left:5px" icon="el-icon-delete" size="mini" @click="deleteSafeElements" type="danger">删除</el-button>
               <el-button icon="el-icon-check" size="mini" @click="submit" type="success">提交</el-button>
               <!-- <el-button icon="el-icon-back" size="mini" @click="goToElementsManage">退出</el-button> -->
             </div>
@@ -82,6 +109,8 @@ export default {
   name: "safeStock",
   data() {
     return {
+      loading: false,
+      queryParams: {},
       inputValue: "",
       status: "全部",
       currentPage: 1,
@@ -106,41 +135,46 @@ export default {
     handleCurrentChange(){},
     deleteSafeElements(){},
     submit(){},
-    goToElementsManage(){}
+    goToElementsManage(){},
+    handleQuery(){},
+    resetQuery(){}
   },
 };
 </script>
 
 <style lang="scss">
 .safeStock {
-  .header {
-    height: 38px;
-    border: 1px solid #e5e5e5;
-    background-color: #fff;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
-    .right {
-      line-height: 36px;
-    }
-    .topCtrlTile {
-      height: 36px;
-      display: inline-block;
-      line-height: 38px;
-      width: 88px;
-      text-align: center;
-      font-size: 12px;
-      background: rgba(227, 227, 227, 1);
-      border-right: 1px solid #ccc;
-    }
+  // .header {
+  //   height: 38px;
+  //   border: 1px solid #e5e5e5;
+  //   background-color: #fff;
+  //   margin-bottom: 10px;
+  //   display: flex;
+  //   justify-content: space-between;
+  //   .right {
+  //     line-height: 36px;
+  //   }
+  //   .topCtrlTile {
+  //     height: 36px;
+  //     display: inline-block;
+  //     line-height: 38px;
+  //     width: 88px;
+  //     text-align: center;
+  //     font-size: 12px;
+  //     background: rgba(227, 227, 227, 1);
+  //     border-right: 1px solid #ccc;
+  //   }
     
-  }
+  // }
   .table_input {
     width: 80% !important;
   }
   .footer {
     text-align: center;
     margin-top: 5px;
+    .downloadSty {
+      margin: 0 5px;
+    }
   }
 }
 </style>
