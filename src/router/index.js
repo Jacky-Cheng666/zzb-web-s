@@ -304,7 +304,7 @@ export const asyncRoutes = [
         path: 'basicInfo',
         name: 'basicInfo',
         component: () => import('@/views/basicInfo/index'),
-        meta: { title: '基本信息',icon: 'el-icon-info' }
+        meta: { title: '基本信息',icon: 'el-icon-info', noCache: true}
       },
       {
         path: 'addressBook',
