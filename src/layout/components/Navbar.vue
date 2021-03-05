@@ -8,7 +8,7 @@
       <search id="header-search" class="right-menu-item" />
       <!-- <screenfull id="screenfull" class="right-menu-item hover-effect" /> -->
       
-      <el-tooltip effect="dark" content="切换公司主体" placement="bottom" class="right-menu-item">
+      <!-- <el-tooltip effect="dark" content="切换公司主体" placement="bottom" class="right-menu-item">
         <el-dropdown trigger="click" @command="switchCompany">
           <div>
             <svg-icon class-name="company-icon" icon-class="company" />
@@ -19,7 +19,7 @@
             </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-      </el-tooltip>
+      </el-tooltip> -->
 
       <el-tooltip class="item" effect="dark" content="返回主页" placement="bottom">
           <router-link to="/">
@@ -27,23 +27,6 @@
           </router-link>
       </el-tooltip>
       
-      <!-- <el-dropdown class="avatar-container" trigger="click">
-        <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
-          <i class="el-icon-caret-bottom" />
-        </div>
-        <el-dropdown-menu slot="dropdown" class="user-dropdown">
-          <router-link to="/">
-            <el-dropdown-item>返回首页</el-dropdown-item>
-          </router-link>
-          <router-link to="/">
-            <el-dropdown-item>系统设置</el-dropdown-item>
-          </router-link>
-          <el-dropdown-item divided @click.native="logout">
-            <span style="display:block;">退出登录</span>
-          </el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown> -->
     </div>
   </div>
 </template>
