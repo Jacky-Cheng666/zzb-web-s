@@ -7,6 +7,7 @@ const getters = {
   permission_routes: state => state.permission.routes,
   screen_height: state => state.app.screenHeight,
   companies: state => state.user.profile?state.user.profile.companies: [],
-  login_company_no: state => state.user.company_no
+  login_company_no: state => state.user.company_no,
+  tax_list: state => state.cwm.tax_list
 }
 export default getters

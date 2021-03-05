@@ -29,6 +29,7 @@ router.beforeEach(async(to, from, next) => {
           // console.log('accessRoutes',accessRoutes);
           router.addRoutes(accessRoutes)
           store.commit('app/CALCULATE_SCREEN_HEIGHT')
+          store.dispatch('cwm/getTaxList')
           next({ ...to, replace: true })
 
         } catch (error) {
