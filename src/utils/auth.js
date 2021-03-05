@@ -1,15 +1,11 @@
-import Cookies from 'js-cookie'
-
-const TokenKey = 'zzb_web_s_token'
-
-export function getToken() {
-  return Cookies.get(TokenKey)
+export function getToken(TokenKey) {
+  return JSON.parse(window.localStorage.getItem(TokenKey))
 }
 
-export function setToken(token) {
-  return Cookies.set(TokenKey, token)
+export function setToken(TokenKey,token) {
+  return window.localStorage.setItem(TokenKey, JSON.stringify(token))
 }
 
-export function removeToken() {
-  return Cookies.remove(TokenKey)
+export function removeToken(TokenKey) {
+  return window.localStorage.removeItem(TokenKey)
 }

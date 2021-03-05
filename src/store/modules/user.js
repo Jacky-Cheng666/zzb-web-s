@@ -5,12 +5,11 @@ import Cookies from 'js-cookie'
 
 const getDefaultState = () => {
   return {
-    token: getToken(),
-    name: Cookies.getJSON('profile')?Cookies.getJSON('profile').name:'',
-    avatar: '',
-    introduction: '',
+    token: getToken('zzb_web_s_token'),
+    name: getToken('profile')?getToken('profile').name:'',
     roles: [],
-    profile: Cookies.getJSON('profile')?Cookies.getJSON('profile'):''
+    profile: getToken('profile'),
+    org: getToken('org')
   }
 }
 
@@ -23,20 +22,17 @@ const mutations = {
   SET_TOKEN: (state, token) => {
     state.token = token
   },
-  SET_INTRODUCTION: (state, introduction) => {
-    state.introduction = introduction
-  },
   SET_NAME: (state, name) => {
     state.name = name
-  },
-  SET_AVATAR: (state, avatar) => {
-    state.avatar = avatar
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
   },
   SET_PROFILE: (state, profile) => {
     state.profile = profile
+  },
+  SET_ORG: (state,org) => {
+    state.org = org;
   }
 }
 
@@ -45,12 +41,14 @@ const actions = {
   login({ commit }, userInfo) {
     return new Promise((resolve, reject) => {
       login({ ...userInfo }).then(response => {
-        // console.log('登录',response);
+        console.log('登录',response);
         commit('SET_TOKEN', response.access_token)
         commit('SET_NAME', response.profile.name)
         commit('SET_PROFILE', response.profile)
-        setToken(response.access_token)
-        Cookies.set('profile', response.profile)
+        commit('SET_ORG', response.org)
+        setToken('zzb_web_s_token',response.access_token)
+        setToken('profile', response.profile)
+        setToken('org', response.org)
         resolve(response)
       }).catch(error => {
         reject(error)
@@ -62,26 +60,13 @@ const actions = {
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
       let data = {
-        avatar: state.avatar,
-        introduction: state.introduction,
         name: state.name,
         roles: ["admin"]
       }
-      const { roles, name, avatar, introduction } = data
-      // getInfo(state.token).then(response => {
-      //   const { data } = response
-
-      //   if (!data) {
-      //     return reject('Verification failed, please Login again.')
-      //   }
+      const { roles, name } = data
       commit('SET_ROLES', roles)
       commit('SET_NAME', name)
-      commit('SET_AVATAR', avatar)
-      commit('SET_INTRODUCTION', introduction)
       resolve(data)
-      // }).catch(error => {
-      //   reject(error)
-      // })
     })
   },
 
@@ -89,7 +74,7 @@ const actions = {
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
       logout({access_token: state.token}).then((res) => {
-        removeToken() // must remove  token  first
+        removeToken('zzb_web_s_token') // must remove  token  first
         resetRouter()
         commit('RESET_STATE')
         resolve()
@@ -102,7 +87,7 @@ const actions = {
   // remove token
   resetToken({ commit }) {
     return new Promise(resolve => {
-      removeToken() // must remove  token  first
+      removeToken('zzb_web_s_token') // must remove  token  first
       commit('RESET_STATE')
       resolve()
     })

@@ -13,7 +13,7 @@ const whiteList = ['/login']
 router.beforeEach(async(to, from, next) => {
   NProgress.start()
  
-  const hasToken = getToken()
+  const hasToken = getToken('zzb_web_s_token')
   if (hasToken) {
     if (to.path === '/login') {
       next({ path: '/' })
