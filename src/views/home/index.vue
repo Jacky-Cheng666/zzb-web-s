@@ -177,11 +177,23 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(async ()=>{
-        let res = await switch_company({
+        let response = await switch_company({
           access_token: this.token,
-          company_no: this.login_company_no
+          company_no: this.company_no
         })
-        console.log('切换主题', res);
+        console.log('切换主题', response);
+        if(res.code===0){
+          // this.$store.commit('user/SET_TOKEN', response.access_token)
+          // this.$store.commit('user/SET_NAME', response.profile.name)
+          // this.$store.commit('user/SET_PROFILE', response.profile)
+          // this.$store.commit('user/SET_ORG', response.org)
+          // this.$store.commit('user/SET_COMPANY_NO', response.company_no)
+
+          // setToken('zzb_web_s_token',response.access_token)
+          // setToken('profile', response.profile)
+          // setToken('org', response.org)
+          // setToken('company_no', response.company_no)
+        }
       }).catch(()=>{})
     }
   },
