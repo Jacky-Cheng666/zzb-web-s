@@ -26,7 +26,7 @@ export function login(data) {
 
 export function switch_company(data) {
   return request({
-    url: '/home/user/switch_company',
+    url: '/corp/users/switch_company',
     method: 'post',
     data
   })
