@@ -18,7 +18,7 @@ export function login_get_code(data) {
 
 export function login(data) {
   return request({
-    url: '/user/register_with_code',
+    url: '/user/login_with_code',
     method: 'post',
     data
   })
