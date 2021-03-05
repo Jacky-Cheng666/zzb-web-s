@@ -6,11 +6,11 @@ import Cookies from 'js-cookie'
 const getDefaultState = () => {
   return {
     token: getToken(),
-    name: Cookies.getJSON('profile').name,
+    name: Cookies.getJSON('profile')?Cookies.getJSON('profile').name:'',
     avatar: '',
     introduction: '',
     roles: [],
-    profile: Cookies.getJSON('profile')
+    profile: Cookies.getJSON('profile')?Cookies.getJSON('profile'):''
   }
 }
 
