@@ -1,7 +1,6 @@
 import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
-import Cookies from 'js-cookie'
 
 const getDefaultState = () => {
   return {
@@ -9,7 +8,8 @@ const getDefaultState = () => {
     name: getToken('profile')?getToken('profile').name:'',
     roles: [],
     profile: getToken('profile'),
-    org: getToken('org')
+    org: getToken('org'),
+    company_no: getToken('company_no')
   }
 }
 
@@ -33,6 +33,9 @@ const mutations = {
   },
   SET_ORG: (state,org) => {
     state.org = org;
+  },
+  SET_COMPANY_NO: (state,company_no) => {
+    state.company_no = company_no;
   }
 }
 
@@ -46,9 +49,12 @@ const actions = {
         commit('SET_NAME', response.profile.name)
         commit('SET_PROFILE', response.profile)
         commit('SET_ORG', response.org)
+        commit('SET_COMPANY_NO', response.company_no)
+
         setToken('zzb_web_s_token',response.access_token)
         setToken('profile', response.profile)
         setToken('org', response.org)
+        setToken('company_no', response.company_no)
         resolve(response)
       }).catch(error => {
         reject(error)

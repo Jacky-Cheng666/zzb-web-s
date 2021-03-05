@@ -7,7 +7,11 @@
             <router-link to="/"><img src="../../assets/imgs/logo.png" class="logo-img" alt=""/></router-link>
           </div>
           <div v-if="isJoinCompany" class="user-company" style="font-size: 18px; margin-right: 120px">
-            <span class="user-company-name">深圳市智造帮科技有限公司</span>
+            <el-select v-if="companies && companies.length>1" style="font-size: 18px;color: white;margin-left: 0px;width: 240px;" v-model="company_no" @change="changeCompany" placeholder="请输入或者选择">
+              <el-option v-for="item in companies" :key="item.company_no" :label="item.name" :value="item.company_no" />
+            </el-select>
+
+            <span v-else class="user-company-name">{{company_name}}</span>
           </div>
           <div v-else>
             <span @click="handleJoinCompany" style="cursor: pointer" class="user-company-link">还未加入公司，前去注册</span>
@@ -97,11 +101,13 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { switch_company } from '@/api/user.js'
 export default {
   name: "home",
   data() {
     return {
       isJoinCompany: true,
+      company_no: '',
       saleManage:[
           {title: '新建销单', url:'/saleManage/createSaleOrder'},
           {title: '协同接单', url:'/saleManage/synergyOrderManage'},
@@ -139,8 +145,14 @@ export default {
       ]
     };
   },
+  created() {
+    this.company_no = this.login_company_no
+  },
   computed: {
-    ...mapGetters(['name'])
+    ...mapGetters(['name','companies','login_company_no','token']),
+    company_name(){
+      return this.$store.state.user.org.name
+    }
   },
   methods: {
     toDetailPage(item){
@@ -158,6 +170,19 @@ export default {
         this.$router.replace(`/login`)
       }).catch(()=>{})
       
+    },
+    changeCompany(){
+      this.$confirm('确定切换公司主体？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async ()=>{
+        let res = await switch_company({
+          access_token: this.token,
+          company_no: this.login_company_no
+        })
+        console.log('切换主题', res);
+      }).catch(()=>{})
     }
   },
 };
