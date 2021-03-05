@@ -44,7 +44,7 @@ const actions = {
   login({ commit }, userInfo) {
     return new Promise((resolve, reject) => {
       login({ ...userInfo }).then(response => {
-        console.log('登录',response);
+        // console.log('登录',response);
         commit('SET_TOKEN', response.access_token)
         commit('SET_NAME', response.profile.name)
         commit('SET_PROFILE', response.profile)
