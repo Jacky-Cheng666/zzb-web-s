@@ -15,3 +15,10 @@ export function get_tax_list(data) {
         data
     })
 }
+export function set_financial_book_name(data) {
+    return request({
+        url: '/corp/company/set_financial_book_name',
+        method: 'post',
+        data
+    })
+}

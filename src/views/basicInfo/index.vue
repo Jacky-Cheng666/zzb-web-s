@@ -4,8 +4,8 @@
       <div class="header">
         <div class="left">
           <span class="tipWord">账本信息</span>
-          <el-input style="width:120px" size="mini" placeholder="输入账本名称"></el-input>
-          <el-button size="mini" type="primary">保存账本名称</el-button>
+          <el-input v-model="financialBookName" style="width:120px" size="mini" placeholder="输入账本名称"></el-input>
+          <el-button @click="saveFinancialBook" size="mini" type="primary">保存账本名称</el-button>
         </div>
         <el-select style="width:102px;margin-right:10px" size="mini" @change="switchFinancialBook" v-model="CurrentFinancialBook" placeholder="请选择">
           <el-option v-for="item in bookList" :key="item.financial_book_no" :label="item.financial_book_name" :value="item.financial_book_no" />
@@ -110,7 +110,7 @@
 </template>
 
 <script>
-import { get_company_basic_info } from '@/api/enterpriseManage.js'
+import { get_company_basic_info, set_financial_book_name} from '@/api/enterpriseManage.js'
 import { mapGetters } from 'vuex'
 import { deepClone } from '@/utils/index.js'
 export default {
@@ -125,7 +125,8 @@ export default {
       financial_book_list: [],
       bookList: [],
       CurrentFinancialBook: "",
-      temp: ""
+      temp: "",
+      financialBookName: ""
     };
   },
   computed: {
@@ -183,6 +184,28 @@ export default {
           return true;
         }
       });
+    },
+    async saveFinancialBook(){
+      if (this.financialBookName.trim().length == 0) {
+        this.$message({
+          type: "warning",
+          message: "账本名称不能为空",
+        });
+        return;
+      }
+      let result = await set_financial_book_name({
+        access_token: this.token,
+        financial_book_no: this.CurrentFinancialBook,
+        financial_book_name: this.financialBookName.trim(),
+      })
+      if(result.code===0){
+        this.financialBookName = "";
+        this.$notify({
+          title: '成功',
+          message: '账本保存成功',
+          type: 'success'
+        });
+      }
     }
   },
 };
