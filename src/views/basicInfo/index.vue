@@ -7,8 +7,8 @@
           <el-input style="width:120px" size="mini" placeholder="输入账本名称"></el-input>
           <el-button size="mini" type="primary">保存账本名称</el-button>
         </div>
-        <el-select style="width:102px;margin-right:10px" size="mini" v-model="value" placeholder="请选择">
-          <el-option label="默认账本" value="001"></el-option>
+        <el-select style="width:102px;margin-right:10px" size="mini" @change="switchFinancialBook" v-model="CurrentFinancialBook" placeholder="请选择">
+          <el-option v-for="item in bookList" :key="item.financial_book_no" :label="item.financial_book_name" :value="item.financial_book_no" />
         </el-select>
       </div>
       <div class="info">
@@ -21,18 +21,18 @@
         <div class="content">
           <el-row style="margin-bottom:15px">
             <el-col :span="10">
-              <el-input size="mini" disabled style="width:680px" placeholder="公司名称"/>
+              <el-input size="mini" v-model="currentBookInfo.company_full_name" disabled style="width:680px" placeholder="公司名称"/>
             </el-col>
             <el-col :offset="4" :span="10">
-              <el-input size="mini" style="width:680px;margin-left:12px" placeholder="公司简称"></el-input>
+              <el-input size="mini" v-model="currentBookInfo.company_name" style="width:680px;margin-left:12px" placeholder="公司简称"></el-input>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="10">
-              <el-input size="mini" style="width:680px" placeholder="注册地址"></el-input>
+              <el-input size="mini" v-model="currentBookInfo.address" style="width:680px" placeholder="注册地址"></el-input>
             </el-col>
             <el-col :offset="4" :span="10">
-              <el-input size="mini" style="width:680px;margin-left:12px" placeholder="纳税识别码"></el-input>
+              <el-input size="mini" v-model="currentBookInfo.tax_identification" style="width:680px;margin-left:12px" placeholder="纳税识别码"></el-input>
             </el-col>
           </el-row>
         </div>
@@ -46,7 +46,7 @@
           </div>
         </div>
         <div class="content">
-          <el-table stripe :data="currentBookInfo.bank_account_list" style="width: 100%">
+          <el-table border stripe :data="currentBookInfo.bank_account_list" style="width: 100%">
             <el-table-column align="center" prop="type" label="类型" width="100"></el-table-column>
             <el-table-column align="center" prop="bank_name" label="银行" width="350"></el-table-column>
             <el-table-column align="center" prop="account_name" label="账户名"></el-table-column>
@@ -110,22 +110,80 @@
 </template>
 
 <script>
+import { get_company_basic_info } from '@/api/enterpriseManage.js'
+import { mapGetters } from 'vuex'
+import { deepClone } from '@/utils/index.js'
 export default {
   name: "basicInfo",
   data() {
     return {
-      value: "001",
       currentBookInfo: {
         bank_account_list: [{},{}]
       },
-      tax_list: [{tax_name:"96%"},{tax_name:"3%"}],
-      currentTax: "96%",
-      receive_info_list: [{default:true},{}]
+      currentTax: "",
+      receive_info_list: [],
+      financial_book_list: [],
+      bookList: [],
+      CurrentFinancialBook: "",
+      temp: ""
     };
+  },
+  computed: {
+    ...mapGetters(['token','tax_list'])
+  },
+  created() {
+    this.getCompanyBasicInfo();
   },
   methods: {
     defaultAddr(){},
-    deleteAddr(){}
+    deleteAddr(){},
+    async getCompanyBasicInfo(){
+      let result = await get_company_basic_info({
+        access_token: this.token
+      })
+      console.log('result', result);
+      if(result.code===0){
+        this.financial_book_list = result.financial_book_list;
+        this.financial_book_list.forEach((item) => {
+          if (!item.address) {
+            this.$set(item, "address", "");
+          }
+          if (!item.company_full_name) {
+            this.$set(item, "company_full_name", "");
+          }
+          if (!item.company_name) {
+            this.$set(item, "company_name", "");
+          }
+          if (!item.tax_identification) {
+            this.$set(item, "tax_identification", "");
+          }
+        });
+        this.bookList = this.financial_book_list.map((item) => {
+          return {
+            financial_book_no: item.financial_book_no,
+            financial_book_name: item.financial_book_name,
+          };
+        });
+        this.CurrentFinancialBook = this.temp ? this.temp: this.bookList[0].financial_book_no;
+        this.switchFinancialBook();
+        this.currentTax = result.tax_name;
+        this.bank_use_type_list = result.bank_use_type_list;
+        let obj = {};
+        this.bank_use_type_list.forEach((item) => {
+          obj[item.type] = item.name;
+        });
+        this.bankUseType = obj;
+        this.receive_info_list = result.receive_info_list;
+      }
+    },
+    switchFinancialBook(){
+      this.financial_book_list.some((item) => {
+        if (item.financial_book_no == this.CurrentFinancialBook) {
+          this.currentBookInfo = item;
+          return true;
+        }
+      });
+    }
   },
 };
 </script>
