@@ -151,7 +151,7 @@ export default {
   computed: {
     ...mapGetters(['name','companies','login_company_no','token']),
     company_name(){
-      return this.$store.state.user.org.name
+      return this.$store.state.user.org?this.$store.state.user.org.name:""
     }
   },
   methods: {

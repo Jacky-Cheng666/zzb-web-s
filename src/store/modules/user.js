@@ -80,7 +80,10 @@ const actions = {
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
       logout({access_token: state.token}).then((res) => {
-        removeToken('zzb_web_s_token') // must remove  token  first
+        removeToken('zzb_web_s_token')
+        removeToken('org')
+        removeToken('profile')
+        removeToken('company_no')
         resetRouter()
         commit('RESET_STATE')
         resolve()
@@ -93,7 +96,10 @@ const actions = {
   // remove token
   resetToken({ commit }) {
     return new Promise(resolve => {
-      removeToken('zzb_web_s_token') // must remove  token  first
+      removeToken('zzb_web_s_token')
+      removeToken('org')
+      removeToken('profile')
+      removeToken('company_no')
       commit('RESET_STATE')
       resolve()
     })
