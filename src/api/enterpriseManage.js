@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-
+// 基本信息
 export function get_company_basic_info(data) {
     return request({
         url: '/corp/company/get_company_basic_info',
@@ -64,6 +64,15 @@ export function set_company_tax(data) {
 export function set_receive_info_list(data) {
     return request({
         url: '/corp/company/set_receive_info_list',
+        method: 'post',
+        data
+    })
+}
+
+// 物料管理
+export function get_supplier_list(data) {
+    return request({
+        url: '/corp/company/get_supplier_list',
         method: 'post',
         data
     })

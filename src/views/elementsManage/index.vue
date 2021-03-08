@@ -126,6 +126,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { get_supplier_list } from '@/api/enterpriseManage.js'
 export default {
   name: 'elementsManage',
   data() {
@@ -142,12 +143,25 @@ export default {
       count: 0,
       currentPage: 1,
       pageSize: 50,
+      supplier_list: []
     }
   },
+  created() {
+    this.getSupplier();
+  },
   computed: {
-    ...mapGetters(['screen_height'])
+    ...mapGetters(['screen_height','token'])
   },
   methods: {
+    async getSupplier(){
+      let result = await get_supplier_list({
+        access_token: this.token
+      })
+      console.log('result',result);
+      if(result.code===0){
+        this.supplier_list = result.supplier_list;
+      }
+    },
     getWorkpieceElements(){},
     handleChangeRule(){},
     changeCheckType(){},
