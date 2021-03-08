@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container basicInfo">
+  <div class="app-container basicInfo" v-loading="loading" element-loading-text="加载中...">
     <div class="bookInfo">
       <div class="header">
         <div class="left">
@@ -167,6 +167,7 @@ export default {
       bank_use_type_list: [],
       isEdit: false,
       bankUseType: [],
+      loading: false
     };
   },
   computed: {
@@ -187,10 +188,12 @@ export default {
       this.receive_info_list.splice(index, 1);
     },
     async getCompanyBasicInfo(){
+      this.loading = true;
       let result = await get_company_basic_info({
         access_token: this.token
       })
       if(result.code===0){
+        this.loading = false;
         this.financial_book_list = result.financial_book_list;
         this.financial_book_list.forEach((item) => {
           if (!item.address) {
