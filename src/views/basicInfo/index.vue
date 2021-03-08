@@ -42,7 +42,7 @@
         <div class="title">
           <div style="color: #333;font-weight: bold">资金账户</div>
           <div>
-            <el-button size="mini" type="primary" icon="el-icon-plus">新增</el-button>
+            <el-button @click="showNewAccount" size="mini" type="primary" icon="el-icon-plus">新增</el-button>
           </div>
         </div>
         <div class="content">
@@ -52,12 +52,12 @@
             <el-table-column align="center" prop="account_name" label="账户名"></el-table-column>
             <el-table-column align="center" prop="account_id" label="账号" width="180"></el-table-column>
             <el-table-column align="center" prop="use_type" label="用途" width="60">
-              <template slot-scope="scope"></template>
+              <template slot-scope="scope">{{bankUseType[scope.row.use_type]}}</template>
             </el-table-column>
             <el-table-column align="center" prop label="操作" width="120">
               <template slot-scope="scope">
-                <el-button size="mini" type="text" icon="el-icon-edit">编辑</el-button>
-                <el-button size="mini" type="text" icon="el-icon-delete" class="text-danger">删除</el-button>
+                <el-button @click="editAccount(scope.row)" size="mini" type="text" icon="el-icon-edit">编辑</el-button>
+                <el-button @click="deleteAccount(scope.row)" size="mini" type="text" icon="el-icon-delete" class="text-danger">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -106,11 +106,46 @@
       <div class="content">
       </div>
     </div>
+
+    <!-- 新增账户对话框 -->
+    <el-dialog @close="dialogClose" width="28%" center title="资金账户" :visible.sync="dialogFormVisible">
+      <el-form :model="form">
+        <el-form-item>
+          <el-select size="small" style="width:150px" v-model="form.type" placeholder="选择类型">
+            <el-option label="银行账户" value="银行账户"></el-option>
+            <el-option label="现金" value="现金"></el-option>
+            <el-option label="企业支付宝" value="企业支付宝"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <div style="display:flex">
+            <el-input size="small" style="margin-right:20px" v-model="form.bank_name" autocomplete="off" placeholder="开户行" />
+            <el-select size="small" v-model="form.use_type" placeholder="选择用途" style="width:180px">
+              <el-option v-for="(item, index) in bank_use_type_list" :key="index" :label="item.name" :value="item.type" />
+            </el-select>
+          </div>
+        </el-form-item>
+        <el-form-item>
+          <div style="display:flex">
+            <el-input size="small" style="margin-right:20px" v-model="form.account_id" autocomplete="off" placeholder="账号" @blur="verifyAccount" :disabled="isEdit"/>
+            <el-input size="small" type="number" style="width:180px" v-model.number="form.money" autocomplete="off" placeholder="余额"/>
+          </div>
+        </el-form-item>
+        <el-form-item>
+          <el-input size="small" placeholder="账户名" v-model="form.account_name" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button size="mini" @click="dialogFormVisible = false">取 消</el-button>
+        <el-button size="mini" @click="addNewBank" type="primary">提 交</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { get_company_basic_info, set_financial_book_name, set_company_basic_info} from '@/api/enterpriseManage.js'
+import { get_company_basic_info, set_financial_book_name, set_company_basic_info, add_bank_account,
+set_bank_account, remove_bank_account } from '@/api/enterpriseManage.js'
 import { mapGetters } from 'vuex'
 import { deepClone } from '@/utils/index.js'
 export default {
@@ -126,7 +161,12 @@ export default {
       bookList: [],
       CurrentFinancialBook: "",
       temp: "",
-      financialBookName: ""
+      financialBookName: "",
+      dialogFormVisible: false,
+      form: {},
+      bank_use_type_list: [],
+      isEdit: false,
+      bankUseType: [],
     };
   },
   computed: {
@@ -236,6 +276,102 @@ export default {
         this.getCompanyBasicInfo();
       }
     },
+     // 验证账号
+    verifyAccount() {
+      if (this.form.account_id.length > 24) {
+        this.$message.error("银行卡号位数不能超过24");
+        this.form.account_id = "";
+      }
+    },
+    dialogClose(){
+      this.form = {};
+    },
+    editAccount(row){
+      this.isEdit = true;
+      this.form = deepClone(row);
+      this.dialogFormVisible = true;
+    },
+    async addNewBank(){
+      if (!this.isEdit) {
+        // 如果是新增
+        if (!this.form.type) {
+          this.$message.error("请选择类型");
+          return;
+        }
+        if (!this.form.bank_name) {
+          this.$message.error("开户行不能为空");
+          return;
+        }
+        if (!this.form.use_type) {
+          this.$message.error("请选择用途");
+          return;
+        }
+
+        if (!this.form.account_id) {
+          this.$message.error("账号不能为空");
+          return;
+        }
+        if (!this.form.account_name) {
+          this.$message.error("账户名不能为空");
+          return;
+        }
+        let result = await add_bank_account({
+          access_token: this.token,
+          bank_account: this.form,
+          financial_book_no: this.CurrentFinancialBook,
+        })
+        if(result.code===0){
+          this.$notify({
+            title: '成功',
+            message: '操作成功',
+            type: 'success'
+          });
+          this.dialogFormVisible = false;
+          this.temp = this.CurrentFinancialBook;
+          this.getCompanyBasicInfo();
+        }
+      } else {
+        // 编辑
+        let result = await set_bank_account({
+          access_token: this.token,
+          financial_book_no: this.CurrentFinancialBook,
+          bank_account: this.form,
+        })
+        if(result.code===0){
+          this.$notify({
+            title: '成功',
+            message: '操作成功',
+            type: 'success'
+          });
+          this.dialogFormVisible = false;
+          this.temp = this.CurrentFinancialBook;
+          this.getCompanyBasicInfo();
+        }
+      }
+    },
+    showNewAccount() {
+      this.isEdit = false;
+      this.dialogFormVisible = true;
+    },
+    deleteAccount(row){
+      this.$confirm("确认删除该银行账号, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(async () => {
+          let result = await remove_bank_account({
+            access_token: this.token,
+            bank_account_id: row.account_id,
+            financial_book_no: this.CurrentFinancialBook,
+          });
+          if(result.code===0){
+            this.temp = this.CurrentFinancialBook;
+            this.getCompanyBasicInfo();
+          }
+        })
+        .catch(() => {});
+    }
   },
 };
 </script>

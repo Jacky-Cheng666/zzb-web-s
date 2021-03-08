@@ -30,3 +30,27 @@ export function set_company_basic_info(data) {
         data
     })
 }
+
+export function add_bank_account(data) {
+    return request({
+        url: '/corp/company/add_bank_account',
+        method: 'post',
+        data
+    })
+}
+
+export function set_bank_account(data) {
+    return request({
+        url: '/corp/company/set_bank_account',
+        method: 'post',
+        data
+    })
+}
+
+export function remove_bank_account(data) {
+    return request({
+        url: '/corp/company/remove_bank_account',
+        method: 'post',
+        data
+    })
+}
