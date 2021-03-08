@@ -7,7 +7,7 @@
       </el-form-item>
 
       <el-form-item prop="status">
-        <el-select @change="isSetChange" v-model="queryParams.status" size="small" style="width: 100px">
+        <el-select v-model="queryParams.status" size="small" style="width: 100px">
           <el-option key="全部" label="全部" value="全部"></el-option>
           <el-option key="未设置" label="未设置" value="未设置"></el-option>
           <el-option key="已设置" label="已设置" value="已设置"></el-option>
@@ -51,6 +51,7 @@
         <img style="vertical-align:middle;margin-top:-4px;margin-right:4px" src="@/assets/imgs/import.png" alt="">
         <span style="font-size: 14px;color:#333333;">批量导入</span>
       </span>
+      <input type="file" @change="OnFileChanged(this)" ref="imFile" style="display: none" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>
       <el-button style="margin-left:5px" icon="el-icon-delete" size="mini" @click="deleteSafeElements" type="danger">删除</el-button>
       <el-button icon="el-icon-check" size="mini" @click="submit" type="success">提交</el-button>
       <!-- <el-button icon="el-icon-back" size="mini" @click="goToElementsManage">退出</el-button> -->
@@ -68,7 +69,7 @@ export default {
       loading: false,
       queryParams: {
         pageNum: 1,
-        pageSize: 50,
+        pageSize: 100,
         status: "全部",
         inputValue: "",
       },
@@ -107,11 +108,190 @@ export default {
       }
     },
     searchSafeStorage() {},
-    exportTemplate(){},
+    exportTemplate(){
+      window.location.href = process.env.VUE_APP_BASEURL + "/template/安全库存模板.xlsx";
+    },
     downloadTemp(){},
-    uploadFile(){},
-    OnFileChanged(){},
-    isSetChange(){},
+    uploadFile(){
+      this.imFile = this.$refs.imFile;
+      this.imFile.click();
+    },
+    OnFileChanged() {
+      let _this = this;
+      var files = this.imFile.files;
+      var file = new FileReader();
+      file.readAsArrayBuffer(files[0]);
+      file.onload = function(e) {
+        try {
+          var fileContent = e.target.result;
+          var wb = XLSX.read(_this.fixdata(fileContent), { type: "binary" });
+          var items = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+          _this.ReadElementList(items);
+          _this.$refs.imFile.value = "";
+        } catch (error) {
+          console.log(error);
+          return;
+        }
+      };
+    },
+    fixdata(data) {
+      // 文件流转BinaryString
+      var o = "";
+      var l = 0;
+      var w = 10240;
+      for (; l < data.byteLength / w; ++l) {
+        o += String.fromCharCode.apply(
+          null,
+          new Uint8Array(data.slice(l * w, l * w + w))
+        );
+      }
+      o += String.fromCharCode.apply(null, new Uint8Array(data.slice(l * w)));
+      return o;
+    },
+    ReadElementList(elemsRaw) {
+      let elementSafeStorage = [];
+
+      for (let i in elemsRaw) {
+        elemsRaw[i]["物料代码"] = elemsRaw[i]["物料代码"]
+          ? elemsRaw[i]["物料代码"].trim()
+          : elemsRaw[i]["物料代码"];
+        elemsRaw[i]["名称"] = elemsRaw[i]["名称"]
+          ? elemsRaw[i]["名称"].trim()
+          : elemsRaw[i]["名称"];
+        elemsRaw[i]["图号/规格型号"] = elemsRaw[i]["图号/规格型号"]
+          ? elemsRaw[i]["图号/规格型号"].trim()
+          : elemsRaw[i]["图号/规格型号"];
+        elemsRaw[i]["材质/品牌"] = elemsRaw[i]["材质/品牌"]
+          ? elemsRaw[i]["材质/品牌"].trim()
+          : elemsRaw[i]["材质/品牌"];
+
+        elemsRaw[i]["单位"] = elemsRaw[i]["单位"]
+          ? elemsRaw[i]["单位"].trim()
+          : elemsRaw[i]["单位"];
+        elemsRaw[i]["最小包装"] = elemsRaw[i]["最小包装"]
+          ? elemsRaw[i]["最小包装"].trim()
+          : elemsRaw[i]["最小包装"];
+        elemsRaw[i]["库存下限"] = elemsRaw[i]["库存下限"]
+          ? elemsRaw[i]["库存下限"].trim()
+          : elemsRaw[i]["库存下限"];
+        elemsRaw[i]["库存上限"] = elemsRaw[i]["库存上限"]
+          ? elemsRaw[i]["库存上限"].trim()
+          : elemsRaw[i]["库存上限"];
+
+        let index = Number(i) + 2;
+
+        if (!elemsRaw[i]["名称"]) {
+          this.$message({
+            type: "warning",
+            showClose: true,
+            duration: 0,
+            message:
+              "第 " +
+              index +
+              " 行 物料名称 为空。请确所有的 物料名称 都不为空！"
+          });
+          return;
+        }
+
+        if (!elemsRaw[i]["材质/品牌"]) {
+          this.$message({
+            type: "warning",
+            showClose: true,
+            duration: 0,
+            message:
+              "第 " +
+              index +
+              " 行 材质/品牌 为空。请确保所有的 材质/品牌 都不为空！"
+          });
+          return;
+        }
+
+        if (!elemsRaw[i]["图号/规格型号"]) {
+          this.$message({
+            type: "warning",
+            showClose: true,
+            duration: 0,
+            message:
+              "第 " +
+              index +
+              " 行 规格型号 为空。请确保所有的 规格型号 都不为空！"
+          });
+          return;
+        }
+
+        if (!elemsRaw[i]["单位"]) {
+          this.$message({
+            type: "warning",
+            showClose: true,
+            duration: 0,
+            message:
+              "第 " + index + " 行 单位 为空。请确保所有的 单位 都不为空！"
+          });
+          return;
+        }
+
+        if (!elemsRaw[i]["最小包装"]) {
+          this.$message({
+            type: "warning",
+            showClose: true,
+            duration: 0,
+            message:
+              "第 " +
+              index +
+              " 行 最小包装 为空。请确保所有的 最小包装 都不为空！"
+          });
+          return;
+        }
+        if (!elemsRaw[i]["库存下限"]) {
+          this.$message({
+            type: "warning",
+            showClose: true,
+            duration: 0,
+            message:
+              "第 " +
+              index +
+              " 行 库存下限 为空。请确保所有的 库存下限 都不为空！"
+          });
+          return;
+        }
+        if (!elemsRaw[i]["库存上限"]) {
+          this.$message({
+            type: "warning",
+            showClose: true,
+            duration: 0,
+            message:
+              "第 " +
+              index +
+              " 行 库存上限 为空。请确保所有的 库存上限 都不为空！"
+          });
+          return;
+        }
+
+        var element = {
+          element_code: elemsRaw[i]["物料代码"],
+          element_name: elemsRaw[i]["名称"],
+          brand: elemsRaw[i]["材质/品牌"],
+          spec_code: elemsRaw[i]["图号/规格型号"],
+          unit: elemsRaw[i]["单位"],
+          min_pack_num: elemsRaw[i]["最小包装"],
+          min_storage: elemsRaw[i]["库存下限"],
+          max_storage: elemsRaw[i]["库存上限"]
+        };
+
+        elementSafeStorage.push(element);
+      }
+
+      if (elementSafeStorage.length > 0) {
+        this.allRows.push(...elementSafeStorage);
+        this.total = this.allRows.length;
+        this.tableData = this.allRows.slice(0,this.queryParams.pageSiz);
+      } else {
+        this.$message({
+          type: "warning",
+          message: "文件不匹配或者没有任何物料数据！"
+        });
+      }
+    },
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
