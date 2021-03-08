@@ -19,7 +19,7 @@
       </el-form-item>
     </el-form>
 
-    <el-table class="mb8" v-loading="loading" element-loading-text="加载中..." ref="multipleTable" :data="tableData" stripe :height="screen_height-340" @selection-change="changeFun" style="width: 100%" :default-sort="{prop:'element_code', order: 'ascending'}">
+    <el-table class="mb8" v-loading="loading" element-loading-text="加载中..." ref="multipleTable" :data="tableData" stripe :height="screen_height-340" @selection-change="handleSelectionChange" style="width: 100%" :default-sort="{prop:'element_code', order: 'ascending'}">
       <el-table-column align="center" type="selection" width="50" fixed />
       <el-table-column align="center" prop="element_code" label="物料代码" show-overflow-tooltip width="120px" sortable />
       <el-table-column align="center" prop="element_name" label="名称" show-overflow-tooltip width="360px" sortable />
@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import { get_element_stock_controls } from '@/api/enterpriseManage.js'
+import { get_element_stock_controls, delete_element_stock_controls} from '@/api/enterpriseManage.js'
 import { mapGetters } from 'vuex'
 export default {
   name: "safeStock",
@@ -68,14 +68,15 @@ export default {
       loading: false,
       queryParams: {
         pageNum: 1,
-        pageSize: 100,
+        pageSize: 50,
         status: "全部",
         inputValue: "",
       },
       total: 0,
       tableData: [],
       allRows: [],
-      paginationRows: []
+      paginationRows: [],
+      multipleSelection: [],
     };
   },
   computed: {
@@ -97,9 +98,11 @@ export default {
         this.loading = false;
         if(!this.isChecked){
           this.allRows = result.element_list;
-          this.paginationRows = this.allRows;
-          this.total = this.paginationRows.length;
-          this.tableData = this.allRows.slice(0, this.queryParams.pageSize);
+          // this.paginationRows = this.allRows;
+          // this.total = this.paginationRows.length;
+          // this.queryParams.pageNum = 1;
+          // this.tableData = this.allRows.slice(0, this.queryParams.pageSize);
+          this.handleQuery();
         }
       }
     },
@@ -109,7 +112,9 @@ export default {
     uploadFile(){},
     OnFileChanged(){},
     isSetChange(){},
-    changeFun(){},
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
     limitMinStorage(){},
     handleSizeChange(){},
     handleCurrentChange({page:currentPage,limit: pageSize}){
@@ -118,7 +123,38 @@ export default {
         pageSize * currentPage
       );
     },
-    deleteSafeElements(){},
+    deleteSafeElements(){
+      if (this.multipleSelection.length == 0) {
+        this.$message({
+          type: "warning",
+          message: "请至少选择一项物料"
+        });
+        return;
+      }
+      let element_code_list = this.multipleSelection.map(item => {
+        return item.element_code;
+      });
+      if(!this.isChecked){
+        this.$confirm("是否删除安全设置, 是否继续?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(async()=>{
+          let result = await delete_element_stock_controls({
+            access_token: this.token,
+            element_code_list
+          })
+          if(result.code===0){
+            this.$notify({
+              title: '成功',
+              message: '操作成功',
+              type: 'success'
+            })
+            this.getElementSafeStockList();
+          }
+        }).catch(()=>{})
+      }
+    },
     submit(){},
     goToElementsManage(){},
     handleQuery(){
