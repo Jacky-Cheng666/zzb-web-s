@@ -60,7 +60,6 @@
 
 <script>
 import { get_element_stock_controls } from '@/api/enterpriseManage.js'
-import { filterFun } from '@/utils'
 import { mapGetters } from 'vuex'
 export default {
   name: "safeStock",
@@ -125,7 +124,7 @@ export default {
     handleQuery(){
       let temp = [];
       this.allRows.forEach(item=>{
-        if(!filterFun(this.queryParams.inputValue,item))return
+        if(!this.$FilterFun(this.queryParams.inputValue,item))return
         temp.push(item)
       })
       this.total = temp.length;

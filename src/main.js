@@ -43,6 +43,9 @@ Vue.use(ElementUI)
 
 Vue.config.productionTip = false
 
+import { filterFun } from '@/utils'
+Vue.prototype.$FilterFun = filterFun
+
 new Vue({
   el: '#app',
   router,
