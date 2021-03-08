@@ -46,7 +46,7 @@
           </div>
         </div>
         <div class="content">
-          <el-table border stripe :data="currentBookInfo.bank_account_list" style="width: 100%">
+          <el-table border stripe :data="currentBookInfo.bank_account_list" style="width: 100%;font-size:12px">
             <el-table-column align="center" prop="type" label="类型" width="100"></el-table-column>
             <el-table-column align="center" prop="bank_name" label="银行" width="350"></el-table-column>
             <el-table-column align="center" prop="account_name" label="账户名"></el-table-column>
