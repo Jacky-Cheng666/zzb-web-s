@@ -61,3 +61,10 @@ export function set_company_tax(data) {
         data
     })
 }
+export function set_receive_info_list(data) {
+    return request({
+        url: '/corp/company/set_receive_info_list',
+        method: 'post',
+        data
+    })
+}

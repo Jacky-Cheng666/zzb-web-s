@@ -85,8 +85,8 @@
       <div class="title">
         <div style="color: #333;font-weight: bold">收货地址</div>
         <div>
-          <el-button size="mini" type="primary" icon="el-icon-plus">新增</el-button>
-          <el-button size="mini" type="success" style="height:29px">
+          <el-button @click="addAddr" size="mini" type="primary" icon="el-icon-plus">新增</el-button>
+          <el-button @click="saveAddr" size="mini" type="success" style="height:29px">
             <svg-icon icon-class="save" class-name="btn_icon_svg" />&nbsp;保存
           </el-button>
         </div>
@@ -145,7 +145,7 @@
 
 <script>
 import { get_company_basic_info, set_financial_book_name, set_company_basic_info, add_bank_account,
-set_bank_account, remove_bank_account, set_company_tax } from '@/api/enterpriseManage.js'
+set_bank_account, remove_bank_account, set_company_tax, set_receive_info_list } from '@/api/enterpriseManage.js'
 import { mapGetters } from 'vuex'
 import { deepClone } from '@/utils/index.js'
 export default {
@@ -176,13 +176,20 @@ export default {
     this.getCompanyBasicInfo();
   },
   methods: {
-    defaultAddr(){},
-    deleteAddr(){},
+    defaultAddr(index){
+      this.receive_info_list.forEach((item) => {
+        item.default = false;
+      });
+
+      this.receive_info_list[index].default = true;
+    },
+    deleteAddr(index){
+      this.receive_info_list.splice(index, 1);
+    },
     async getCompanyBasicInfo(){
       let result = await get_company_basic_info({
         access_token: this.token
       })
-      // console.log('result', result);
       if(result.code===0){
         this.financial_book_list = result.financial_book_list;
         this.financial_book_list.forEach((item) => {
@@ -385,6 +392,56 @@ export default {
         });
         this.getCompanyBasicInfo();
       }
+    },
+    addAddr(){
+      this.receive_info_list.push({
+        receive_addr: "",
+        receiver_name: "",
+        receiver_phone: "",
+      });
+    },
+    saveAddr() {
+      let hasDisable = false;
+      this.receive_info_list.forEach((item) => {
+        if (!item.receive_addr || !item.receiver_name || !item.receiver_phone) {
+          hasDisable = true;
+        }
+
+        if (item.receiver_phone) {
+          let exe = /^1[3456789]{1}\d{9}$/;
+          if (!exe.exec(item.receiver_phone)) {
+            hasDisable = true;
+          }
+        }
+      });
+
+      if (hasDisable) {
+        this.$message({
+          type: "warning",
+          message: "请正确填写收货地址、收货人、收货人手机，不能为空！",
+        });
+        return;
+      }
+
+      this.$confirm("确定保存收货地址？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(async () => {
+          let result = await set_receive_info_list({
+            access_token: this.token,
+            receive_info_list: this.receive_info_list,
+          });
+          if(result.code===0){
+            this.$notify({
+              title: '成功',
+              message: '操作成功',
+              type: 'success'
+            });
+          }
+        })
+        .catch(() => {});
     },
   },
 };
