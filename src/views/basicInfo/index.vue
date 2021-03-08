@@ -108,7 +108,7 @@
     </div>
 
     <!-- 新增账户对话框 -->
-    <el-dialog @close="dialogClose" width="28%" center title="资金账户" :visible.sync="dialogFormVisible">
+    <el-dialog @close="dialogClose" width="520px" center title="资金账户" :visible.sync="dialogFormVisible">
       <el-form :model="form">
         <el-form-item>
           <el-select size="small" style="width:150px" v-model="form.type" placeholder="选择类型">
