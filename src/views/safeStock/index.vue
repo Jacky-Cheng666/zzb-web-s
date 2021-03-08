@@ -2,12 +2,12 @@
   <div class="app-container safeStock">
 
     <el-form class="mb10" :model="queryParams" ref="queryForm" :inline="true">
-      <el-form-item>
+      <el-form-item prop="inputValue">
         <el-input v-model="queryParams.inputValue" placeholder="输入关键字" clearable size="small" style="width: 180px" @keyup.enter.native="handleQuery"/>
       </el-form-item>
 
-      <el-form-item>
-        <el-select @change="isSetChange" v-model="queryParams.invoiceStatus" size="small" style="width: 100px">
+      <el-form-item prop="status">
+        <el-select @change="isSetChange" v-model="queryParams.status" size="small" style="width: 100px">
           <el-option key="全部" label="全部" value="全部"></el-option>
           <el-option key="未设置" label="未设置" value="未设置"></el-option>
           <el-option key="已设置" label="已设置" value="已设置"></el-option>
@@ -69,10 +69,10 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 100,
+        status: "全部",
+        inputValue: "",
       },
       total: 0,
-      inputValue: "",
-      status: "全部",
       tableData: [],
       allRows: [],
       paginationRows: []
@@ -124,6 +124,8 @@ export default {
     handleQuery(){
       let temp = [];
       this.allRows.forEach(item=>{
+        if ( this.queryParams.status == "未设置" && item.min_storage != 0 && item.max_storage != 0)return;
+        if ( this.queryParams.status == "已设置" && (item.min_storage == 0 || item.max_storage == 0))return;
         if(!this.$FilterFun(this.queryParams.inputValue,item))return
         temp.push(item)
       })
@@ -132,7 +134,10 @@ export default {
       this.queryParams.pageNum = 1;
       this.tableData = this.paginationRows.slice(0, this.queryParams.pageSize);
     },
-    resetQuery(){}
+    resetQuery(){
+      this.$refs.queryForm.resetFields();
+      this.handleQuery();
+    }
   },
 };
 </script>
