@@ -54,3 +54,10 @@ export function remove_bank_account(data) {
         data
     })
 }
+export function set_company_tax(data) {
+    return request({
+        url: '/corp/company/set_company_tax',
+        method: 'post',
+        data
+    })
+}

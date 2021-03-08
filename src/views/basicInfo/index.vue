@@ -76,7 +76,7 @@
           </el-radio-group>
         </div>
         <div class="right">
-          <el-button size="mini" type="success" style="height:29px">
+          <el-button @click="save_tax" size="mini" type="success" style="height:29px">
             <svg-icon icon-class="save" class-name="btn_icon_svg" />&nbsp;保存税率
           </el-button>
         </div>
@@ -145,7 +145,7 @@
 
 <script>
 import { get_company_basic_info, set_financial_book_name, set_company_basic_info, add_bank_account,
-set_bank_account, remove_bank_account } from '@/api/enterpriseManage.js'
+set_bank_account, remove_bank_account, set_company_tax } from '@/api/enterpriseManage.js'
 import { mapGetters } from 'vuex'
 import { deepClone } from '@/utils/index.js'
 export default {
@@ -371,7 +371,21 @@ export default {
           }
         })
         .catch(() => {});
-    }
+    },
+    async save_tax() {
+      let result = await set_company_tax({
+        access_token: this.token,
+        tax_name: this.currentTax
+      })
+      if(result.code===0){
+        this.$notify({
+          title: '成功',
+          message: '操作成功',
+          type: 'success'
+        });
+        this.getCompanyBasicInfo();
+      }
+    },
   },
 };
 </script>
