@@ -355,8 +355,8 @@ export default {
           type: 'success'
         })
         if (!this.isChecked) {
-            this.getElementSafeStockList();
-          }
+          this.getElementSafeStockList();
+        }
       }
     },
     goToElementsManage(){},
