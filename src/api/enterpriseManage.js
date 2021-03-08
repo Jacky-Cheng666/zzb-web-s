@@ -77,3 +77,11 @@ export function get_supplier_list(data) {
         data
     })
 }
+
+export function get_element_stock_controls(data) {
+    return request({
+        url: '/corp/company/get_element_stock_controls',
+        method: 'post',
+        data
+    })
+}

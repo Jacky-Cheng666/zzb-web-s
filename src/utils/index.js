@@ -141,3 +141,23 @@ export function deepClone(target) {
   // 返回最终结果
   return result
 }
+
+/**
+ * @param {number|strint} value
+ * @param {object} item
+ * @returns {boolean}
+ */
+export function filterFun(value ,item){
+  for (let k in item) {
+    if (typeof item[k] == "string" || typeof item[k] == "number") {
+        if (item[k].toString().toLowerCase().includes(value.toLowerCase())) {
+            return true;
+        }
+    } else if (typeof item[k] == "object") {
+        if (filterFun(value, item[k])) {
+            return true;
+        }
+    }
+  }
+  return false;
+}
