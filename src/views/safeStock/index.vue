@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import { get_element_stock_controls, delete_element_stock_controls} from '@/api/enterpriseManage.js'
+import { get_element_stock_controls, delete_element_stock_controls, set_element_stock_controls} from '@/api/enterpriseManage.js'
 import { mapGetters } from 'vuex'
 export default {
   name: "safeStock",
@@ -155,7 +155,30 @@ export default {
         }).catch(()=>{})
       }
     },
-    submit(){},
+    async submit(){
+      if (this.multipleSelection.length == 0) {
+        this.$message({
+          type: "warning",
+          message: "请至少选择一项物料"
+        });
+        return;
+      }
+      let element_list = this.multipleSelection;
+      let result = await set_element_stock_controls({
+        access_token: this.token,
+        element_list
+      })
+      if(result.code===0){
+        this.$notify({
+          title: '成功',
+          message: '操作成功',
+          type: 'success'
+        })
+        if (!this.isChecked) {
+            this.getElementSafeStockList();
+          }
+      }
+    },
     goToElementsManage(){},
     handleQuery(){
       let temp = [];

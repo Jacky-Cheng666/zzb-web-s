@@ -92,3 +92,10 @@ export function delete_element_stock_controls(data) {
         data
     })
 }
+export function set_element_stock_controls(data) {
+    return request({
+        url: '/corp/company/set_element_stock_controls',
+        method: 'post',
+        data
+    })
+}
