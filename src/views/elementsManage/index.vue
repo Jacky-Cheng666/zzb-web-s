@@ -148,6 +148,13 @@ export default {
   },
   created() {
     this.getSupplier();
+    if (0 == this.check_type) {
+      this.getEncodeRule(true);
+      this.getWorkpieces(false);
+    } else {
+      this.getEncodeRule(false);
+      this.getWorkpieces(true);
+    }
   },
   computed: {
     ...mapGetters(['screen_height','token'])
@@ -157,11 +164,13 @@ export default {
       let result = await get_supplier_list({
         access_token: this.token
       })
-      console.log('result',result);
+      // console.log('result',result);
       if(result.code===0){
         this.supplier_list = result.supplier_list;
       }
     },
+    getEncodeRule(){},
+    getWorkpieces(){},
     getWorkpieceElements(){},
     handleChangeRule(){},
     changeCheckType(){},
