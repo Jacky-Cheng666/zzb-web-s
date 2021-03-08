@@ -49,7 +49,8 @@ service.interceptors.response.use(
       Message({
         message: res.message || 'Error',
         type: 'error',
-        duration: 5 * 1000
+        duration: 5 * 1000,
+        showClose: true
       })
 
       if (res.code === 5) {
