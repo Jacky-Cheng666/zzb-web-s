@@ -22,3 +22,11 @@ export function set_financial_book_name(data) {
         data
     })
 }
+
+export function set_company_basic_info(data) {
+    return request({
+        url: '/corp/company/set_company_basic_info',
+        method: 'post',
+        data
+    })
+}

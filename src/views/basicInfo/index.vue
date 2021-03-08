@@ -14,7 +14,7 @@
       <div class="info">
         <div class="title">
           <div style="color: #333;font-weight: bold">基本信息</div>
-          <el-button size="mini" type="success" style="height:29px">
+          <el-button @click="saveBasicInfo" size="mini" type="success" style="height:29px">
             <svg-icon icon-class="save" class-name="btn_icon_svg" />&nbsp;保存
           </el-button>
         </div>
@@ -110,7 +110,7 @@
 </template>
 
 <script>
-import { get_company_basic_info, set_financial_book_name} from '@/api/enterpriseManage.js'
+import { get_company_basic_info, set_financial_book_name, set_company_basic_info} from '@/api/enterpriseManage.js'
 import { mapGetters } from 'vuex'
 import { deepClone } from '@/utils/index.js'
 export default {
@@ -142,7 +142,7 @@ export default {
       let result = await get_company_basic_info({
         access_token: this.token
       })
-      console.log('result', result);
+      // console.log('result', result);
       if(result.code===0){
         this.financial_book_list = result.financial_book_list;
         this.financial_book_list.forEach((item) => {
@@ -202,11 +202,40 @@ export default {
         this.financialBookName = "";
         this.$notify({
           title: '成功',
-          message: '账本保存成功',
+          message: '操作成功',
           type: 'success'
         });
+        this.financialBookName = "";
+        this.getCompanyBasicInfo();
       }
-    }
+    },
+    async saveBasicInfo() {
+      if (this.currentBookInfo.company_name.trim().length == 0) {
+        this.$message({
+          type: "error",
+          message: "请输入公司简称",
+        });
+        return;
+      }
+      let result = await set_company_basic_info({
+        access_token: this.token,
+        financial_book_no: this.CurrentFinancialBook,
+        company: {
+          name: this.currentBookInfo.company_full_name.trim(),
+          company_name: this.currentBookInfo.company_name.trim(),
+          address: this.currentBookInfo.address.trim(),
+          tax_identification: this.currentBookInfo.tax_identification.trim(),
+        },
+      });
+      if(result.code===0){
+        this.$notify({
+          title: '成功',
+          message: '操作成功',
+          type: 'success'
+        });
+        this.getCompanyBasicInfo();
+      }
+    },
   },
 };
 </script>
