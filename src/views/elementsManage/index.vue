@@ -129,6 +129,7 @@ import dtime from "time-formater";
 import { mapGetters } from 'vuex'
 import { get_supplier_list, get_encode_rule, get_content_elements, get_element_list, get_all_workpiece_list, 
 search_elements } from '@/api/enterpriseManage.js'
+import { getToken,setToken,removeToken } from '@/utils/auth'
 export default {
   name: 'elementsManage',
   data() {
@@ -265,7 +266,8 @@ export default {
           list0.push(newNode);
         });
       }
-
+      this.$store.commit('cwm/SET_PINGLEI',list0)
+      setToken('encode_rule_list',list0)
       this.encode_rule_list = list0;
     },
     async getWorkpieces(refresh){

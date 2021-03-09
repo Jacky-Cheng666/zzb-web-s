@@ -63,7 +63,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="关键物料" prop="major">
-          <el-checkbox v-model="ruleFormAdd.major" @change="boxChange(ruleFormSet)" />
+          <el-checkbox v-model="ruleFormAdd.major" @change="boxChange(ruleFormAdd)" />
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input type="textarea" style="width: 400px" v-model="ruleFormAdd.remark" placeholder="请输入备注" maxlength="1000" :show-word-limit="true" :autosize="{ minRows: 2, maxRows: 7 }" />
@@ -81,7 +81,7 @@
 </template>
 
 <script>
-import { check_element_exists } from '@/api/enterpriseManage'
+import { check_element_exists, is_elements_repeat} from '@/api/enterpriseManage'
 import { mapGetters } from 'vuex'
 export default {
   name: "elementsEdit",
@@ -93,7 +93,6 @@ export default {
           children: 'sub_list'
         },
         encode_code_list: [],
-        encode_rule_list: [],
         ruleFormAdd: {
           "spec_code": "",
           "version": "",
@@ -109,13 +108,12 @@ export default {
           "major":""
         },
         checked: true,
-        workpiece_list: [],
         isNameOk: "",
         isNickNameOk: ""
     };
   },
   computed: {
-    ...mapGetters(['token']),
+    ...mapGetters(['token','encode_rule_list','workpiece_list']),
     isEdit(){
         return this.$route.meta.isEdit
     }
@@ -165,6 +163,250 @@ export default {
           key?this.isNameOk = true:this.isNickNameOk = true
         }else {
           key?this.isNameOk = false:this.isNickNameOk = false
+        }
+      },
+      handleChangerRule(ruleForm) {
+        let codes = []
+        ruleForm.content_code = ""
+        this.encode_code_list.forEach((item, index)=>{
+          ruleForm.content_code += item
+          codes[index] = item
+        })
+
+        let first, second
+        ruleForm.content_name = ""
+        codes.forEach((code, index) => {
+          if (0 == index) {
+            this.encode_rule_list.forEach((item, i1) => {
+              if (item.code == code) {
+                first = i1
+                ruleForm.content_name = item.name
+              }
+            })
+          }
+
+          if (1 == index) {
+            this.encode_rule_list[first].sub_list.forEach((item, i2) => {
+              if (item.code == code) {
+                second = i2
+                ruleForm.content_name = item.name
+              }
+            })
+          }
+
+          if (2 == index) {
+            this.encode_rule_list[first].sub_list[second].sub_list.forEach((item) => {
+              if (item.code == code) {
+                ruleForm.content_name = item.name
+              }
+            })
+          }
+        })
+
+        if (this.encode_code_list.length <= 1) {
+          ruleForm.content_code += '00000'
+        } else if (this.encode_code_list.length <= 2) {
+          ruleForm.content_code += '000'
+        }
+      },
+      handleDiaSureAdd(formName,key){
+        if (!this.isEdit) {
+          let match_result = null
+          this.matchAllForSpecialCharater(this.ruleFormAdd, function(result){
+            match_result = result
+          })
+          if(match_result && match_result.code === 1){
+            this.$message({
+              showClose: true,
+              duration: 0,
+              message: match_result.error_message,
+              type: 'warning'
+            })
+
+            return
+          }
+          
+          for(var o in this.ruleFormAdd){
+            if(typeof this.ruleFormAdd[o] == 'string'){
+              this.ruleFormAdd[o] = this.ruleFormAdd[o].trim();
+            }
+          }
+          if (!this.ruleFormAdd.content_name) {
+            this.$message({
+              type: 'warning',
+              message: '必须指定物料品类！'
+            });
+            return
+          }
+          this.ruleFormAdd.spec_code = this.ruleFormAdd.spec_code + (this.ruleFormAdd.version?String(this.ruleFormAdd.version):'')
+
+        } else {
+          let match_result = null
+          this.matchAllForSpecialCharater(this.ruleFormSet, function(result){
+            match_result = result
+          })
+          if(match_result && match_result.code === 1){
+            this.$message({
+              showClose: true,
+              duration: 0,
+              message: match_result.error_message,
+              type: 'warning'
+            })
+
+            return
+          }
+
+          for(var o in this.ruleFormSet){
+            if(typeof this.ruleFormSet[o] == 'string'){
+              this.ruleFormSet[o] = this.ruleFormSet[o].trim();
+            }
+          }
+          if (!this.ruleFormSet.content_name) {
+            this.$message({
+              type: 'warning',
+              message: '必须指定物料品类！'
+            });
+            return
+          }
+          this.ruleFormSet.spec_code = this.ruleFormSet.spec_code + (this.ruleFormSet.version?String(this.ruleFormSet.version):'')
+        }
+
+        let checkElementList = formName == "ruleFormAdd" ? [this.ruleFormAdd] : [this.ruleFormSet];
+        this.checkRepeat(checkElementList, repeatSpecCodeList => {
+          let url = formName == "ruleFormAdd" ? "add_elements" : this.unusable ? "perfect_element" : "edit_element"
+          let forData = formName == "ruleFormAdd" ? { element_list: [this.ruleFormAdd] } : this.ruleFormSet
+          if (forData.major) {
+            forData.major = 1;
+          }
+          else {
+            forData.major = 0;
+          }
+          axios.post(process.env.API_HOST + 'company/' + url, {
+            access_token: this.access_token,
+            ...forData
+          })
+            .then(response => {
+              if (response.data.code == 0) {
+                if (repeatSpecCodeList.length && formName == "ruleFormAdd") {
+                  var tipMsg = formName == "ruleFormAdd" ? "添加的规格型号为:“" : "修改的规格型号为:“";
+                  tipMsg += repeatSpecCodeList[0]
+                  tipMsg += "”的物料和系统中的一些物料的规格型号重复，请您检查该物料是否异常！"
+
+                  this.$alert(tipMsg, '', {
+                    confirmButtonText: '确定',
+                    callback: action => {
+                      let contentCode = this[formName].content_code
+                      let workpeceId = this[formName].workpiece_id
+                      this.$emit('refreshData', true)
+                      this.resetForm(formName)
+                      this[formName].content_code = contentCode
+                      this[formName].workpiece_id = workpeceId
+
+                      if (key) {
+                        this.$router.push("/elementsManage")
+                        this.goToElementsManage()
+                      }
+                    }
+                  });
+                }
+                else {
+                  this.$message({
+                    type: 'success',
+                    message: '操作成功!'
+                  });
+
+                  let contentCode = this[formName].content_code
+                  let workpeceId = this[formName].workpiece_id
+                  this.$emit('refreshData', true)
+                  this.resetForm(formName)
+                  this[formName].content_code = contentCode
+                  this[formName].workpiece_id = workpeceId
+
+                  if (key) {
+                    this.$router.push("/elementsManage")
+                    this.goToElementsManage()
+                  }
+                }
+              }
+            })
+            .catch(error => {
+              console.log(error);
+            });
+        });
+      },
+      matchAllForSpecialCharater(list, callback) {
+        if(list.length <= 0){
+          callback({
+            code: 0
+          })
+          return
+        }
+
+        let errorList = []
+        let errorMessage = []
+        let blankErrorList = []
+        let blankErrorMessage = []
+        for(var o in list){
+          if (list.hasOwnProperty(o)) {
+            if(list[o] && this.matchSpecialCharacter(list[o])){
+              errorList.push({
+                prop: o,
+                val: list[o]
+              })
+            } 
+            // else if(typeof list[o] == 'string' && list[o].indexOf(' ') >= 0) {
+            //   blankErrorList.push({
+            //     prop: o,
+            //     val: list[o]
+            //   })
+            // }
+          }
+        }
+        blankErrorList.forEach(item => {
+          blankErrorMessage.push(this.propMap[item.prop] + '(' + item.val + ')')
+        })
+
+        errorList.forEach(item => {
+          errorMessage.push(this.propMap[item.prop] + '(' + item.val + ')')
+        })
+
+        if(blankErrorMessage.length > 0){
+          callback({
+            code: 1,
+            error_message: '以下内容包含空格: ' + blankErrorMessage + '，请检查！！！'
+          })
+          return
+        }
+        
+        if(errorMessage.length <= 0){
+          callback({
+            code: 0
+          })
+        } else{
+          callback({
+            code: 1,
+            error_message: '以下内容包含特殊字符: ' + errorMessage + '，请检查！！！'
+          })
+        }
+      },
+      async checkRepeat(elementList, callback) {
+        if (0 == elementList.length) {
+          return;
+        }
+
+        var specCodeList = [];
+
+        for (var i = 0; i < elementList.length; i++) {
+          specCodeList.push(elementList[i].spec_code)
+        }
+
+        let result = await is_elements_repeat({
+          access_token: this.token,
+          spec_code_list: specCodeList
+        });
+        if(result.code===0){
+          var repeatSpecCodeList = result.repeat_spec_code_list;
+          callback(repeatSpecCodeList);
         }
       },
   }

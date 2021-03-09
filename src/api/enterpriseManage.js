@@ -146,3 +146,11 @@ export function check_element_exists(data) {
         data
     })
 }
+
+export function is_elements_repeat(data) {
+    return request({
+        url: '/corp/company/is_elements_repeat',
+        method: 'post',
+        data
+    })
+}
