@@ -7,8 +7,8 @@
           <el-input size="mini" style="width: 320px" v-model="ruleFormAdd.spec_code" auto-complete="off" placeholder="规格型号" />
           <el-input size="mini" style="margin-left: 10px; width: 70px" v-model="ruleFormAdd.version" auto-complete="off" placeholder="版本" />
           <div style="display: inline-block;width: 150px;line-height: 26px;vertical-align: middle;">
-            <i style="margin-left: 10px; color: #2cd03e" class="iconfont icon-ShapeCopy" v-show="isNameOk === true"></i>
-            <i style="margin-left: 10px; color: red" class="iconfont icon-cuowu" v-show="isNameOk === false"></i>
+            <i style="margin-left: 10px; color: #2cd03e;font-size:16px" class="el-icon-success" v-show="isNameOk === true"></i>
+            <i style="margin-left: 10px; color: red;font-size:16px" class="el-icon-error" v-show="isNameOk === false"></i>
             <el-button style="float: right" type="primary" size="mini" @click="checkOk(ruleFormAdd.spec_code, ruleFormAdd.version, true, ruleFormAdd.brand, ruleFormAdd.element_name)">检查相同项</el-button>
           </div>
         </el-form-item>
@@ -74,7 +74,6 @@
             <el-button size="mini" @click="goToElementsManage">取 消</el-button>
           </router-link>
           <el-button style="margin-left: 20px" type="primary" size="mini" @click="submitForm('ruleFormAdd', true)">保 存</el-button>
-          <!-- <el-button style="margin-left: 20px" type="primary" size="mini" @click="submitForm('ruleFormAdd', false)">保存并继续添加</el-button> -->
         </el-form-item>
       </el-form>
     </div>
@@ -82,6 +81,8 @@
 </template>
 
 <script>
+import { check_element_exists } from '@/api/enterpriseManage'
+import { mapGetters } from 'vuex'
 export default {
   name: "elementsEdit",
   data() {
@@ -114,14 +115,58 @@ export default {
     };
   },
   computed: {
-      isEdit(){
-          return this.$route.meta.isEdit
-      }
+    ...mapGetters(['token']),
+    isEdit(){
+        return this.$route.meta.isEdit
+    }
   },
   methods: {
       boxChange(){},
       goToElementsManage(){},
-      submitForm(){}
+      submitForm(formName, key) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            alert('恭喜，输入通过')
+            this.handleDiaSureAdd(formName,key)
+          } else {
+            this.$message({
+              type: 'warning',
+              message: '请检查所有输入和选项是否完整!'
+            });
+            return false;
+          }
+        });
+      },
+      async checkOk(name,version,key,brand,element_name){
+        //true 型号
+        if(!name){
+          this.$message({
+            type: 'warning',
+            message: '请输入检查内容！'
+          });
+          return
+        }
+
+        if (key && (!brand || !element_name)) {
+          this.$message({
+            type: 'warning',
+            message: '检查规格型号，需要指定品牌以及名称！'
+          });
+          return
+        }
+
+        let keywords = name + (version?version:'')
+        let forData=key?{spec_code:keywords,brand:brand,element_name:element_name}:{element_code:name}
+        let result = await check_element_exists({
+          access_token: this.token,
+          ...forData
+        })
+        if(result.code===0) {
+          key?this.isNameOk = true:this.isNickNameOk = true
+        }else {
+          key?this.isNameOk = false:this.isNickNameOk = false
+        }
+      },
   }
 };
 </script>

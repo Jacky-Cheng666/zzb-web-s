@@ -138,3 +138,11 @@ export function search_elements(data) {
         data
     })
 }
+
+export function check_element_exists(data) {
+    return request({
+        url: '/corp/company/check_element_exists',
+        method: 'post',
+        data
+    })
+}
