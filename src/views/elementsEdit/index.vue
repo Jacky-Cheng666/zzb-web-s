@@ -38,8 +38,8 @@
           <div v-show="!checked">
             <el-input size="mini" style="width: 400px" :disabled="checked" v-model="ruleFormAdd.element_code" auto-complete="off" placeholder="物料代码" />
             <div style="display: inline-block;width: 150px;line-height: 26px;vertical-align: middle;">
-              <i style="margin-left: 10px; color: #2cd03e" class="iconfont icon-ShapeCopy" v-show="isNickNameOk === true"></i>
-              <i style="margin-left: 10px; color: red" class="iconfont icon-cuowu" v-show="isNickNameOk === false"></i>
+              <i style="margin-left: 10px; color: #2cd03e;font-size:16px" class="el-icon-success" v-show="isNickNameOk === true"></i>
+              <i style="margin-left: 10px; color: red;font-size:16px" class="el-icon-error" v-show="isNickNameOk === false"></i>
               <el-button style="float: right" type="primary" size="mini" :disabled="checked" @click="checkOk(ruleFormAdd.element_code, false)">检查相同项</el-button>
             </div>
           </div>
