@@ -338,7 +338,7 @@ export default {
                 title: '成功',
                 message:"操作成功"
               })
-
+              
               this.getJobList()
             }
           })
