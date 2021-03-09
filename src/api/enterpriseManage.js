@@ -154,3 +154,42 @@ export function is_elements_repeat(data) {
         data
     })
 }
+
+export function get_department_list(data) {
+    return request({
+        url: '/corp/company/get_department_list',
+        method: 'post',
+        data
+    })
+}
+
+export function get_staff_list(data) {
+    return request({
+        url: '/corp/company/get_staff_list',
+        method: 'post',
+        data
+    })
+}
+
+export function get_job_list(data) {
+    return request({
+        url: '/corp/company/get_job_list',
+        method: 'post',
+        data
+    })
+}
+
+export function get_auth_list(data) {
+    return request({
+        url: '/corp/company/get_auth_list',
+        method: 'post',
+        data
+    })
+}
+export function delete_job(data) {
+    return request({
+        url: '/corp/company/delete_job',
+        method: 'post',
+        data
+    })
+}
