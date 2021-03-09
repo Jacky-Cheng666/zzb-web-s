@@ -99,3 +99,42 @@ export function set_element_stock_controls(data) {
         data
     })
 }
+export function get_encode_rule(data) {
+    return request({
+        url: '/corp/company/get_encode_rule',
+        method: 'post',
+        data
+    })
+}
+
+export function get_content_elements(data) {
+    return request({
+        url: '/corp/company/get_content_elements',
+        method: 'post',
+        data
+    })
+}
+
+export function get_element_list(data) {
+    return request({
+        url: '/corp/company/get_element_list',
+        method: 'post',
+        data
+    })
+}
+
+export function get_all_workpiece_list(data) {
+    return request({
+        url: '/corp/company/get_all_workpiece_list',
+        method: 'post',
+        data
+    })
+}
+
+export function search_elements(data) {
+    return request({
+        url: '/corp/company/search_elements',
+        method: 'post',
+        data
+    })
+}

@@ -21,7 +21,7 @@
           </el-select>
         </span>
 
-        <span v-show="0==check_type && encode_rule_ui[2] && 0 < encode_rule_ui[2].length" style="display:inline-block;margin-left: 10px;line-height: 36px;vertical-align: top;">
+        <span v-show="0==check_type && encode_rule_ui[2] && 0 < encode_rule_ui[2].length" style="display:inline-block;margin-left: 10px;line-height: 36px;vertical-align: middle;">
           <el-select style="width: 180px;" v-model="encode_code[2]" @change="handleChangeRule(2)" filterable size="mini" placeholder="请输入或者选择">
             <el-option v-for="item in encode_rule_ui[2]" :key="item.code" :label="item.name" :value="item.code" />
           </el-select>
@@ -67,7 +67,7 @@
       </div>
     </div>
     <div class="table_container">
-      <el-table ref="multipleTable" :data="rows" stripe :height="screen_height-400" @selection-change="changeFun" style="width: 100%" @sort-change="changeSort">
+      <el-table v-loading="loading" element-loading-text="加载中..." ref="multipleTable" :data="rows" stripe :height="screen_height-400" @selection-change="changeFun" style="width: 100%" @sort-change="changeSort">
         <el-table-column align="center" type="selection" width="60" />
         <el-table-column align="center" prop="element_code" label="物料代码" show-overflow-tooltip width="140" sortable="custom">
           <template slot-scope="scope">
@@ -125,8 +125,10 @@
 </template>
 
 <script>
+import dtime from "time-formater";
 import { mapGetters } from 'vuex'
-import { get_supplier_list } from '@/api/enterpriseManage.js'
+import { get_supplier_list, get_encode_rule, get_content_elements, get_element_list, get_all_workpiece_list, 
+search_elements } from '@/api/enterpriseManage.js'
 export default {
   name: 'elementsManage',
   data() {
@@ -134,8 +136,10 @@ export default {
       workpiece_id: '',
       workpiece_list: [],
       check_type: 0,
+      encode_rule: [],
       encode_code: [],
       encode_rule_ui: [],
+      encode_rule_list: [],
       element_code: "",
       unusable: false,
       major: false,
@@ -143,7 +147,9 @@ export default {
       count: 0,
       currentPage: 1,
       pageSize: 50,
-      supplier_list: []
+      supplier_list: [],
+      loading: false,
+      multipleSelection: []
     }
   },
   created() {
@@ -169,23 +175,528 @@ export default {
         this.supplier_list = result.supplier_list;
       }
     },
-    getEncodeRule(){},
-    getWorkpieces(){},
-    getWorkpieceElements(){},
-    handleChangeRule(){},
-    changeCheckType(){},
-    searchElement(){},
-    unusableClick(){},
-    majorClick(){},
+    async getEncodeRule(refresh){
+      let result = await get_encode_rule({
+        access_token: this.token
+      })
+      if(result.code===0){
+        this.encode_rule = result.encode_rule;
+        this.transRuleData();
+
+        if (refresh) {
+              this.handleChangeRule(0);
+            }
+      }else{
+        this.encode_rule = [];
+            this.encode_code = [];
+      }
+    },
+    transRuleData() {
+      if (!this.encode_rule || this.encode_rule.length <= 0) {
+        return;
+      }
+
+      let list0 = [],
+        list1 = [];
+      let first = this.encode_rule[0];
+      let second = this.encode_rule[1];
+      let third = this.encode_rule[2];
+
+      if (second) {
+        second.forEach(item_1 => {
+          let newNode = {
+            code: item_1.code,
+            name: item_1.name
+          };
+
+          if (
+            item_1.sub_index &&
+            item_1.sub_index.length > 0 &&
+            third &&
+            third.length > 0
+          ) {
+            newNode.sub_list = [];
+
+            item_1.sub_index.forEach(item_2 => {
+              third.forEach(son => {
+                if (son.name == item_2) {
+                  newNode.sub_list.push({
+                    code: son.code,
+                    name: son.name,
+                    sub_list: son.sub_list
+                  });
+                }
+              });
+            });
+          }
+
+          list1.push(newNode);
+        });
+      }
+
+      if (first) {
+        first.forEach(item_1 => {
+          let newNode = {
+            code: item_1.code,
+            name: item_1.name
+          };
+
+          if (
+            item_1.sub_index &&
+            item_1.sub_index.length > 0 &&
+            list1 &&
+            list1.length > 0
+          ) {
+            newNode.sub_list = [];
+
+            item_1.sub_index.forEach(item_2 => {
+              list1.forEach(son => {
+                if (son.name == item_2) {
+                  newNode.sub_list.push({
+                    code: son.code,
+                    name: son.name,
+                    sub_list: son.sub_list
+                  });
+                }
+              });
+            });
+          }
+
+          list0.push(newNode);
+        });
+      }
+
+      this.encode_rule_list = list0;
+    },
+    async getWorkpieces(refresh){
+      let result = await get_all_workpiece_list({
+        access_token: this.token
+      })
+      if (result.code == 0) {
+        this.workpiece_list = result.workpiece_list;
+        if (this.workpiece_list.length > 0) {
+          this.workpiece_id = this.workpiece_list[0].id;
+          if (refresh) {
+            this.getWorkpieceElements();
+          }
+        }
+      }
+
+    },
+    async getWorkpieceElements() {
+      this.unusable = false;
+      this.loading = true;
+      let result = await get_element_list({
+        access_token: this.token,
+        workpiece_id: this.workpiece_id
+      })
+      if (result.code == 0) {
+        this.loading = false;
+        this.elementList = [];
+        this.allRows = result.element_list ? result.element_list : [];
+        this.allRows.forEach(item => {
+          if (item.version) {
+            item.spec_code = item.spec_code.slice(
+              0,
+              item.spec_code.length - item.version.length
+            );
+          }
+
+          item.content_name = item.workpiece_name;
+          delete item.workpiece_name;
+
+          this.elementList.push(item);
+        });
+        this.currentPage = 1;
+        this.handleClick();
+      }
+    },
+    handleChangeRule(level) {
+      if (!this.encode_rule || this.encode_rule.length <= 0) {
+        return;
+      }
+      //console.log(JSON.stringify(this.encode_rule))
+
+      let second = this.encode_rule[1];
+      let third = this.encode_rule[2];
+
+      if (level <= 0 && this.encode_code.length <= 0) {
+        this.encode_code = [];
+        this.encode_rule_ui = [];
+        this.encode_rule_ui[0] = this.encode_rule[0];
+        this.encode_code[0] = this.encode_rule_ui[0][0].code;
+      }
+      //console.log(JSON.stringify(this.encode_rule_ui))
+      if (
+        level <= 0 &&
+        this.encode_rule_ui[0] &&
+        0 < this.encode_rule_ui[0].length
+      ) {
+        this.encode_rule_ui[1] = [];
+
+        this.encode_rule_ui[0].forEach(item => {
+          if (item.code == this.encode_code[0]) {
+            if (item.sub_index && 0 < item.sub_index.length && second) {
+              item.sub_index.forEach(son => {
+                second.forEach(node => {
+                  if (node.name == son) {
+                    this.encode_rule_ui[1].push(node);
+                  }
+                });
+              });
+            }
+          }
+        });
+
+        if (0 < this.encode_rule_ui[1].length) {
+          this.encode_rule_ui[1].unshift({ code: "", name: "全部" });
+        }
+
+        this.encode_code[1] = "";
+      }
+
+      if (
+        level <= 1 &&
+        this.encode_rule_ui[1] &&
+        0 < this.encode_rule_ui[1].length
+      ) {
+        this.encode_rule_ui[2] = [];
+
+        this.encode_rule_ui[1].forEach(item => {
+          if (item.code == this.encode_code[1]) {
+            if (item.sub_index && 0 < item.sub_index.length && third) {
+              item.sub_index.forEach(son => {
+                third.forEach(node => {
+                  if (node.name == son) {
+                    this.encode_rule_ui[2].push(node);
+                  }
+                });
+              });
+            }
+          }
+        });
+
+        if (0 < this.encode_rule_ui[2].length) {
+          this.encode_rule_ui[2].unshift({ code: "", name: "全部" });
+        }
+
+        this.encode_code[2] = "";
+      }
+      //console.log(JSON.stringify(this.encode_code))
+
+      let name_list = [];
+      this.encode_code.forEach((code, index) => {
+        if (
+          this.encode_rule_ui[index] &&
+          0 < this.encode_rule_ui[index].length
+        ) {
+          if (!code) {
+            this.encode_rule_ui[index].forEach(item => {
+              if (item.code && !item.sub_index) {
+                name_list.push(item.name);
+              }
+
+              if (item.sub_index) {
+                item.sub_index.forEach(son => {
+                  name_list.push(son);
+                });
+              }
+            });
+          } else {
+            this.encode_rule_ui[index].forEach(item => {
+              if (item.code == code && !item.sub_index) {
+                name_list.push(item.name);
+              }
+            });
+          }
+        }
+      });
+
+      this.content_name_list = name_list;
+      this.getContentElements();
+    },
+    async getContentElements() {
+      this.unusable = false;
+      this.loading = true;
+      let result = await get_content_elements({
+        access_token: this.token,
+        content_name_list: this.content_name_list
+      })
+      if(result.code===0){
+        this.loading = false;
+        this.elementList = [];
+        this.allRows = result.element_list ? result.element_list : [];
+        this.allRows.forEach(item => {
+          if (item.version) {
+            item.spec_code = item.spec_code.slice(
+              0,
+              item.spec_code.length - item.version.length
+            );
+          }
+
+          item.content_name = item.workpiece_name;
+          if (item.create_time) {
+            item.create_time = dtime(item.create_time * 1000).format(
+              "YYYY-MM-DD"
+            );
+          }
+
+          delete item.workpiece_name;
+
+          this.elementList.push(item);
+        });
+        this.currentPage = 1;
+        this.handleClick();
+      }
+    },
+    handleClick() {
+      this.count = this.allRows.length;
+      this.rows = this.allRows.slice(
+        this.pageSize * (this.currentPage - 1),
+        this.pageSize * this.currentPage
+      );
+    },
+    changeCheckType(){
+      if (1 == this.check_type) {
+        this.getWorkpieceElements();
+      } else {
+        this.getContentElements();
+      }
+    },
+    async searchElement() {
+      this.loading = true;
+      let result = await search_elements({
+        access_token: this.token,
+        element_code: this.element_code,
+        unusable: this.unusable,
+        major: this.major
+      })
+      if(result.code===0){
+        this.loading = false;
+        this.elementList = [];
+        this.allRows = result.element_list ? result.element_list : [];
+        this.allRows.forEach(item => {
+          if (item.version) {
+            item.spec_code = item.spec_code.slice(
+              0,
+              item.spec_code.length - item.version.length
+            );
+          }
+
+          item.content_name = item.workpiece_name;
+          if (item.create_time) {
+            item.create_time = dtime(item.create_time * 1000).format(
+              "YYYY-MM-DD"
+            );
+          }
+          delete item.workpiece_name;
+
+          this.elementList.push(item);
+        });
+        this.currentPage = 1;
+        this.handleClick();
+      }
+
+      // axios
+      //   .post(process.env.API_HOST + "company/search_elements", {
+      //     access_token: this.access_token,
+      //     element_code: this.element_code,
+      //     unusable: this.unusable,
+      //     major: this.major
+      //   })
+      //   .then(response => {
+      //     let result = response.data;
+      //     if (result.code == 0) {
+      //       this.elementList = [];
+      //       this.allRows = result.element_list ? result.element_list : [];
+      //       this.allRows.forEach(item => {
+      //         if (item.version) {
+      //           item.spec_code = item.spec_code.slice(
+      //             0,
+      //             item.spec_code.length - item.version.length
+      //           );
+      //         }
+
+      //         item.content_name = item.workpiece_name;
+      //         if (item.create_time) {
+      //           item.create_time = dtime(item.create_time * 1000).format(
+      //             "YYYY-MM-DD"
+      //           );
+      //         }
+      //         delete item.workpiece_name;
+
+      //         this.elementList.push(item);
+      //       });
+      //       this.currentPage = 1;
+      //       this.handleClick();
+      //     }
+      //   });
+    },
+    unusableClick(){
+      this.major = false;
+      if (!this.unusable) {
+        if (1 == this.check_type) {
+          this.getWorkpieceElements();
+        } else {
+          this.getContentElements();
+        }
+      } else {
+        this.searchElement();
+      }
+    },
+    majorClick(){
+      this.unusable = false;
+      if (!this.major) {
+        if (1 == this.check_type) {
+          this.getWorkpieceElements();
+        } else {
+          this.getContentElements();
+        }
+      } else {
+        this.searchElement();
+      }
+    },
     toElementsEdit(row){
       console.log('row', row);
       this.$router.push('/enterpriseManage/inventoryManage/elementsEdit/' + row.element_code)
     },
-    exportTemplate(){},
-    changeFun(){},
-    changeSort(){},
-    handleSizeChange(){},
-    handleCurrentChange(){},
+    exportTemplate(){
+      window.location.href = process.env.VUE_APP_BASEURL + "/template/物料清单模板.xlsx";
+    },
+    changeFun(val){
+      this.multipleSelection = val;
+    },
+    changeSort(sortEvent) {
+      if (0 === this.allRows.length) {
+        return;
+      }
+
+      var localeCompare = this.localeCompare;
+
+      if ("ascending" === sortEvent.order) {
+        if ("element_code" === sortEvent.prop) {
+          this.allRows.sort(function(itemA, itemB) {
+            let ret = localeCompare(itemA.element_code, itemB.element_code);
+            if (2 == ret) {
+              ret = itemA.element_code.localeCompare(itemB.element_code);
+            }
+            return ret;
+          });
+        }
+
+        if ("element_name" === sortEvent.prop) {
+          this.allRows.sort(function(itemA, itemB) {
+            let ret = localeCompare(itemA.element_name, itemB.element_name);
+            if (2 == ret) {
+              ret = itemA.element_name.localeCompare(itemB.element_name);
+            }
+            return ret;
+          });
+        }
+
+        if ("brand" === sortEvent.prop) {
+          this.allRows.sort(function(itemA, itemB) {
+            let ret = localeCompare(itemA.brand, itemB.brand);
+            if (2 == ret) {
+              ret = itemA.brand.localeCompare(itemB.brand);
+            }
+            return ret;
+          });
+        }
+
+        if ("spec_code" === sortEvent.prop) {
+          this.allRows.sort(function(itemA, itemB) {
+            let ret = localeCompare(itemA.spec_code, itemB.spec_code);
+            if (2 == ret) {
+              ret = itemA.spec_code.localeCompare(itemB.spec_code);
+            }
+            return ret;
+          });
+        }
+
+        if ("content_name" === sortEvent.prop) {
+          this.allRows.sort(function(itemA, itemB) {
+            let ret = localeCompare(itemA.content_name, itemB.content_name);
+            if (2 == ret) {
+              ret = itemA.content_name.localeCompare(itemB.content_name);
+            }
+            return ret;
+          });
+        }
+      } else if ("descending" === sortEvent.order) {
+        if ("element_code" === sortEvent.prop) {
+          this.allRows.sort(function(itemA, itemB) {
+            let ret = localeCompare(itemB.element_code, itemA.element_code);
+            if (2 == ret) {
+              ret = itemB.element_code.localeCompare(itemA.element_code);
+            }
+            return ret;
+          });
+        }
+
+        if ("element_name" === sortEvent.prop) {
+          this.allRows.sort(function(itemA, itemB) {
+            let ret = localeCompare(itemB.element_name, itemA.element_name);
+            if (2 == ret) {
+              ret = itemB.element_name.localeCompare(itemA.element_name);
+            }
+            return ret;
+          });
+        }
+
+        if ("brand" === sortEvent.prop) {
+          this.allRows.sort(function(itemA, itemB) {
+            let ret = localeCompare(itemB.brand, itemA.brand);
+            if (2 == ret) {
+              ret = itemB.brand.localeCompare(itemA.brand);
+            }
+            return ret;
+          });
+        }
+
+        if ("spec_code" === sortEvent.prop) {
+          this.allRows.sort(function(itemA, itemB) {
+            let ret = localeCompare(itemB.spec_code, itemA.spec_code);
+            if (2 == ret) {
+              ret = itemB.spec_code.localeCompare(itemA.spec_code);
+            }
+            return ret;
+          });
+        }
+
+        if ("content_name" === sortEvent.prop) {
+          this.allRows.sort(function(itemA, itemB) {
+            let ret = localeCompare(itemB.content_name, itemA.content_name);
+            if (2 == ret) {
+              ret = itemB.content_name.localeCompare(itemA.content_name);
+            }
+            return ret;
+          });
+        }
+      } else {
+        this.allRows = [];
+        for (var i = 0; i < this.elementList.length; i++) {
+          this.allRows.push(this.elementList[i]);
+        }
+      }
+
+      this.currentPage = 1;
+      this.handleClick();
+    },
+    handleSizeChange(val) {
+      this.pageSize = val;
+      this.rows = this.allRows.slice(
+        this.pageSize * (this.currentPage - 1),
+        this.pageSize * this.currentPage
+      );
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val;
+      this.rows = this.allRows.slice(
+        this.pageSize * (this.currentPage - 1),
+        this.pageSize * this.currentPage
+      );
+    },
     setSafeStorage(){
       this.$router.push('/enterpriseManage/inventoryManage/setSafeStock')
     }

@@ -43,8 +43,9 @@ Vue.use(ElementUI)
 
 Vue.config.productionTip = false
 
-import { filterFun } from '@/utils'
+import { filterFun, localeCompare } from '@/utils'
 Vue.prototype.$FilterFun = filterFun
+Vue.prototype.localeCompare = localeCompare
 
 new Vue({
   el: '#app',

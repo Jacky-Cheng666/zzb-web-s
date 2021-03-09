@@ -161,3 +161,21 @@ export function filterFun(value ,item){
   }
   return false;
 }
+
+export function localeCompare(itemA, itemB) {
+  if (itemA && itemB) {
+    return 2;
+  }
+
+  if (!itemA && !itemB) {
+    return 0;
+  }
+
+  if (!itemA) {
+    return -1;
+  }
+
+  if (!itemB) {
+    return 1;
+  }
+}
