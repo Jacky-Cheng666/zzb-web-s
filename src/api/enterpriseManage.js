@@ -193,3 +193,27 @@ export function delete_job(data) {
         data
     })
 }
+
+export function rename_department(data) {
+    return request({
+        url: '/corp/company/rename_department',
+        method: 'post',
+        data
+    })
+}
+
+export function add_department(data) {
+    return request({
+        url: '/corp/company/add_department',
+        method: 'post',
+        data
+    })
+}
+
+export function delete_department(data) {
+    return request({
+        url: '/corp/company/delete_department',
+        method: 'post',
+        data
+    })
+}

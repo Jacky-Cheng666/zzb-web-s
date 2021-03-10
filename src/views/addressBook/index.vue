@@ -103,7 +103,8 @@
 </template>
 
 <script>
-import { get_department_list, get_staff_list, get_job_list, get_auth_list, delete_job} from '@/api/enterpriseManage'
+import { get_department_list, get_staff_list, get_job_list, get_auth_list, delete_job,rename_department, add_department,
+delete_department } from '@/api/enterpriseManage'
 import { mapGetters } from 'vuex'
 import axios from "axios"
 export default {
@@ -258,9 +259,131 @@ export default {
       
     },
     handleClose(){},
-    delDepartment(){},
-    renameDepartment(){},
-    addDepart(){},
+    delDepartment(department_name) {
+      if (!department_name) {
+        return
+      }
+
+      this.$confirm('确定删除部门：' + department_name + '？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        let result = await delete_department({
+          access_token: this.token,
+          department_name:department_name,
+        });
+        if (result.code == 0) {
+          this.$notify({
+            type: 'success',
+            title: '成功',
+            message:"操作成功"
+          });
+          this.getDepartmentList(1)
+        }
+
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
+    },
+    renameDepartment(){
+      if(!this.new_department_name || this.department_name == this.new_department_name) {
+        this.$message({
+          type: 'warning',
+          message: '部门名称为空或者未修改，请输入部门名称'
+        });
+        return
+      }
+
+      let has_num = 0
+      this.department_list.forEach(item=>{
+        if(this.new_department_name == item.name){
+          has_num ++
+          return
+        }
+      })
+
+      if (0 < has_num) {
+        this.$message({
+          type: 'warning',
+          message: '部门：' + this.new_department_name + ' 已存在，请重新输入'
+        });
+        return
+      }
+      this.$confirm('确定修改部门：' + this.department_name + ' 的名称为：' + this.new_department_name + ' ？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async()=>{
+        let result = await rename_department({
+          access_token: this.token,
+          old_name: this.department_name,
+          new_name:this.new_department_name,
+        })
+        if (result.code == 0) {
+          this.$notify({
+            type: 'success',
+            title: '成功',
+            message:"操作成功"
+          });
+          this.getDepartmentList()
+        }
+      }).catch(()=>{})
+    },
+    addDepart() {
+      if(!this.new_department_name) {
+        this.$message({
+          type: 'warning',
+          message: '请输入部门名称'
+        });
+        return
+      }
+
+      let has_num = 0
+      this.department_list.forEach(item=>{
+        if(this.new_department_name == item.name){
+          has_num ++
+          return
+        }
+      })
+
+      if (0 < has_num) {
+        this.$message({
+          type: 'warning',
+          message: '部门：' + this.new_department_name + ' 已存在，请重新输入'
+        });
+        return
+      }
+
+      this.$confirm('确定新增部门：' + this.new_department_name + '？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        
+        let result = await add_department({
+          access_token: this.token,
+          department_name:this.new_department_name,
+        })
+        if (result.code == 0) {
+          this.$notify({
+            type: 'success',
+            title: '成功',
+            message:"操作成功"
+          });
+          this.getDepartmentList()
+        }
+
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消新增部门'
+        });
+      });
+    },
     transferAdmin(){},
     setDepartmentDirector(){},
     changeFun(){},
@@ -338,7 +461,7 @@ export default {
                 title: '成功',
                 message:"操作成功"
               })
-              
+
               this.getJobList()
             }
           })
