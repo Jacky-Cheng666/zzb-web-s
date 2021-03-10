@@ -155,7 +155,7 @@
 
 <script>
 import payPlan from './components/payPlanDialog'
-import elementInfo from '../../components/elementInfo'
+import elementInfo from '../../../components/elementInfo'
 const battchAdd = ()=>import('./components/batchAdd')
 import uploadFile from '@/components/UploadFile/index'
 import { mapGetters } from 'vuex'

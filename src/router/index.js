@@ -52,7 +52,7 @@ export const asyncRoutes = [
       {
         path: 'createSaleOrder',
         name: 'createSaleOrder',
-        component: () => import('@/views/createSaleOrder/index'),
+        component: () => import('@/views/saleManage/createSaleOrder/index'),
         meta: { title: '新建销单',icon: 'el-icon-document-add' }
       },
       {
@@ -66,25 +66,25 @@ export const asyncRoutes = [
           {
             path: 'intentionOrder',
             name: 'intentionOrder',
-            component: () => import('@/views/intentionOrder/index'),
+            component: () => import('@/views/saleManage/intentionOrder/index'),
             meta: { title: '意向订单',icon: 'el-icon-tickets' }
           },
           {
             path: 'synergyOfferPrice',
             name: 'synergyOfferPrice',
-            component: () => import('@/views/synergyOfferPrice/index'),
+            component: () => import('@/views/saleManage/synergyOfferPrice/index'),
             meta: { title: '协同报价',icon: 'el-icon-money' }
           },
           {
             path: 'customerAskPrice',
             name: 'customerAskPrice',
-            component: () => import('@/views/customerAskPrice/index'),
+            component: () => import('@/views/saleManage/customerAskPrice/index'),
             meta: { title: '客户询价',icon: 'el-icon-price-tag' }
           },
           {
             path: 'AskPriceOrder/:order_name',
             name: 'AskPriceOrder',
-            component: () => import('@/views/AskPriceOrder/index'),
+            component: () => import('@/views/saleManage/AskPriceOrder/index'),
             meta: { title: '询价单',icon: 'el-icon-price-tag',activeMenu: '/saleManage/synergyOrderManage/customerAskPrice' },
             hidden: true,
           },
@@ -93,7 +93,7 @@ export const asyncRoutes = [
       {
         path: 'saleRecords',
         name: 'saleRecords',
-        component: () => import('@/views/saleRecords/index'),
+        component: () => import('@/views/saleManage/saleRecords/index'),
         meta: { title: '销售记录',icon: 'el-icon-tickets' }
       },
       {
@@ -106,39 +106,39 @@ export const asyncRoutes = [
           {
             path: 'deliveryList',
             name: 'deliveryList',
-            component: () => import('@/views/deliveryList/index'),
+            component: () => import('@/views/saleManage/deliveryList/index'),
             meta: { title: '发货',icon: 'deliver' }
           },
           {
             path: 'deliveryRecords',
             name: 'deliveryRecords',
-            component: () => import('@/views/deliveryRecords/index'),
+            component: () => import('@/views/saleManage/deliveryRecords/index'),
             meta: { title: '发货记录',icon: 'el-icon-tickets' }
           },
           {
             path: 'cusReturnRecords',
             name: 'cusReturnRecords',
-            component: () => import('@/views/cusReturnRecords/index'),
+            component: () => import('@/views/saleManage/cusReturnRecords/index'),
             meta: { title: '退货记录',icon: 'el-icon-tickets' }
           },
           {
             path: 'deSaleOrder/:order_name',
             name: 'deSaleOrder',
-            component: () => import('@/views/deSaleOrder/index'),
+            component: () => import('@/views/saleManage/deSaleOrder/index'),
             meta: { title: '销售订单',icon: '', },
             hidden: true
           },
           {
             path: 'deliveryOrder/:deliver_name',
             name: 'deliveryOrder',
-            component: () => import('@/views/deliveryOrder/index'),
+            component: () => import('@/views/saleManage/deliveryOrder/index'),
             meta: { title: '发货单',icon: '', activeMenu: '/saleManage/deliveryManage/deliveryRecords' },
             hidden: true
           },
           {
             path: 'cusReturnOrder/:deliver_name',
             name: 'cusReturnOrder',
-            component: () => import('@/views/cusReturnOrder/index'),
+            component: () => import('@/views/saleManage/cusReturnOrder/index'),
             meta: { title: '退货单',icon: '', activeMenu: '/saleManage/deliveryManage/cusReturnRecords' },
             hidden: true
           },
@@ -155,7 +155,7 @@ export const asyncRoutes = [
           {
             path: 'productLibrary',
             name: 'productLibrary',
-            component: () => import('@/views/productLibrary/index'),
+            component: () => import('@/views/saleManage/productLibrary/index'),
             meta: { title: '产品库',icon: 'el-icon-goods' }
           },
         ]
@@ -163,7 +163,7 @@ export const asyncRoutes = [
       {
         path: 'saleOrder/:order_name',
         name: 'saleOrder',
-        component: () => import('@/views/saleOrder/index'),
+        component: () => import('@/views/saleManage/saleOrder/index'),
         meta: { title: '销售订单',icon: 'el-icon-takeaway-box',activeMenu: '/saleManage/saleRecords' },
         hidden: true
       }
@@ -185,25 +185,25 @@ export const asyncRoutes = [
           {
             path: 'createRequestOrder',
             name: 'createRequestOrder',
-            component: () => import('@/views/createRequestOrder/index'),
+            component: () => import('@/views/purchaseManage/createRequestOrder/index'),
             meta: { title: '新建请购',icon: 'el-icon-document-add' }
           },
           {
             path: 'myRequestList',
             name: 'myRequestList',
-            component: () => import('@/views/myRequestList/index'),
+            component: () => import('@/views/purchaseManage/myRequestList/index'),
             meta: { title: '我的请购',icon: 'el-icon-tickets' }
           },
           {
             path: 'reqListFollow',
             name: 'reqListFollow',
-            component: () => import('@/views/reqListFollow/index'),
+            component: () => import('@/views/purchaseManage/reqListFollow/index'),
             meta: { title: '请购跟进',icon: 'el-icon-document-copy' }
           },
           {
             path: 'requestOrder/:order_name',
             name: 'requestOrder',
-            component: () => import('@/views/requestOrder/index'),
+            component: () => import('@/views/purchaseManage/requestOrder/index'),
             meta: { title: '请购单',icon: 'el-icon-takeaway-box',activeMenu: '/purchaseManage/requestOrderManage/myRequestList' },
             hidden: true
           }
@@ -212,25 +212,25 @@ export const asyncRoutes = [
       {
         path: 'createPurchaseOrder',
         name: 'createPurchaseOrder',
-        component: () => import('@/views/createPurchaseOrder/index'),
+        component: () => import('@/views/purchaseManage/createPurchaseOrder/index'),
         meta: { title: '新建订单',icon: 'el-icon-document-add' }
       },
       {
         path: 'purchaseRecords',
         name: 'purchaseRecords',
-        component: () => import('@/views/purchaseRecords/index'),
+        component: () => import('@/views/purchaseManage/purchaseRecords/index'),
         meta: { title: '采购记录',icon: 'el-icon-tickets' }
       },
       {
         path: 'monthBillCheck',
         name: 'monthBillCheck',
-        component: () => import('@/views/monthBillCheck/index'),
+        component: () => import('@/views/purchaseManage/monthBillCheck/index'),
         meta: { title: '月结对账',icon: 'el-icon-document' }
       },
       {
         path: 'monthBill/:order_no',
         name: 'monthBill',
-        component: () => import('@/views/monthBill/index'),
+        component: () => import('@/views/purchaseManage/monthBill/index'),
         meta: { title: '对账单' ,activeMenu: '/purchaseManage/monthBillCheck' },
         hidden: true
       },
@@ -245,39 +245,39 @@ export const asyncRoutes = [
           {
             path: 'receiveList',
             name: 'receiveList',
-            component: () => import('@/views/receiveList/index'),
+            component: () => import('@/views/purchaseManage/receiveList/index'),
             meta: { title: '收货',icon: 'receiveIcon' }
           },
           {
             path: 'rePurchaseOrder/:order_name',
             name: 'rePurchaseOrder',
-            component: () => import('@/views/rePurchaseOrder/index'),
+            component: () => import('@/views/purchaseManage/rePurchaseOrder/index'),
             hidden: true,
             meta: { title: '采购订单',activeMenu: '/purchaseManage/receiveManage/receiveList'}
           },
           {
             path: 'receiveRecords',
             name: 'receiveRecords',
-            component: () => import('@/views/receiveRecords/index'),
+            component: () => import('@/views/purchaseManage/receiveRecords/index'),
             meta: { title: '收货记录',icon: 'el-icon-tickets' }
           },
           {
             path: 'reDeliveryOrder/:order_name',
             name: 'reDeliveryOrder',
-            component: () => import('@/views/reDeliveryOrder/index'),
+            component: () => import('@/views/purchaseManage/reDeliveryOrder/index'),
             meta: { title: '发货单',activeMenu: '/purchaseManage/receiveManage/receiveRecords' },
             hidden: true
           },
           {
             path: 'reReturnRecords',
             name: 'reReturnRecords',
-            component: () => import('@/views/reReturnRecords/index'),
+            component: () => import('@/views/purchaseManage/reReturnRecords/index'),
             meta: { title: '退货记录',icon: 'el-icon-tickets' }
           },
           {
             path: 'reReturnOrder/:order_name',
             name: 'reReturnOrder',
-            component: () => import('@/views/reReturnOrder/index'),
+            component: () => import('@/views/purchaseManage/reReturnOrder/index'),
             meta: { title: '退货单',activeMenu: '/purchaseManage/receiveManage/reReturnRecords' },
             hidden: true
           },
@@ -286,7 +286,7 @@ export const asyncRoutes = [
       {
         path: 'purchaseOrder/:order_name',
         name: 'purchaseOrder',
-        component: () => import('@/views/purchaseOrder/index'),
+        component: () => import('@/views/purchaseManage/purchaseOrder/index'),
         meta: { title: '采购订单',icon: 'el-icon-takeaway-box',activeMenu: '/purchaseManage/purchaseRecords' },
         hidden: true
       },
@@ -303,33 +303,33 @@ export const asyncRoutes = [
       {
         path: 'basicInfo',
         name: 'basicInfo',
-        component: () => import('@/views/basicInfo/index'),
+        component: () => import('@/views/enterpriseManage/basicInfo/index'),
         meta: { title: '基本信息',icon: 'el-icon-info', noCache: true}
       },
       {
         path: 'addressBook',
         name: 'addressBook',
-        component: () => import('@/views/addressBook/index'),
+        component: () => import('@/views/enterpriseManage/addressBook/index'),
         meta: { title: '通讯录',icon: 'el-icon-notebook-2', noCache: true}
       },
       {
         path: 'addStaff',
         name: 'staffEdit',
-        component: () => import('@/views/staffEdit/index'),
+        component: () => import('@/views/enterpriseManage/staffEdit/index'),
         meta: { title: '添加成员', activeMenu: '/enterpriseManage/addressBook'},
         hidden: true
       },
       {
         path: 'staffEdit/:staff_id',
         name: 'staffEdit',
-        component: () => import('@/views/staffEdit/index'),
+        component: () => import('@/views/enterpriseManage/staffEdit/index'),
         meta: { title: '编辑成员', activeMenu: '/enterpriseManage/addressBook'},
         hidden: true
       },
       {
         path: 'processManage',
         name: 'processManage',
-        component: () => import('@/views/processManage/index'),
+        component: () => import('@/views/enterpriseManage/processManage/index'),
         meta: { title: '流程管理',icon: 'el-icon-refresh' }
       },
       {
@@ -343,33 +343,33 @@ export const asyncRoutes = [
           {
             path: 'elementsManage',
             name: 'elementsManage',
-            component: () => import('@/views/elementsManage/index'),
+            component: () => import('@/views/enterpriseManage/elementsManage/index'),
             meta: { title: '物料管理',icon: 'el-icon-coin' },
           },
           {
             path: 'safeStock',
             name: 'safeStock',
-            component: () => import('@/views/safeStock/index'),
+            component: () => import('@/views/enterpriseManage/safeStock/index'),
             meta: { title: '安全库存',icon: 'el-icon-lock' },
           },
           {
             path: 'setSafeStock',
             name: 'safeStock',
-            component: () => import('@/views/safeStock/index'),
+            component: () => import('@/views/enterpriseManage/safeStock/index'),
             meta: { title: '设置安全库存',isChecked:true },
             hidden: true
           },
           {
             path: 'addElements',
             name: 'elementsEdit',
-            component: () => import('@/views/elementsEdit/index'),
+            component: () => import('@/views/enterpriseManage/elementsEdit/index'),
             meta: { title: '添加物料', activeMenu: '/enterpriseManage/inventoryManage/elementsManage'},
             hidden: true
           },
           {
             path: 'elementsEdit/:element_code',
             name: 'elementsEdit',
-            component: () => import('@/views/elementsEdit/index'),
+            component: () => import('@/views/enterpriseManage/elementsEdit/index'),
             meta: { title: '编辑物料', activeMenu: '/enterpriseManage/inventoryManage/elementsManage', isEdit: true},
             hidden: true
           }
@@ -378,7 +378,7 @@ export const asyncRoutes = [
       {
         path: 'categoryManage',
         name: 'categoryManage',
-        component: () => import('@/views/categoryManage/index'),
+        component: () => import('@/views/enterpriseManage/categoryManage/index'),
         meta: { title: '品类管理',icon: 'el-icon-set-up' }
       },
     ]

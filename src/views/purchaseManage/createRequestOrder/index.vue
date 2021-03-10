@@ -106,7 +106,7 @@
 </template>
 
 <script>
-import elementInfo from '../../components/elementInfo'
+import elementInfo from '../../../components/elementInfo'
 import batchAdd from './components/batchAdd'
 import uploadFile from '@/components/UploadFile'
 import { mapGetters } from 'vuex'

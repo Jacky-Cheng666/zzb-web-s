@@ -139,7 +139,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import elementInfo from '../../components/elementInfo'
+import elementInfo from '../../../components/elementInfo'
 const battchAdd = ()=>import('./components/batchAdd')
 import uploadFile from '@/components/UploadFile'
 export default {
