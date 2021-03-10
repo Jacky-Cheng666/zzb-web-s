@@ -5,28 +5,31 @@
               <el-form-item>
                   <div>{{myElementTitleName}}：</div>
                   <el-form-item label="名称" prop="element_name">
-                      <el-input v-model="elementInfoForm.element_name" placeholder="输入名称" clearable size="small" style="width: 260px"/>
+                      <el-input v-model="elementInfoForm.element_info.element_name" placeholder="输入名称" clearable size="small" style="width: 260px"/>
                   </el-form-item>
                   <el-form-item label="代码" prop="element_code">
-                      <el-input v-model="elementInfoForm.element_code" placeholder="输入代码" clearable size="small"/>
+                      <el-input v-model="elementInfoForm.element_info.element_code" placeholder="输入代码" clearable size="small"/>
                   </el-form-item>
                   <el-form-item label="型号" prop="spec_code">
-                      <el-input v-model="elementInfoForm.spec_code" placeholder="输入型号" clearable size="small" style="width: 260px"/>
+                      <el-input v-model="elementInfoForm.element_info.spec_code" placeholder="输入型号" clearable size="small" style="width: 260px"/>
                   </el-form-item>
                   <el-form-item label="品牌" prop="element_code">
-                      <el-input v-model="elementInfoForm.brand" placeholder="输入品牌" clearable size="small"/>
+                      <el-input v-model="elementInfoForm.element_info.brand" placeholder="输入品牌" clearable size="small"/>
                   </el-form-item>
                   <el-form-item label="单位" prop="unit">
-                      <el-input style="width:80px" v-model="elementInfoForm.unit" placeholder="单位" clearable size="small"/>
+                      <el-input style="width:80px" v-model="elementInfoForm.element_info.unit" placeholder="单位" clearable size="small"/>
                   </el-form-item>
                   <el-form-item label="最小包装" prop="min_package" label-width="70px">
-                      <el-input style="width:100px" v-model="elementInfoForm.min_package" placeholder="最小包装" clearable size="small"/>
+                      <el-input style="width:100px" v-model="elementInfoForm.element_info.min_package" placeholder="最小包装" clearable size="small"/>
                   </el-form-item>
                   <el-form-item label="最少购买" prop="min_purchase" label-width="80px">
-                      <el-input style="width:170px" v-model="elementInfoForm.min_purchase" placeholder="最少购买" clearable size="small"/>
+                      <el-input style="width:170px" v-model="elementInfoForm.element_info.min_purchase" placeholder="最少购买" clearable size="small"/>
                   </el-form-item>
                   <el-form-item label="品类" prop="work_piece_id">
-                      <el-select placeholder="选择品类" v-model="elementInfoForm.work_piece_id" size="small" style="width:520px">
+                      <!-- <el-cascader filterable style="width: 100%;" placeholder="请选择物料品类" @change="handleChangerRule(elementInfoForm)"
+                        :props="select_props" :options="encode_rule_list" v-model="encode_code_list" clearable>
+                      </el-cascader> -->
+                      <el-select placeholder="选择品类" v-model="elementInfoForm.element_info.work_piece_id" size="small" style="width:520px">
                         <el-option label="全部" value="全部"></el-option>
                         <el-option label="预付" value="预付"></el-option>
                         <el-option label="到付" value="到付"></el-option>
@@ -63,30 +66,84 @@ export default {
         },
         myElementTitleName: {
             default: "我方物料信息"
+        },
+        elementInfoForm: {
+            
         }
     },
     data() {
         return {
             openElementInfo: false,
-            elementInfoForm: {
-                element_name: "",
-                element_code: "",
-                spec_code: "",
-                brand: "",
-                unit: "",
-                min_package: "",
-                min_purchase: "",
-                work_piece_id: "",
-                trade_num: "",
-                noTax: "",
-                price: "",
-                remark: ""
-            }
+            // elementInfoForm: {
+            //     element_info: {},
+            //     buy_info: {},
+            //     sale_info: {},
+            //     trade_info: {},
+            //     element_name: "",
+            //     element_code: "",
+            //     spec_code: "",
+            //     brand: "",
+            //     unit: "",
+            //     min_package: "",
+            //     min_purchase: "",
+            //     work_piece_id: "",
+            //     trade_num: "",
+            //     noTax: "",
+            //     price: "",
+            //     remark: ""
+            // }
         }
     },
     created() {
         // console.log('公共组件');
+
     },
+    methods: {
+        // handleChangerRule(ruleForm) {
+        //     let codes = []
+        //     ruleForm.content_code = ""
+        //     this.encode_code_list.forEach((item, index)=>{
+        //         ruleForm.content_code += item
+        //         codes[index] = item
+        //     })
+
+        //     let first, second
+        //     ruleForm.content_name = ""
+        //     codes.forEach((code, index) => {
+        //         if (0 == index) {
+        //         this.encode_rule_list.forEach((item, i1) => {
+        //             if (item.code == code) {
+        //             first = i1
+        //             ruleForm.content_name = item.name
+        //             }
+        //         })
+        //         }
+
+        //         if (1 == index) {
+        //         this.encode_rule_list[first].sub_list.forEach((item, i2) => {
+        //             if (item.code == code) {
+        //             second = i2
+        //             ruleForm.content_name = item.name
+        //             }
+        //         })
+        //         }
+
+        //         if (2 == index) {
+        //         this.encode_rule_list[first].sub_list[second].sub_list.forEach((item) => {
+        //             if (item.code == code) {
+        //             ruleForm.content_name = item.name
+        //             }
+        //         })
+        //         }
+        //     })
+
+        //     if (this.encode_code_list.length <= 1) {
+        //         ruleForm.content_code += '00000'
+        //     } else if (this.encode_code_list.length <= 2) {
+        //         ruleForm.content_code += '000'
+        //     }
+        // }
+    }
 }
 </script>
 
