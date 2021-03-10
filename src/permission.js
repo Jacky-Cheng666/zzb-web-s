@@ -30,6 +30,7 @@ router.beforeEach(async(to, from, next) => {
           router.addRoutes(accessRoutes)
           store.commit('app/CALCULATE_SCREEN_HEIGHT')
           store.dispatch('cwm/getTaxList')
+          store.dispatch('cwm/getSaleBasicInfo')
           next({ ...to, replace: true })
 
         } catch (error) {

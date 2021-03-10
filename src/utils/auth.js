@@ -9,3 +9,7 @@ export function setToken(TokenKey,token) {
 export function removeToken(TokenKey) {
   return window.localStorage.removeItem(TokenKey)
 }
+
+export function clearLocalStorage() {
+  return window.localStorage.clear()
+}
