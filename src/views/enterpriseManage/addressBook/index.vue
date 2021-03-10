@@ -53,7 +53,7 @@
             <el-table-column align="center" label="操作" width="120">
               <template slot-scope="scope" >
                 <el-button @click="toStaffEdit(scope.row)" size="mini" type="text" icon="el-icon-edit">编辑</el-button>
-                <el-button size="mini" type="text" icon="el-icon-delete" class="text-danger">删除</el-button>              
+                <el-button @click="deleteStaff(scope.row.staff_id)" size="mini" type="text" icon="el-icon-delete" class="text-danger">删除</el-button>              
               </template>
             </el-table-column>
           </el-table>
@@ -104,7 +104,7 @@
 
 <script>
 import { get_department_list, get_staff_list, get_job_list, get_auth_list, delete_job,rename_department, add_department,
-delete_department, set_department_head, transfer_admin_role } from '@/api/enterpriseManage'
+delete_department, set_department_head, transfer_admin_role, delete_staff } from '@/api/enterpriseManage'
 import { mapGetters } from 'vuex'
 import { setToken } from '@/utils/auth'
 import axios from "axios"
@@ -621,7 +621,34 @@ export default {
     },
     toStaffEdit(row){
       this.$router.push('/enterpriseManage/staffEdit/'+row.staff_id)
-    }
+    },
+
+    deleteStaff(staff_id){
+      this.$confirm('确定删除该人员？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        let result = await delete_staff({
+          access_token: this.token,
+          staff_id:staff_id,
+        });
+        if (result.code == 0) {
+          this.$notify({
+            type: 'success',
+            title: '成功',
+            message:"操作成功"
+          });
+          this.getDepartmentList()
+        }
+
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
+    },
   },
 };
 </script>

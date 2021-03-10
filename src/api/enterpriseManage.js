@@ -241,3 +241,11 @@ export function add_staff(data) {
         data
     })
 }
+
+export function delete_staff(data) {
+    return request({
+        url: '/corp/company/delete_staff',
+        method: 'post',
+        data
+    })
+}
