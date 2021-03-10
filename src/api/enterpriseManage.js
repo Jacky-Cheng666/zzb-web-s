@@ -233,3 +233,11 @@ export function transfer_admin_role(data) {
         data
     })
 }
+
+export function add_staff(data) {
+    return request({
+        url: '/corp/company/add_staff',
+        method: 'post',
+        data
+    })
+}

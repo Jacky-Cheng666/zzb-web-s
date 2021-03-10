@@ -106,6 +106,7 @@
 import { get_department_list, get_staff_list, get_job_list, get_auth_list, delete_job,rename_department, add_department,
 delete_department, set_department_head, transfer_admin_role } from '@/api/enterpriseManage'
 import { mapGetters } from 'vuex'
+import { setToken } from '@/utils/auth'
 import axios from "axios"
 export default {
   name: "addressBook",
@@ -147,6 +148,8 @@ export default {
         access_token: this.token
       });
       if(result.code===0){
+        this.$store.commit('cwm/SET_DEPARTMENT_LIST', result.department_list)
+        setToken('department_list', result.department_list)
         this.department_list = result.department_list
         this.activeIndex = this.department_list[0].name.toString();
         if(this.department_list.length>0){
@@ -160,7 +163,8 @@ export default {
         access_token: this.token
       })
       if(result.code===0){
-
+        this.$store.commit('cwm/SET_JOB_LIST', result.job_list)
+        setToken('job_list',result.job_list)
         this.job_list = result.job_list
         if(this.job_list.length > 0){
           this.job_id = this.job_list[0].job_id
