@@ -109,7 +109,16 @@ export default {
     }
   },
   methods: {
-    isGetAll(){},
+    isGetAll(){
+      if(this.checked){
+        this.workpieces = []
+        this.workpiece_list.forEach(node => {
+        this.workpieces.push(node.id)
+        })
+      }else{
+        this.workpieces = []
+      }
+    },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {

@@ -452,6 +452,9 @@ export default {
 
 <style lang='scss'>
 .basicInfo {
+  .el-form-item {
+    margin-bottom: 12px
+  }
   .bookInfo {
     border: 1px solid #e5e5e5;
     margin-bottom: 25px;

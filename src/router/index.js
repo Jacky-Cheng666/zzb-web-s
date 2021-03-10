@@ -379,7 +379,7 @@ export const asyncRoutes = [
         path: 'categoryManage',
         name: 'categoryManage',
         component: () => import('@/views/enterpriseManage/categoryManage/index'),
-        meta: { title: '品类管理',icon: 'el-icon-set-up' }
+        meta: { title: '品类管理',icon: 'el-icon-set-up',noCache: true }
       },
     ]
   },

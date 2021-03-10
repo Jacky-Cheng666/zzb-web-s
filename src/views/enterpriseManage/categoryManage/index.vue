@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container categoryManage">
+  <div class="app-container categoryManage" v-loading="loading" element-loading-text="加载中...">
     <header class="header">
       <div class="titleEdit">品类管理</div>
       <div>
@@ -100,20 +100,394 @@
 </template>
 
 <script>
+import { get_encode_rule, edit_encode_rule } from '@/api/enterpriseManage'
+import { mapGetters } from 'vuex'
 export default {
   name: 'categoryManage',
   data() {
     return {
-      encode_rule: [[{"name":"原材料","code":"01","sub_index":["结构件","机械标准件","振动盘","测试仪","紧固件","功能组件","LED系列","控制软件","刀具","电动工具","五金类辅助材料","工具类用品","其它类办公用品"]},{"name":"半成品","code":"02","sub_index":["功能组件","紧固件一","结构件一"]},{"name":"成品","code":"03","sub_index":["LED系列","IC 系列","说明书","控制软件","功能组件一"]},{"name":"工具","code":"04","sub_index":["刀具","手工工具","电动工具","焊接工具","工具盒","车间用具","检验工具","其它类工具"]},{"name":"设备","code":"05","sub_index":["办公设备","生产设备","检验设备","研发设备","运输设备","其它设备"]},{"name":"生产辅助材料","code":"06","sub_index":["电子类辅助材料","五金类辅助材料","化工类辅助材料","板材类辅助材料","纸张类辅助材料","其它类辅助材料"]},{"name":"办公用品","code":"07","sub_index":["纸本类用品","笔墨类用品","工具类用品","其它类办公用品"]},{"name":"其它用品","code":"08","sub_index":["劳保用品","清洁用品/粘合剂","紧固件一"]},{"code":"09","name":"开发用品"}],[{"name":"结构件","code":"01","sub_index":["测试机","编带机","测试打标编带机","换盘机","其他机型","测试机钣金件","编带机钣金件","测试打标编带机钣金件","换盘机钣金件","其他机型钣金件","治具类（改机类）","动力类","控制器类","传感器及附件类","运动控制类","工业相机类","低压电器类","电缆端子类","其他（注塑类、玻璃类和陶瓷类）"]},{"name":"机械标准件","code":"02","sub_index":["传动件","轴承类","气动元件","弹簧类","加工件","连接件","塑料类","其他"]},{"name":"电器标准件","code":"03","sub_index":["动力类","控制器类","传感器及附件类","运动控制类","工业相机类","低压电器类","电缆端子类","其他"]},{"name":"振动盘","code":"04","sub_index":["大兴振动盘","久田振动盘","产台振动盘","晶展新振动盘","其他"]},{"name":"测试仪","code":"05","sub_index":["索拉测试仪","欧泰克测试仪","赐丰测试仪","侧立思测试仪","橙光测试仪","蔚蓝测试仪","其他"]},{"name":"紧固件","code":"06","sub_index":["螺钉、螺栓","螺母、弹簧垫圈、平垫圈","销、键"]},{"name":"功能组件","code":"07","sub_index":["测试机系列","编带机系列","测试打标编带机系列","换盘机系列","其他机型系列","其它组件"]},{"name":"LED系列","code":"08","sub_index":["测试机LJ6000系列","测试机LJ6020系列","编带机LJ9000系列","测试机LJ6050系列","测试机LJ6030系列","换盘机系列","红外产品系列","其它机型系列","其他"]},{"name":"IC 系列","code":"09","sub_index":["测试打标编带机LJ8000 系列","测试分选机LJ8024 系列","其他"]},{"name":"说明书","code":"10","sub_index":["测试机系列说明书","编带机系列说明书","测试打标编带机系列说明书","其他"]},{"name":"控制软件","code":"11","sub_index":["测试机系列","编带机系列","测试打标编带机系列","其他"]},{"name":"刀具","code":"12"},{"name":"手工工具","code":"13"},{"name":"电动工具","code":"14"},{"name":"焊接工具","code":"15"},{"name":"工具盒","code":"16"},{"name":"车间用具","code":"17"},{"name":"检验工具","code":"18"},{"name":"其它类工具","code":"19"},{"name":"办公设备","code":"20"},{"name":"生产设备","code":"21"},{"name":"检验设备","code":"22"},{"name":"研发设备","code":"23"},{"name":"运输设备","code":"24"},{"name":"其它设备","code":"25"},{"name":"电子类辅助材料","code":"26"},{"name":"五金类辅助材料","code":"27"},{"name":"化工类辅助材料","code":"28"},{"name":"板材类辅助材料","code":"29"},{"name":"纸张类辅助材料","code":"30"},{"name":"其它类辅助材料","code":"31"},{"name":"纸本类用品","code":"32"},{"name":"笔墨类用品","code":"33"},{"name":"工具类用品","code":"34"},{"name":"其它类办公用品","code":"35"},{"name":"劳保用品","code":"36"},{"name":"清洁用品/粘合剂","code":"37"}],[{"name":"测试机","code":"001"},{"name":"编带机","code":"002"},{"name":"测试打标编带机","code":"003"},{"name":"换盘机","code":"004"},{"name":"其他机型","code":"005"},{"name":"测试机钣金件","code":"006"},{"name":"编带机钣金件","code":"007"},{"name":"测试打标编带机钣金件","code":"008"},{"name":"换盘机钣金件","code":"009"},{"name":"其他机型钣金件","code":"010"},{"name":"治具类（改机类）","code":"011"},{"name":"传动件","code":"012"},{"name":"轴承类","code":"013"},{"name":"气动元件","code":"014"},{"name":"弹簧类","code":"015"},{"name":"加工件","code":"016"},{"name":"连接件","code":"017"},{"name":"塑料类","code":"018"},{"name":"动力类","code":"019"},{"name":"控制器类","code":"020"},{"name":"传感器及附件类","code":"021"},{"name":"运动控制类","code":"022"},{"name":"工业相机类","code":"023"},{"name":"低压电器类","code":"024"},{"name":"电缆端子类","code":"025"},{"name":"大兴振动盘","code":"026"},{"name":"久田振动盘","code":"027"},{"name":"产台振动盘","code":"028"},{"name":"晶展新振动盘","code":"029"},{"name":"索拉测试仪","code":"030"},{"name":"欧泰克测试仪","code":"031"},{"name":"赐丰测试仪","code":"032"},{"name":"侧立思测试仪","code":"033"},{"name":"橙光测试仪","code":"034"},{"name":"蔚蓝测试仪","code":"035"},{"name":"螺钉、螺栓","code":"036"},{"name":"螺母、弹簧垫圈、平垫圈","code":"037"},{"name":"销、键","code":"038"},{"name":"测试机系列","code":"039"},{"name":"编带机系列","code":"040"},{"name":"测试打标编带机系列","code":"041"},{"name":"换盘机系列","code":"042"},{"name":"其他机型系列","code":"043"},{"name":"其它组件","code":"044"},{"name":"测试机LJ6000系列","code":"045"},{"name":"测试机LJ6020系列","code":"046"},{"name":"编带机LJ9000系列","code":"047"},{"name":"测试机LJ6050系列","code":"048"},{"name":"测试机LJ6030系列","code":"049"},{"name":"红外产品系列","code":"050"},{"name":"其它机型系列","code":"051"},{"name":"测试打标编带机LJ8000 系列","code":"052"},{"name":"测试分选机LJ8024 系列","code":"053"},{"name":"测试机系列说明书","code":"054"},{"name":"编带机系列说明书","code":"055"},{"name":"测试打标编带机系列说明书","code":"056"},{"name":"其他（注塑类、玻璃类和陶瓷类）","code":"057"}]],
-      encode_rule_ui: [[{"name":"原材料","code":"01","sub_index":["结构件","机械标准件","振动盘","测试仪","紧固件","功能组件","LED系列","控制软件","刀具","电动工具","五金类辅助材料","工具类用品","其它类办公用品"]},{"name":"半成品","code":"02","sub_index":["功能组件","紧固件一","结构件一"]},{"name":"成品","code":"03","sub_index":["LED系列","IC 系列","说明书","控制软件","功能组件一"]},{"name":"工具","code":"04","sub_index":["刀具","手工工具","电动工具","焊接工具","工具盒","车间用具","检验工具","其它类工具"]},{"name":"设备","code":"05","sub_index":["办公设备","生产设备","检验设备","研发设备","运输设备","其它设备"]},{"name":"生产辅助材料","code":"06","sub_index":["电子类辅助材料","五金类辅助材料","化工类辅助材料","板材类辅助材料","纸张类辅助材料","其它类辅助材料"]},{"name":"办公用品","code":"07","sub_index":["纸本类用品","笔墨类用品","工具类用品","其它类办公用品"]},{"name":"其它用品","code":"08","sub_index":["劳保用品","清洁用品/粘合剂","紧固件一"]},{"code":"09","name":"开发用品"}],[{"name":"结构件","code":"01","sub_index":["测试机","编带机","测试打标编带机","换盘机","其他机型","测试机钣金件","编带机钣金件","测试打标编带机钣金件","换盘机钣金件","其他机型钣金件","治具类（改机类）","动力类","控制器类","传感器及附件类","运动控制类","工业相机类","低压电器类","电缆端子类","其他（注塑类、玻璃类和陶瓷类）"]},{"name":"机械标准件","code":"02","sub_index":["传动件","轴承类","气动元件","弹簧类","加工件","连接件","塑料类","其他"]},{"name":"振动盘","code":"04","sub_index":["大兴振动盘","久田振动盘","产台振动盘","晶展新振动盘","其他"]},{"name":"测试仪","code":"05","sub_index":["索拉测试仪","欧泰克测试仪","赐丰测试仪","侧立思测试仪","橙光测试仪","蔚蓝测试仪","其他"]},{"name":"紧固件","code":"06","sub_index":["螺钉、螺栓","螺母、弹簧垫圈、平垫圈","销、键"]},{"name":"功能组件","code":"07","sub_index":["测试机系列","编带机系列","测试打标编带机系列","换盘机系列","其他机型系列","其它组件"]},{"name":"LED系列","code":"08","sub_index":["测试机LJ6000系列","测试机LJ6020系列","编带机LJ9000系列","测试机LJ6050系列","测试机LJ6030系列","换盘机系列","红外产品系列","其它机型系列","其他"]},{"name":"控制软件","code":"11","sub_index":["测试机系列","编带机系列","测试打标编带机系列","其他"]},{"name":"刀具","code":"12"},{"name":"电动工具","code":"14"},{"name":"五金类辅助材料","code":"27"},{"name":"工具类用品","code":"34"},{"name":"其它类办公用品","code":"35"}],[{"name":"测试机","code":"001"},{"name":"编带机","code":"002"},{"name":"测试打标编带机","code":"003"},{"name":"换盘机","code":"004"},{"name":"其他机型","code":"005"},{"name":"测试机钣金件","code":"006"},{"name":"编带机钣金件","code":"007"},{"name":"测试打标编带机钣金件","code":"008"},{"name":"换盘机钣金件","code":"009"},{"name":"其他机型钣金件","code":"010"},{"name":"治具类（改机类）","code":"011"},{"name":"动力类","code":"019"},{"name":"控制器类","code":"020"},{"name":"传感器及附件类","code":"021"},{"name":"运动控制类","code":"022"},{"name":"工业相机类","code":"023"},{"name":"低压电器类","code":"024"},{"name":"电缆端子类","code":"025"},{"name":"其他（注塑类、玻璃类和陶瓷类）","code":"057"}]],
-      encode_name: ["原材料","结构件","测试机"],
+      encode_rule: [[],[],[]],
+      encode_rule_ui: [],
+      encode_name: [],
       new_name: ['', '', ''],
       new_code: ['', '', ''],
+      loading: false
     }
   },
+  created() {
+    this.getRuleList()
+  },
+  computed: {
+    ...mapGetters(['token'])
+  },
   methods: {
-    clearAll(){},
-    submitRule(){}
+    async getRuleList(){
+      this.loading = true;
+      let result = await get_encode_rule({
+        access_token: this.token
+      })
+      if(result.code===0){
+        this.loading = false;
+        this.encode_rule = result.encode_rule
+        this.handleChangeRule(0)
+      }else{
+        this.loading = false;
+        this.encode_rule = []
+        this.encode_name = []
+      }
+    },
+    handleChangeRule(level){
+      if (!this.encode_rule || this.encode_rule.length <= 0) {
+        this.encode_name = []
+        this.encode_rule_ui = []
+        return
+      }
+      //console.log(JSON.stringify(this.encode_rule))
+
+      let first = this.encode_rule[0]
+      let second = this.encode_rule[1]
+      let third = this.encode_rule[2]
+
+      if(first) {
+        first.sort((a, b) => {
+          return a.code.localeCompare(b.code);
+        });
+      }
+      if(second) {
+        second.sort((a, b) => {
+          return a.code.localeCompare(b.code);
+        });
+      }
+      if(third) {
+        third.sort((a, b) => {
+          return a.code.localeCompare(b.code);
+        });
+      }
+
+      if (level <= 0 && this.encode_name.length <= 0) {
+        this.encode_name = []
+        this.encode_rule_ui = []
+        this.encode_rule_ui[0] = this.encode_rule[0]
+        this.encode_name[0] = this.encode_rule_ui[0][0].name
+      }
+      //console.log(JSON.stringify(this.encode_rule_ui))
+
+      if (level <= 0 && this.encode_rule_ui[0] && 0 < this.encode_rule_ui[0].length) {
+        this.encode_rule_ui[1] = []
+
+        this.encode_rule_ui[0].forEach((item) => {
+          if (item.name == this.encode_name[0]) {
+            if (item.sub_index && 0 < item.sub_index.length && second) {
+              item.sub_index.forEach((son) => {
+                second.forEach((node) => {
+                  if (node.name == son) {
+                    this.encode_rule_ui[1].push(node)
+                  }
+                })
+              })
+            }
+          }
+        })
+
+        if (0 < this.encode_rule_ui[1].length) {
+          this.encode_name[1] = this.encode_rule_ui[1][0].name
+        } else {
+          this.encode_name[1] = ''
+        }
+      }
+
+      if (level <= 1 && this.encode_rule_ui[1] && 0 < this.encode_rule_ui[1].length) {
+        this.encode_rule_ui[2] = []
+
+        this.encode_rule_ui[1].forEach((item) => {
+          if (item.name == this.encode_name[1]) {
+            if (item.sub_index && 0 < item.sub_index.length && third) {
+              item.sub_index.forEach((son) => {
+                third.forEach((node) => {
+                  if (node.name == son) {
+                    this.encode_rule_ui[2].push(node)
+                  }
+                })
+              })
+            }
+          }
+        })
+
+        if (0 < this.encode_rule_ui[2].length) {
+          this.encode_name[2] = this.encode_rule_ui[2][0].name
+        } else {
+          this.encode_name[2] = ''
+        }
+      }
+      //console.log(JSON.stringify(this.encode_name))
+    },
+    delRule(level) {
+      if (this.encode_name[level]) {
+        let old_name = ''
+        for (let i in this.encode_rule[level]) {
+          if (this.encode_rule[level][i].name == this.encode_name[level]) {
+            if (this.encode_rule[level][i].sub_index && 0 < this.encode_rule[level][i].sub_index.length) {
+              this.$message({
+                type: 'warning',
+                message: '不能删除包含子类的品类'
+              })
+              return
+            }
+
+            old_name = this.encode_rule[level][i].name
+            this.encode_rule[level].splice(i, 1)
+            if (0 == this.encode_rule[level].length) {
+              this.encode_rule.splice(level, 1)
+            }
+          }
+        }
+
+        if (0 < level) {
+          let index = level - 1
+          this.encode_rule[index].forEach(node => {
+            if (this.encode_name[index] == node.name && node.sub_index) {
+              for (let i in node.sub_index) {
+                if (node.sub_index[i] == old_name) {
+                  node.sub_index.splice(i, 1)
+                  if (0 == node.sub_index.length) {
+                    delete node.sub_index
+                  }
+                  return
+                }
+              }
+            }
+          })
+        }
+
+        if (0 == level) {
+          this.encode_name = []
+          this.handleChangeRule(0)
+        } else if (1 == level) {
+          this.handleChangeRule(0)
+        } else {
+          this.handleChangeRule(1)
+        }
+
+        this.$notify({
+          type: 'success',
+          title: '成功',
+          message: '删除成功'
+        })
+      } else {
+        this.$message({
+          type: 'warning',
+          message: '请选择一个品类'
+        });
+      }
+    },
+    addRule(level) {
+      if (0 < level) {
+        let index = level - 1
+        if (!this.encode_name[index]) {
+          this.$message({
+            type: 'warning',
+            message: '请选择一个上一级品类'
+          });
+          return
+        }
+      }
+
+      if (!this.hasRule(level)) {
+        let result = this.checkRule(level)
+        if (result) {
+          this.$message({
+            type: 'warning',
+            message: result
+          });
+          return
+        } else {
+          result = this.checkRuleCodeInLevel(level)
+          if (result) {
+            this.$message({
+              type: 'warning',
+              message: result
+            });
+            return
+          } 
+        }
+
+        if (!this.encode_rule[level]) {
+          this.encode_rule[level] = []
+        }
+
+        this.encode_rule[level].push({
+          code : this.new_code[level],
+          name : this.new_name[level]
+        })
+      }
+
+      if (0 < level) {
+        let index = level - 1
+        this.encode_rule[index].forEach(node => {
+          if (this.encode_name[index] == node.name) {
+            if (node.sub_index) {
+              let has = false
+              node.sub_index.forEach(name => {
+                if (name == this.new_name[level]) {
+                  has = true
+                }
+              })
+
+              if (!has) {
+                node.sub_index.push(this.new_name[level])
+              }
+            } else {
+              node.sub_index = [this.new_name[level]]
+            }
+          }
+        })
+      }
+
+      if (0 == level) {
+        this.encode_name = []
+        this.handleChangeRule(0)
+      } else if (1 == level) {
+        this.handleChangeRule(0)
+      } else {
+        this.handleChangeRule(1)
+      }
+
+      this.$message({
+        type: 'success',
+        message: '添加成功或者已经存在相同品类'
+      })
+    },
+    hasRule(level) {
+      for (let i in this.encode_rule[level]) {
+        if (this.encode_rule[level][i].name == this.new_name[level]) {
+          return true
+        }
+      }
+
+      return false
+    },
+    checkRule(level) {
+      if (!this.new_name[level] || !this.new_code[level]) {
+        return '请输入品类名称或者代码'
+      }
+
+      for (let i in this.encode_rule[level]) {
+        if (0 == level && this.encode_rule[level][i].code == this.new_code[level]) {
+          return '代码重复，请重新输入'
+        }
+
+        if (this.encode_rule[level][i].name == this.new_name[level]) {
+          return '名称重复，请重新输入'
+        }
+      }
+
+      return
+    },
+    checkRuleCodeInLevel(level) {
+      for (let i in this.encode_rule_ui[level]) {
+        if (this.encode_rule_ui[level][i].code == this.new_code[level]) {
+          return '同一品类分级中有相同代码，请重新输入'
+        }
+      }
+
+      return
+    },
+    clearAll() {
+      if (!this.encode_rule || this.encode_rule.length <= 0) {
+        this.$message({
+          type: 'warning',
+          message: '品类数据已经为空'
+        });
+        return
+      }
+
+      this.$confirm('确定清空品类数据？请谨慎操作', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.encode_rule = []
+          this.handleChangeRule(0)
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消操作'
+          });
+        });
+    },
+    changeSubIndex(level) {
+      let code_list = [], has_same = false
+      this.encode_rule_ui[level].forEach(node => {
+        if(code_list[node.code]) {
+          has_same = true
+        } else {
+          code_list[node.code] = 1
+        }
+      })
+
+      if (has_same) {
+        this.encode_rule_ui[level].pop()
+        this.$message({
+          type: 'warning',
+          message: '同一级中品类代码不可重复'
+        });
+        return
+      }
+
+      if (0 < level) {
+        this.encode_rule_ui[level].sort((a, b) => {
+          return a.code.localeCompare(b.code);
+        });
+
+        let index = level - 1
+        this.encode_rule[index].forEach(node => {
+          if (this.encode_name[index] == node.name) {
+            node.sub_index = []
+            this.encode_rule_ui[level].forEach(item => {
+              node.sub_index.push(item.name)
+            })
+
+            if (0 == node.sub_index.length) {
+              delete node.sub_index
+            }
+          }
+        })
+      }
+    },
+    submitRule() {
+      if (!this.encode_rule || this.encode_rule.length <= 0) {
+        this.$message({
+          type: 'warning',
+          message: '请至少设置一级品类'
+        });
+        return
+      }
+
+      this.$confirm('确定修改品类规则？请谨慎操作', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(async () => {
+          let result = await edit_encode_rule({
+            access_token:this.token,
+            encode_rule:this.encode_rule
+          });
+          if(result.code===0){
+            this.$notify({
+              type: 'success',
+              title: '成功',
+              message: '操作成功'
+            })
+            this.getRuleList();
+          }
+
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消操作'
+          });
+        });
+    },
   },
 }
 </script>

@@ -241,3 +241,18 @@ export function add_staff(data) {
         data
     })
 }
+
+export function delete_staff(data) {
+    return request({
+        url: '/corp/company/delete_staff',
+        method: 'post',
+        data
+    })
+}
+export function edit_encode_rule(data) {
+    return request({
+        url: '/corp/company/edit_encode_rule',
+        method: 'post',
+        data
+    })
+}
