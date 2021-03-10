@@ -4,7 +4,9 @@ import { getToken,setToken,removeToken } from '@/utils/auth'
 const state = {
     tax_list: [],
     encode_rule_list: getToken('encode_rule_list'),
-    workpiece_list: getToken('profile')?getToken('profile').config.workpieces:""
+    workpiece_list: getToken('profile')?getToken('profile').config.workpieces:"",
+    department_list: getToken('department_list'),
+    job_list: getToken('job_list')
 }
 
 const mutations = {
@@ -13,6 +15,12 @@ const mutations = {
     },
     SET_PINGLEI: (state, encode_rule_list) => {
         state.encode_rule_list = encode_rule_list
+    },
+    SET_DEPARTMENT_LIST: (state, department_list) => {
+        state.department_list = department_list
+    },
+    SET_JOB_LIST: (state, job_list) => {
+        state.job_list = job_list;
     }
 }
 

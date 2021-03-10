@@ -54,6 +54,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: "staffEdit",
   data() {
@@ -73,10 +74,23 @@ export default {
       },
       workpieces: [],
       checked: true,
-      department_list: [],
-      job_list: [],
-      workpiece_list: [{"id":1000,"name":"机电"},{"id":999,"name":"气动"},{"id":998,"name":"传动"},{"id":997,"name":"电控"},{"id":996,"name":"导轨丝杆"},{"id":995,"name":"仪器"},{"id":994,"name":"五金耗材"},{"id":993,"name":"液压"},{"id":992,"name":"劳保办公"},{"id":991,"name":"工具"},{"id":990,"name":"无形资产"},{"id":989,"name":"服务类"},{"id":988,"name":"电子元件"},{"id":987,"name":"低压电器"},{"id":986,"name":"电缆端子"},{"id":985,"name":"弹簧类"},{"id":984,"name":"紧固件"},{"id":1001,"name":"车件"},{"id":1002,"name":"钣金"},{"id":1003,"name":"大板"},{"id":1004,"name":"中板"},{"id":1005,"name":"小板"},{"id":1006,"name":"型材/机罩"},{"id":1007,"name":"机架"},{"id":1008,"name":"陶瓷"},{"id":1009,"name":"注塑"},{"id":1010,"name":"铸造"},{"id":1011,"name":"锻造"},{"id":1012,"name":"轴类磨削"},{"id":1013,"name":"齿轮"},{"id":1014,"name":"精密板件"},{"id":1017,"name":"有料机加工"},{"id":1999,"name":"其它"}]
     };
+  },
+  computed: {
+    ...mapGetters(['token','workpiece_list','job_list','department_list']),
+    isEdit(){
+      return this.$route.meta.isEdit
+    }
+  },
+  created() {
+    if(!this.isEdit){
+      this.workpiece_list.forEach(node => {
+        this.workpieces.push(node.id)
+        this.ruleFormAdd.staff.config.workpieces.push(node)
+      })
+    }else{
+      console.log('编辑成员');
+    }
   },
   methods: {
       isGetAll(){}

@@ -10,6 +10,9 @@ const getters = {
   login_company_no: state => state.user.company_no,
   tax_list: state => state.cwm.tax_list,
   encode_rule_list: state => state.cwm.encode_rule_list,
-  workpiece_list: state => state.cwm.workpiece_list
+  workpiece_list: state => state.cwm.workpiece_list,
+  job_list: state => state.cwm.job_list,
+  department_list: state => state.cwm.department_list
+
 }
 export default getters
