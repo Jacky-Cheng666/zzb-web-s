@@ -249,3 +249,10 @@ export function delete_staff(data) {
         data
     })
 }
+export function edit_encode_rule(data) {
+    return request({
+        url: '/corp/company/edit_encode_rule',
+        method: 'post',
+        data
+    })
+}
