@@ -217,3 +217,11 @@ export function delete_department(data) {
         data
     })
 }
+
+export function set_department_head(data) {
+    return request({
+        url: '/corp/company/set_department_head',
+        method: 'post',
+        data
+    })
+}

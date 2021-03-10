@@ -104,7 +104,7 @@
 
 <script>
 import { get_department_list, get_staff_list, get_job_list, get_auth_list, delete_job,rename_department, add_department,
-delete_department } from '@/api/enterpriseManage'
+delete_department, set_department_head } from '@/api/enterpriseManage'
 import { mapGetters } from 'vuex'
 import axios from "axios"
 export default {
@@ -129,7 +129,8 @@ export default {
       add_model: false,
       auth_title_list: ['企业管理权限', '项目管理权限', '采购管理权限', '销售管理权限', '仓库管理权限', '财务管理权限', '报表查看权限'],
       auth_list: [],
-      loading: false
+      loading: false,
+      multipleSelection: []
     };
   },
   computed:{
@@ -385,8 +386,48 @@ export default {
       });
     },
     transferAdmin(){},
-    setDepartmentDirector(){},
-    changeFun(){},
+    setDepartmentDirector(){
+      if(this.multipleSelection.length==0){
+        this.$message({
+          type: 'warning',
+          message:"请选择一个成员"
+        });
+        return;
+
+      }
+      if(this.multipleSelection.length>1){
+        this.$message({
+          type: 'warning',
+          message:"部门主管只能设置一个人"
+        });
+        return;
+      }
+      this.$confirm('是否设置部门主管为：'+this.multipleSelection[0].name+'？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(async ()=>{
+          
+          let result = await set_department_head({
+            access_token:this.token,
+            department_name:this.multipleSelection[0].department_name,
+            staff_id:this.multipleSelection[0].staff_id,
+            phone:this.multipleSelection[0].phone,
+            name:this.multipleSelection[0].name,
+          });
+          if(result.code===0){
+            this.$notify({
+                type: 'success',
+                title: '成功',
+                message:"操作成功"
+              });
+            this.getDepartmentList();
+          }
+        }).catch(()=>{})
+    },
+    changeFun(val) {
+      this.multipleSelection = val
+    },
     handleSizeChange(val) {  
       this.pageSize=val
       this.rows = this.allRows.slice(this.pageSize * (this.currentPage - 1), this.pageSize * this.currentPage)
