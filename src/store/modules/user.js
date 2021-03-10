@@ -96,10 +96,11 @@ const actions = {
   // remove token
   resetToken({ commit }) {
     return new Promise(resolve => {
-      removeToken('zzb_web_s_token')
-      removeToken('org')
-      removeToken('profile')
-      removeToken('company_no')
+      // removeToken('zzb_web_s_token')
+      // removeToken('org')
+      // removeToken('profile')
+      // removeToken('company_no')
+      window.localStorage.clear()
       commit('RESET_STATE')
       resolve()
     })
