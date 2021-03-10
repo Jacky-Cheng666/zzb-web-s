@@ -268,8 +268,9 @@ export default {
           this.handleChangeRule(1)
         }
 
-        this.$message({
+        this.$notify({
           type: 'success',
+          title: '成功',
           message: '删除成功'
         })
       } else {
