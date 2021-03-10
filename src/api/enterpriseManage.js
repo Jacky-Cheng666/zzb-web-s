@@ -225,3 +225,11 @@ export function set_department_head(data) {
         data
     })
 }
+
+export function transfer_admin_role(data) {
+    return request({
+        url: '/corp/company/transfer_admin_role',
+        method: 'post',
+        data
+    })
+}

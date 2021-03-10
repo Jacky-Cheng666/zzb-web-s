@@ -104,7 +104,7 @@
 
 <script>
 import { get_department_list, get_staff_list, get_job_list, get_auth_list, delete_job,rename_department, add_department,
-delete_department, set_department_head } from '@/api/enterpriseManage'
+delete_department, set_department_head, transfer_admin_role } from '@/api/enterpriseManage'
 import { mapGetters } from 'vuex'
 import axios from "axios"
 export default {
@@ -385,7 +385,51 @@ export default {
         });
       });
     },
-    transferAdmin(){},
+    transferAdmin(){
+      if(this.multipleSelection.length==0){
+        this.$message({
+          type: 'warning',
+          message:"请选择一个成员"
+        });
+
+      }else if(this.multipleSelection.length>1){
+        this.$message({
+          type: 'warning',
+          message:"管理员只能转让给一个成员"
+        });
+
+      }else if(this.multipleSelection.length==1){
+        this.$confirm('转让后，不再保留您的管理员身份且需要重新登录，是否转让给 ‘ '+this.multipleSelection[0].name+' ’ ？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(async () => {
+          
+          let result = await transfer_admin_role({
+            access_token:this.token,
+            new_admin_id:this.multipleSelection[0].staff_id,
+          });
+          if (result.code == 0) {
+            this.$message({
+              type: 'success',
+              message:"转让成功，即将退出登录"
+            });
+            setTimeout(()=>{
+              localStorage.setItem('isLogin',false);
+              this.$store.dispatch('user/resetToken').then(() => {
+                window.location.reload()
+              })
+            },2000)
+          }
+
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消操作'
+          });
+        });
+      }
+    },
     setDepartmentDirector(){
       if(this.multipleSelection.length==0){
         this.$message({
