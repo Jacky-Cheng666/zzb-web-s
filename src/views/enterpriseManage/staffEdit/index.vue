@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container staffEdit" v-loading="loading" element-loading-text="添加中...">
+  <div class="app-container staffEdit" v-loading="loading" element-loading-text="保存中...">
     <div class="titleEdit">添加成员</div>
     <el-form :model="ruleFormAdd" ref="ruleFormAdd" :rules="rulesAdd" label-width="120px">
       <el-form-item label="姓名" prop="staff.name" :rules="{ required: true, message: '姓名为必填项', trigger: 'blur' }">
@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import { add_staff } from '@/api/enterpriseManage'
+import { add_staff, get_staff_info} from '@/api/enterpriseManage'
 import { mapGetters } from 'vuex'
 export default {
   name: "staffEdit",
@@ -105,10 +105,35 @@ export default {
       })
       this.$set(this.ruleFormAdd.staff.config,'workpieces',this.workpiece_list)
     }else{
-      console.log('编辑成员');
+      this.getStaffInfo();
     }
   },
   methods: {
+    async getStaffInfo(){
+      const staff_id = this.$route.params && this.$route.params.staff_id
+      let result = await get_staff_info({
+        access_token: this.token,
+        staff_id: parseInt(staff_id)
+      })
+      console.log('单个员工信息', result);
+      if(result.code===0){
+        let staff_info = {
+          department_name: result.staff_info.department_name || '',
+          staff: {
+            phone: result.staff_info.phone || '',
+            name: result.staff_info.name || '',
+
+            job: result.staff_info.job || '',
+            employee_id: result.staff_info.employee_id || '',
+            config: {
+              workpieces: result.staff_info.config.workpieces,
+            },
+          }
+        }
+        console.log('staff_info',staff_info);
+        this.ruleFormAdd = this.$DeepClone(staff_info)
+      }
+    },
     isGetAll(){
       if(this.checked){
         this.workpieces = []

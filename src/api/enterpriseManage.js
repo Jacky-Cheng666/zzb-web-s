@@ -171,6 +171,14 @@ export function get_staff_list(data) {
     })
 }
 
+export function get_staff_info(data) {
+    return request({
+        url: '/corp/company/get_staff_info',
+        method: 'post',
+        data
+    })
+}
+
 export function get_job_list(data) {
     return request({
         url: '/corp/company/get_job_list',

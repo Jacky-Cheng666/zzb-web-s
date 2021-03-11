@@ -320,7 +320,7 @@ export const asyncRoutes = [
         hidden: true
       },
       {
-        path: 'staffEdit/:staff_id',
+        path: 'staffEdit/:staff_id(\\d+)',
         name: 'staffEdit',
         component: () => import('@/views/enterpriseManage/staffEdit/index'),
         meta: { title: '编辑成员', activeMenu: '/enterpriseManage/addressBook', isEdit: true},
