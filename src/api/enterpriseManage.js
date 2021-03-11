@@ -328,3 +328,11 @@ export function delete_workflow_template(data) {
     })
 }
 
+export function set_ai_assist_config(data) {
+    return request({
+        url: '/corp/company/set_ai_assist_config',
+        method: 'post',
+        data
+    })
+}
+
