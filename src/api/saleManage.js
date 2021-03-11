@@ -7,3 +7,11 @@ export function getSaleBasicInfo(data) {
     data
   })
 }
+
+export function getAllIntentionOrder(data) {
+  return request({
+    url: '/som/orderCommon/get_all_order',
+    method: 'post',
+    data
+  })
+}
