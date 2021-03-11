@@ -279,3 +279,11 @@ export function get_all_element(data) {
         data
     })
 }
+
+export function delete_all_element(data) {
+    return request({
+        url: '/corp/company/delete_all_element',
+        method: 'post',
+        data
+    })
+}
