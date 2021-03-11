@@ -177,5 +177,8 @@ export default {
     border-left: 4px solid #00a0e9;
     padding-left: 24px;
   }
+  .el-form-item {
+    margin-bottom: 12px;
+  }
 }
 </style>
