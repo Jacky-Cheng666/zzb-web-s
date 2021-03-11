@@ -38,9 +38,9 @@ const fns = {
     }
 
     _this.rows = arr
-    _this.currentPage = page
-    _this.count = arr.length
-    _this.tableData = arr.slice(_this.pageSize * (_this.currentPage - 1), _this.pageSize * _this.currentPage)
+    _this.queryParams.currentPage = page
+    _this.queryParams.count = arr.length
+    _this.tableData = arr.slice(_this.queryParams.pageSize * (_this.queryParams.currentPage - 1), _this.queryParams.pageSize * _this.queryParams.currentPage)
   },
   //过滤函数
   handleFilter(item){

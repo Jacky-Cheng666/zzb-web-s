@@ -7,3 +7,27 @@ export function getSaleBasicInfo(data) {
     data
   })
 }
+
+export function getAllIntentionOrder(data) {
+  return request({
+    url: '/som/orderCommon/get_all_order',
+    method: 'post',
+    data
+  })
+}
+
+export function searchElements(data) {
+  return request({
+    url: '/som/company/search_elements',
+    method: 'post',
+    data
+  })
+}
+
+export function createPlanOrder(data) {
+  return request({
+    url: '/som/planOrder/create_plan_order',
+    method: 'post',
+    data
+  })
+}

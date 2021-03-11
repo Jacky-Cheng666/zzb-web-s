@@ -22,6 +22,89 @@ const mutations = {
     setSaleBasicInfo(state, result){
         state.saleBasicInfo = result.sale_basic_info
         localStorage.setItem('saleBasicInfo',JSON.stringify(result.sale_basic_info))
+
+        let tmpEncodeRuleList = result.sale_basic_info.element_code_encode_info
+        let encode_rule = []
+        let encode_rule_list = []
+        tmpEncodeRuleList.forEach(item => {
+            encode_rule.push(item)
+        })
+
+        if(encode_rule.length >= 0){
+            let list0 = [],
+                list1 = [];
+            let first = encode_rule[0];
+            let second = encode_rule[1];
+            let third = encode_rule[2];
+
+            if (second) {
+                second.forEach(item_1 => {
+                let newNode = {
+                    code: item_1.code,
+                    name: item_1.name
+                };
+
+                if (
+                    item_1.sub_index &&
+                    item_1.sub_index.length > 0 &&
+                    third &&
+                    third.length > 0
+                ) {
+                    newNode.sub_list = [];
+
+                    item_1.sub_index.forEach(item_2 => {
+                    third.forEach(son => {
+                        if (son.name == item_2) {
+                        newNode.sub_list.push({
+                            code: son.code,
+                            name: son.name,
+                            sub_list: son.sub_list
+                        });
+                        }
+                    });
+                    });
+                }
+
+                list1.push(newNode);
+                });
+            }
+
+            if (first) {
+                first.forEach(item_1 => {
+                let newNode = {
+                    code: item_1.code,
+                    name: item_1.name
+                };
+
+                if (
+                    item_1.sub_index &&
+                    item_1.sub_index.length > 0 &&
+                    list1 &&
+                    list1.length > 0
+                ) {
+                    newNode.sub_list = [];
+
+                    item_1.sub_index.forEach(item_2 => {
+                    list1.forEach(son => {
+                        if (son.name == item_2) {
+                        newNode.sub_list.push({
+                            code: son.code,
+                            name: son.name,
+                            sub_list: son.sub_list
+                        });
+                        }
+                    });
+                    });
+                }
+
+                list0.push(newNode);
+                });
+            }
+
+            encode_rule_list = list0
+
+            state.encode_rule_list = encode_rule_list
+        }
     },
     SET_DEPARTMENT_LIST: (state, department_list) => {
         state.department_list = department_list
