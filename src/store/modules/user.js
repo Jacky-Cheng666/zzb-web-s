@@ -9,7 +9,8 @@ const getDefaultState = () => {
     roles: [],
     profile: getToken('profile'),
     org: getToken('org'),
-    company_no: getToken('company_no')
+    company_no: getToken('company_no'),
+    is_admin: getToken('is_admin')
   }
 }
 
@@ -36,6 +37,9 @@ const mutations = {
   },
   SET_COMPANY_NO: (state,company_no) => {
     state.company_no = company_no;
+  },
+  SET_IS_ADMIN: (state,is_admin) => {
+    state.is_admin = is_admin;
   }
 }
 
@@ -44,17 +48,21 @@ const actions = {
   login({ commit }, userInfo) {
     return new Promise((resolve, reject) => {
       login({ ...userInfo }).then(response => {
+        // console.log('登录',response);
         if(response.code===0){
           commit('SET_TOKEN', response.access_token)
           commit('SET_NAME', response.profile.name)
           commit('SET_PROFILE', response.profile)
           commit('SET_ORG', response.org)
           commit('SET_COMPANY_NO', response.company_no)
+          commit('SET_IS_ADMIN', response.is_admin)
+
 
           setToken('zzb_web_s_token',response.access_token)
           setToken('profile', response.profile)
           setToken('org', response.org)
           setToken('company_no', response.company_no)
+          setToken('is_admin',response.is_admin)
         }
         resolve(response)
       }).catch(error => {
@@ -78,15 +86,14 @@ const actions = {
   },
 
   // user logout
-  logout({ commit, state }) {
+  logout({ commit, state,dispatch }) {
     return new Promise((resolve, reject) => {
       logout({access_token: state.token}).then((res) => {
-        removeToken('zzb_web_s_token')
-        removeToken('org')
-        removeToken('profile')
-        removeToken('company_no')
-        resetRouter()
-        commit('RESET_STATE')
+        if(res.code===0){
+          dispatch('resetToken')
+          resetRouter()
+          commit('RESET_STATE')
+        }
         resolve()
       }).catch(error => {
         reject(error)
@@ -97,10 +104,6 @@ const actions = {
   // remove token
   resetToken({ commit }) {
     return new Promise(resolve => {
-      // removeToken('zzb_web_s_token')
-      // removeToken('org')
-      // removeToken('profile')
-      // removeToken('company_no')
       window.localStorage.clear()
       commit('RESET_STATE')
       resolve()
