@@ -148,7 +148,7 @@ export default {
         access_token: this.token
       });
       if(result.code===0){
-        this.$store.commit('cwm/SET_DEPARTMENT_LIST', result.department_list)
+        this.$store.commit('zzb/SET_DEPARTMENT_LIST', result.department_list)
         setToken('department_list', result.department_list)
         this.department_list = result.department_list
         this.activeIndex = this.department_list[0].name.toString();
@@ -163,7 +163,7 @@ export default {
         access_token: this.token
       })
       if(result.code===0){
-        this.$store.commit('cwm/SET_JOB_LIST', result.job_list)
+        this.$store.commit('zzb/SET_JOB_LIST', result.job_list)
         setToken('job_list',result.job_list)
         this.job_list = result.job_list
         if(this.job_list.length > 0){
