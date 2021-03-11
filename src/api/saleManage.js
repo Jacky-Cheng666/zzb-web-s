@@ -15,3 +15,19 @@ export function getAllIntentionOrder(data) {
     data
   })
 }
+
+export function searchElements(data) {
+  return request({
+    url: '/som/company/search_elements',
+    method: 'post',
+    data
+  })
+}
+
+export function createPlanOrder(data) {
+  return request({
+    url: '/som/planOrder/create_plan_order',
+    method: 'post',
+    data
+  })
+}

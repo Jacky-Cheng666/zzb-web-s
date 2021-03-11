@@ -67,10 +67,10 @@
           <el-switch v-model="queryParams.isPayed"></el-switch>
         </el-form-item>
         <el-form-item label="协议交货日期" label-width="110px">
-          <el-date-picker :clearable="false" style="width:140px" size="small" v-model="queryParams.deadline" type="date" placeholder="选择日期" :picker-options="startDatePicker"></el-date-picker>
+          <el-date-picker :clearable="false" value-format="yyyy-MM-dd" style="width:140px" size="small" v-model="queryParams.deadline" type="date" placeholder="选择日期" :picker-options="startDatePicker"></el-date-picker>
         </el-form-item>
         <el-form-item label="预计发货日期" label-width="110px">
-          <el-date-picker :clearable="false" style="width:140px" size="small" v-model="queryParams.deliver_time" type="date" placeholder="选择日期" :picker-options="startDatePicker"></el-date-picker>
+          <el-date-picker :clearable="false" value-format="yyyy-MM-dd" style="width:140px" size="small" v-model="queryParams.deliver_time" type="date" placeholder="选择日期" :picker-options="startDatePicker"></el-date-picker>
         </el-form-item>
         <el-form-item>
           <el-badge :value="payPlanList.length" class="item" type="primary">
@@ -116,9 +116,9 @@
         <el-button @click="handExportOrder('销售订单导入模板', [{'guest_element_code':'', 'guest_element_name':'必填', 'guest_spec_code':'必填', 'brand':'必填', 'version':'' , 'unit':'必填', 'num':'必填', 'delivery_time':'必填', 'price':'两种价格必须且只能填一个', 'tax_price':'', 'remark':'', 'element_code':'', 'element_name':'必填', 'spec_code':'必填', 'workpiece_name': '必填'}])" type="primary" icon="el-icon-upload2" size="mini">下载模板</el-button>
         <el-button @click="handleRemoveMaterial" type="danger" icon="el-icon-delete" size="mini">删除</el-button>
         <el-button @click="batchAddClick" type="primary" icon="el-icon-plus" size="mini">批量新增</el-button>
-        <el-button @click="addElement" type="primary" icon="el-icon-plus" size="mini">新增</el-button>
+        <el-button @click="addElement" disabled type="primary" icon="el-icon-plus" size="mini">新增</el-button>
         <el-button type="success" disabled icon="el-icon-folder-add" size="mini">暂存</el-button>
-        <el-button type="success" icon="el-icon-check" size="mini">提交</el-button>
+        <el-button @click="saveCreateOrder" type="success" icon="el-icon-check" size="mini">提交</el-button>
       </div>
     </pagination>
 
@@ -162,7 +162,7 @@
       </template>
     </element-info>
 
-    <battch-add ref="battchAdd"></battch-add>
+    <battch-add @addMaterial="handleAddMaterial" ref="battchAdd"></battch-add>
 
     <upload-file ref="uploadFile"></upload-file>
   </div>
@@ -174,8 +174,9 @@ import addressDialog from './components/addressDialog'
 import elementInfo from '../../../components/elementInfo'
 const battchAdd = ()=>import('./components/batchAdd')
 import uploadFile from '@/components/UploadFile/index'
-import { mapGetters } from 'vuex'
 
+import { createPlanOrder } from '@/api/saleManage'
+import { mapGetters } from 'vuex'
 import common from '@/utils/common'
 
 export default {
@@ -201,7 +202,6 @@ export default {
     return {
       tmpOrderNum: this.orderNum,
       tmpOrderKey: this.orderKey,
-      access_token: '',
       userInfo: "",
       userName: "",
       myBackToTopStyle: {
@@ -218,8 +218,8 @@ export default {
         orderExplainText: '',
         isNeedInvoice: false,
         isPayed: false,
-        deadline: new Date(),
-        deliver_time: new Date(),
+        deadline: '',
+        deliver_time: '',
         pageNum: 1,
         pageSize: 20,
         //
@@ -284,11 +284,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['screen_height'])
+    ...mapGetters(['screen_height', 'token'])
   },
   created(){
     this.userInfo = JSON.parse(localStorage.getItem('profile'))
-    this.access_token = localStorage.getItem('zzb_web_s_token')
     this.userName = this.userInfo.name
     //销售和采购信息初始化
     this.setSaleBasicInfo()
@@ -923,7 +922,7 @@ export default {
     },
     handleRemoveMaterial(){
       let len = this.multipleSelection.length
-      if(len <= 0){
+      if(len > 0){
         this.$confirm('确定要删除所选物料吗?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -945,8 +944,187 @@ export default {
           message: '请先选择物料'
         })
       }
+    },
+    handleAddMaterial(data){
+      if(data.length > 0){
+        data.forEach(item => {
+          this.tableData.push(item)
+        })
+      }
+    },
+    //保存创建的订单
+    saveCreateOrder(){
+      if(this.tableData.length <= 0){
+        this.$message({
+          showClose: true,
+          message: '请至少选择一种物料',
+          type: 'warning'
+        })
+
+        return
+      }
+
+      //判断表格数据是否填写完毕
+      let data = this.tableData
+      for(let key in data){
+        let row = data[key]
+        let m = Number(key) + 1
+
+        if (!row.element_info.guest_element_name) {
+          this.$message({
+            showClose: true,
+            type: 'warning',
+            message: '第' + m + '行的物料的 对方物料名称 为空！'
+          });
+
+          return
+        }
+
+        if (!row.element_info.guest_spec_code) {
+          this.$message({
+            showClose: true,
+            type: 'warning',
+            message: '第' + m + '行的物料的 对方图号/规格型号 为空！'
+          });
+
+          return
+        }
+
+        if ((!row.buy_info.buy_price && row.buy_info.buy_price !== 0) || !row.buy_info.num) {
+          this.$message({
+            showClose: true,
+            type: 'warning',
+            message: '第' + m + '行的物料：' + row.element_info.element_name + ' 的 需求数量 或者 客户未税议价 为空！'
+          });
+
+          return
+        }
+
+        if (row.element_info.guest_spec_code && row.element_info.guest_spec_code.trim().length > 64) {
+          this.$message({
+            showClose: true,
+            type: 'warning',
+            message: '第' + m + '行的物料的 对方图号/规格型号 过长！'
+          });
+
+          return
+        }
+
+        if (row.element_info.guest_element_name && row.element_info.guest_element_name.trim().length > 32) {
+          this.$message({
+            showClose: true,
+            type: 'warning',
+            message: '第' + m + '行的物料的 对方物料名称 过长！'
+          });
+
+          return
+        }
+        if (row.element_info.guest_element_code && row.element_info.guest_element_code.trim().length > 24) {
+          this.$message({
+            showClose: true,
+            type: 'warning',
+            message: '第' + m + '行的物料的 对方物料代码 过长！'
+          });
+
+          return
+        }
+      }
+
+      if(!this.queryParams.deadline || !this.queryParams.deliver_time){
+        this.$message({
+          showClose: true,
+          message: '协议交货日期 或者 预计发货日期 不能为空！',
+          type: 'warning'
+        })
+        return false
+      }
+
+      if(this.queryParams.inputOrderName && this.queryParams.inputOrderName.trim().length > 32){
+        this.$message({
+          showClose: true,
+          message: '输入的客户订单号过长！',
+          type: 'warning'
+        })
+        return false
+      }
+
+      if(this.queryParams.orderExplainText && this.queryParams.orderExplainText.trim().length > 1024){
+        this.$message({
+          showClose: true,
+          message: '输入的说明过长！',
+          type: 'warning'
+        })
+        return false
+      }
+
+      this.$confirm('确定要保存新建订单吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+      .then(() => {
+        let elementList = []
+        let data = this.tableData
+        for(let i = 0; i < data.length; i ++){
+          let tmp = {...data[i]}
+          // tmp.remark =  data[i].remark
+          // tmp.element_info = data[i].element_info
+          tmp.element_info.guest_element_code = tmp.element_info.guest_element_code?tmp.element_info.guest_element_code.trim():''
+          tmp.element_info.guest_element_name = tmp.element_info.guest_element_name?tmp.element_info.guest_element_name.trim():''
+          tmp.element_info.guest_spec_code = tmp.element_info.guest_spec_code?tmp.element_info.guest_spec_code.trim():''
+
+          // tmp.buy_info = data[i].buy_info
+          tmp.buy_info.buy_price = parseFloat(tmp.buy_info.buy_price)
+          tmp.buy_info.num = parseFloat(tmp.buy_info.num)
+          tmp.buy_info.buy_type_name = this.queryParams.valueBuyType.label
+          tmp.buy_info.task_code = tmp.element_info.guest_task_code?tmp.element_info.guest_task_code.trim():''
+          // tmp.sale_info = data[i].sale_info
+          tmp.buy_info.deadline = this.queryParams.deadline
+          tmp.sale_info.delivery_time = this.queryParams.delivery_time
+
+          tmp.trade_info = tmp.trade_info || {}
+          elementList.push(tmp)
+        }
+        // console.log(elementList)
+        let obj = {
+          access_token: this.token,
+          purchase_code: this.businessInfo.purchase_code,
+          purchase_name: this.businessInfo.purchase_name,
+          purchase_full_name: this.businessInfo.purchase_full_name,
+          buyer: this.businessInfo.contact,
+          buyer_phone: this.businessInfo.phone,
+          receiver_address: this.businessInfo.receive_addr,
+          receiver: this.businessInfo.receiver_name,
+          receiver_phone: this.businessInfo.receiver_phone,
+          order_describe: this.queryParams.orderExplainText?this.queryParams.orderExplainText.trim():'',
+          order_use_name: this.queryParams.valueSaleType.label,
+          order_use_type: this.queryParams.valueSaleType.value,
+          buy_type_name: this.queryParams.valueBuyType.label,
+          buy_type_code: this.queryParams.valueBuyType.value,
+          tax_name: this.queryParams.valueTax.label,
+          tax_value: this.queryParams.valueTax.value,
+          pay_period_name: this.queryParams.valuePay.label,
+          pay_period_value: this.queryParams.valuePay.value,
+          element_list: elementList,
+          order_name: this.queryParams.inputOrderName?this.queryParams.inputOrderName.trim():'',
+          task_code: '',
+          financial_book_no: this.queryParams.valueBookType
+        }
+
+        createPlanOrder(obj).then(response => {
+          if (response.code == 0){
+            this.$notify({
+              title: '成功',
+              message: '订单保存成功',
+              type: 'success'
+            })
+
+            this.tableData = []
+          }
+        })
+      })
     }
-  },
+  }
 }
 </script>
 

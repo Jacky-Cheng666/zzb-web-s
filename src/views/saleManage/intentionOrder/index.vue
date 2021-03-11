@@ -40,12 +40,12 @@
       <el-table-column align="center" label="订单号" prop="request_name" width="140">
         <template slot-scope="scope">
           <!-- <router-link :to="'/purchaseManage/requestOrder/'+scope.row.request_name"> -->
-            <el-link :underline="false" type="primary">{{scope.row.request_name}}</el-link>
+            <el-link :underline="false" type="primary">{{scope.row.order_name}}</el-link>
           <!-- </router-link> -->
         </template>
       </el-table-column>
       <el-table-column align="center" label="客户" prop="purchase_full_name" width="240" />
-      <el-table-column align="center" label="客户订单号" prop="order_name" width="180" />
+      <el-table-column align="center" label="客户订单号" prop="guest_order_name" width="180" />
       <el-table-column align="center" label="销售人" prop="seller" width="80" />
       <el-table-column align="center" label="类型" prop="order_use_name" width="60" />
       <el-table-column align="center" label="结款" prop="pay_period_name" width="60" />
@@ -54,7 +54,7 @@
       <el-table-column align="center" label="备注" prop="remark" />
     </el-table>
 
-    <pagination :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="handleCurrentChange">
+    <pagination :total="total" :page.sync="queryParams.currentPage" :limit.sync="queryParams.pageSize" @pagination="handleCurrentChange">
       <el-tooltip class="item" effect="dark" content="刷新" placement="top">
           <el-button size="mini" @click="handleRefresh" circle icon="el-icon-refresh"/>
       </el-tooltip>
@@ -77,7 +77,8 @@ export default {
         searchInputValue: "",
         valueBookType: 0,
         valueOrderType: 0,
-        pageNum: 1,
+        count: 0,
+        currentPage: 1,
         pageSize: 100,
         filterList: []
       },
@@ -140,11 +141,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['screen_height'])
+    ...mapGetters(['screen_height', 'token'])
   },
   created(){
     this.userInfo = JSON.parse(localStorage.getItem('profile'))
-    this.access_token = localStorage.getItem('zzb_web_s_token')
     this.userName = this.userInfo.name
 
     this.setSaleBasicInfo()
@@ -216,15 +216,14 @@ export default {
     },
     handleRefresh(){
       getAllIntentionOrder({
-        access_token: this.access_token,
+        access_token: this.token,
         filter: '全部'
       }).then(response => {
-        let result = response.data
-        if (result.code == 0){
+        if (response.code == 0){
           // this.valueOrderType = 0
           this.searchInputValue = ''
 
-          this.allRows = result.order_list
+          this.allRows = response.order_list
           this.handleQuery()
         }
       })
