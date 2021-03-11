@@ -256,3 +256,11 @@ export function edit_encode_rule(data) {
         data
     })
 }
+
+export function add_elements(data) {
+    return request({
+        url: '/corp/company/add_elements',
+        method: 'post',
+        data
+    })
+}
