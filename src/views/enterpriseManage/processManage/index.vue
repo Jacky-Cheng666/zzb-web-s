@@ -29,11 +29,11 @@
           <div style="display:flex;justify-content:space-between">
             <div class="menuName">{{currentWorkFlow.name}}</div>
             <div>
-              <el-button size="mini" icon="el-icon-refresh">重置</el-button>
-              <el-button size="mini" type="success">
+              <el-button @click="resetCurrentWorkFlow" size="mini" icon="el-icon-refresh">重置</el-button>
+              <el-button @click="saveWorkFlow" size="mini" type="success">
                 <svg-icon icon-class="save" class-name="btn_icon_svg" />&nbsp;保存
               </el-button>
-              <el-button size="mini" type="danger" icon="el-icon-close">关闭</el-button>
+              <el-button @click="disableWorkFlow" size="mini" type="danger" icon="el-icon-close">关闭</el-button>
             </div>
           </div>
           <div style="height:1px;background-color:#BBBBBB;width:100%"></div>
@@ -127,6 +127,9 @@
 </template>
 
 <script>
+import { get_default_workflow_template, get_workflow_template, get_ai_assist_config, edit_workflow_template,
+delete_workflow_template } from '@/api/enterpriseManage'
+import { mapGetters } from 'vuex'
 const WORK_POINT_CREATE = 0; //发起
 const WORK_POINT_APPROVE = 1; //审批
 const WORK_POINT_ACCESS = 2; //执行
@@ -166,17 +169,17 @@ export default {
   data() {
     return {
       itemIndex: "ptm",
-      staff_list_all: [{"staff_id":410,"name":"何丽丽","phone":"15994747589","employee_id":"123456"},{"staff_id":411,"name":"客户","phone":"15889985372","employee_id":"46541"},{"staff_id":412,"name":"加宽了","phone":"15889372548","employee_id":"10052"},{"staff_id":414,"name":"科技","phone":"16484564246","employee_id":"1065456"},{"staff_id":415,"name":"卡机是","phone":"15498456452","employee_id":"1230121"},{"staff_id":416,"name":"速度来","phone":"15884548554","employee_id":"123456"},{"staff_id":535,"name":"小丽","phone":"16800001999"},{"staff_id":871,"name":"天天","phone":"16912345678","employee_id":"008"},{"staff_id":878,"name":"大厦","phone":"16810001018","employee_id":"N001"},{"staff_id":880,"name":"大致","phone":"16712345678","employee_id":"0002"},{"staff_id":881,"name":"XX","phone":"16987654321","employee_id":"156"},{"staff_id":882,"name":"ss","phone":"16887654321","employee_id":"158"},{"staff_id":883,"name":"14701234567","phone":"14701234567","employee_id":"0589"},{"staff_id":884,"name":"16801234567","phone":"16801234567","employee_id":"1360"},{"staff_id":267,"name":"张学友","phone":"13412345678","employee_id":"zzb0004"},{"staff_id":138,"name":"标品采购员","phone":"13212345678","employee_id":"zzb0007"},{"staff_id":396,"name":"黎明","phone":"13612345678","employee_id":"zzb0006"},{"staff_id":536,"name":"Tony","phone":"16800001998","employee_id":"101"},{"staff_id":403,"name":"新员工2","phone":"16809098888","employee_id":"00099"},{"staff_id":900,"name":"阶级","phone":"15272419008"},{"staff_id":409,"name":"人","phone":"13454545654","employee_id":"999"},{"staff_id":936,"name":"陈卫明","phone":"15272419009"},{"staff_id":1,"name":"刘浩1","phone":"13480949851"}],
-      job_list_all: [{"job_id":10001,"job_name":"采购经理","auth_list":[101,103,105,200,202,204,205,300,100,301,305,304,306,303,307,402,405,401,400,404,403,503,507,506,502,505,504,500,601,602,603,308,501,302,209,108,104,107,109,110,102,201,206,210,211,207,203,213,212,208,508,512,513,509,510,514,511,310]},{"job_id":10002,"job_name":"采购工程师","auth_list":[300,304,307,302,303,514,500,504,508,509,505,501,502,506,510,511,507,503,110,109,108,107,104,101,200,204,208,209,205,201,202,206,210,211,207,203,212,407,401,409,317]},{"job_id":10003,"job_name":"采购助理","auth_list":[300,301,302,303,306,307]},{"job_id":10006,"job_name":"销售经理","auth_list":[102,400,401,402,403,404,405]},{"job_id":10007,"job_name":"销售工程师","auth_list":[400,401,403,404,405]},{"job_id":10008,"job_name":"销售助理","auth_list":[401,403,404,405]},{"job_id":10011,"job_name":"研发经理","auth_list":[312]},{"job_id":10012,"job_name":"研发工程师","auth_list":[]},{"job_id":10013,"job_name":"研发助理","auth_list":[]},{"job_id":10016,"job_name":"生产经理","auth_list":[]},{"job_id":10017,"job_name":"生产操作员","auth_list":[]},{"job_id":10022,"job_name":"工艺工程师","auth_list":[208]},{"job_id":10026,"job_name":"仓库管理员","auth_list":[500,501,502,503,504,510,508]},{"job_id":10031,"job_name":"财务经理","auth_list":[503,504,505,506,507,600,601,602,603]},{"job_id":10032,"job_name":"客人","auth_list":[]},{"job_id":11000,"job_name":"公司高管","auth_list":[100,101,102,103,105,200,201,202,203,204,205,206,207,208,209,300,301,302,303,304,305,306,307,400,401,402,403,404,405,500,501,502,503,504,505,506,507,600,601,602,603,107]},{"job_name":"总财务部","auth_list":[100,104,200,204,208,300,304,400,404,500,504,600,601,505,501,405,401,305,301,205,201,105,101,102,202,206,302,306,402,502,506,602,603,503,403,307,303,207,203,103,109,108,209,210,510,511],"job_id":8},{"job_name":"总参谋部","auth_list":[],"job_id":9},{"job_name":"ABC","auth_list":[100,104],"job_id":10}],
-      department_list_all: [{"name":"管理层部","staff_list":[{"staff_id":410,"name":"何丽丽","phone":"15994747589","employee_id":"123456"},{"staff_id":411,"name":"客户","phone":"15889985372","employee_id":"46541"},{"staff_id":412,"name":"加宽了","phone":"15889372548","employee_id":"10052"},{"staff_id":414,"name":"科技","phone":"16484564246","employee_id":"1065456"},{"staff_id":415,"name":"卡机是","phone":"15498456452","employee_id":"1230121"},{"staff_id":416,"name":"速度来","phone":"15884548554","employee_id":"123456"},{"staff_id":535,"name":"小丽","phone":"16800001999"},{"staff_id":871,"name":"天天","phone":"16912345678","employee_id":"008"},{"staff_id":878,"name":"大厦","phone":"16810001018","employee_id":"N001"},{"staff_id":880,"name":"大致","phone":"16712345678","employee_id":"0002"},{"staff_id":881,"name":"XX","phone":"16987654321","employee_id":"156"},{"staff_id":882,"name":"ss","phone":"16887654321","employee_id":"158"},{"staff_id":883,"name":"14701234567","phone":"14701234567","employee_id":"0589"},{"staff_id":884,"name":"16801234567","phone":"16801234567","employee_id":"1360"}],"id":1,"head_staff_id":880},{"name":"采购部","staff_list":[{"staff_id":267,"name":"张学友","phone":"13412345678","employee_id":"zzb0004"},{"staff_id":138,"name":"标品采购员","phone":"13212345678","employee_id":"zzb0007"},{"staff_id":396,"name":"黎明","phone":"13612345678","employee_id":"zzb0006"},{"staff_id":536,"name":"Tony","phone":"16800001998","employee_id":"101"}],"id":2,"head_staff_id":267},{"name":"销售中心","staff_list":[{"staff_id":403,"name":"新员工2","phone":"16809098888","employee_id":"00099"},{"staff_id":900,"name":"阶级","phone":"15272419008"}],"id":3,"head_staff_id":403},{"name":"研发中心","staff_list":[],"id":4},{"name":"生产部","staff_list":[{"staff_id":409,"name":"人","phone":"13454545654","employee_id":"999"}],"id":5,"head_staff_id":409},{"name":"仓储中心","staff_list":[{"staff_id":936,"name":"陈卫明","phone":"15272419009"},{"staff_id":1,"name":"刘浩1","phone":"13480949851"}],"id":6,"head_staff_id":936},{"name":"项目中心","staff_list":[],"id":7},{"name":"财务部","staff_list":[],"id":8},{"name":"项目管理中心","staff_list":[],"id":9}],
+      staff_list_all: [],
+      job_list_all: [],
+      department_list_all: [],
       activeIndex: '',
-      defaultWorkFlowList: [{"id":101,"name":"变更审批","form":[],"work_point_list":[{"type":0,"name":"提交变更","all_staff":true,"department_list":[],"staff_list":[],"job_list":[],"timeChecked":false},{"type":1,"name":"变更审批","worker":1,"staff_list":[],"job_list":[],"all_approve":0,"duration":0,"skip":false,"timeChecked":false}]},{"id":201,"name":"请购审批","form":[{"type":1,"name":"预估金额","enable":true}],"work_point_list":[{"type":0,"name":"提交请购","all_staff":true,"department_list":[],"staff_list":[],"job_list":[],"timeChecked":false},{"type":9,"condition_list":[{"condition":[{"index":0,"operator":1,"value":[1000]}],"work_point_list":[{"type":4,"name":"请购审批","all_staff":true,"worker":1,"staff_list":[],"job_list":[],"all_approve":0,"duration":0,"skip":false}]},{"condition":[{"index":0,"operator":4,"value":[1000]}],"work_point_list":[{"type":1,"name":"请购审批","worker":0,"staff_list":[],"job_list":[],"all_approve":0,"duration":0,"skip":false}]}],"timeChecked":false},{"type":1,"name":"财务审核","worker":1,"staff_list":[],"job_list":[],"all_approve":0,"duration":0,"skip":false,"timeChecked":false}]},{"id":301,"name":"采购审批","form":[],"work_point_list":[{"type":0,"name":"发布订单","all_staff":true,"department_list":[],"staff_list":[],"job_list":[],"timeChecked":false},{"type":1,"name":"订单审核","worker":1,"staff_list":[],"job_list":[],"all_approve":0,"duration":0,"skip":false,"timeChecked":false},{"type":1,"name":"订单审批","worker":1,"staff_list":[],"job_list":[],"all_approve":0,"duration":0,"skip":false,"timeChecked":false}]},{"id":401,"name":"销售审批","form":[],"work_point_list":[{"type":0,"name":"发布订单","all_staff":true,"department_list":[],"staff_list":[],"job_list":[],"timeChecked":false},{"type":1,"name":"订单审核","worker":1,"staff_list":[],"job_list":[],"all_approve":0,"duration":0,"skip":false,"timeChecked":false},{"type":1,"name":"订单审批","worker":1,"staff_list":[],"job_list":[],"all_approve":0,"duration":0,"skip":false,"timeChecked":false}]},{"id":501,"name":"付款审批","form":[],"work_point_list":[{"type":0,"name":"新建付款计划","all_staff":true,"department_list":[],"staff_list":[],"job_list":[],"timeChecked":false},{"type":1,"name":"付款审批","worker":1,"staff_list":[],"job_list":[],"all_approve":0,"duration":0,"skip":false,"timeChecked":false}]},{"id":601,"name":"报销审批","form":[],"work_point_list":[{"type":0,"name":"报销申请","all_staff":true,"department_list":[],"staff_list":[],"job_list":[],"timeChecked":false},{"type":1,"name":"部门审核","worker":0,"staff_list":[],"job_list":[],"all_approve":0,"duration":0,"skip":false,"timeChecked":false},{"type":1,"name":"财务审批","worker":1,"staff_list":[],"job_list":[],"all_approve":0,"duration":0,"skip":false,"timeChecked":false}]}],
-      toolsList: [{"name":"项目助理","value":"ptm"},{"name":"销售助理","value":"som"},{"name":"采购助理","value":"scm"},{"name":"仓库助理","value":"wms"},{"name":"财务助理","value":"finance"}],
+      defaultWorkFlowList: [],
+      toolsList: [],
       radio: '',
       assistantRadio: "ptm",
       type: 'first',
       showWorkflow: false,
-      currentWorkFlow: {"id":101,"name":"变更审批","form":[],"work_point_list":[{"type":0,"name":"提交变更","all_staff":true,"department_list":[],"staff_list":[],"job_list":[],"timeChecked":false,"id":"id310-30"},{"type":1,"name":"变更审批","worker":1,"staff_list":[410,411],"job_list":[],"all_approve":0,"duration":0,"skip":false,"id":"id310-150"}]},
+      currentWorkFlow: {},
       toolsList: [
         {
           name: "项目助理",
@@ -199,10 +202,11 @@ export default {
           value: "finance",
         },
       ],
-      current_ai_assist: {"scm":{"require_drawing":true,"auto_buy":true,"auto_outbound_demand":true,"auto_outbound":true,"auto_order":true},"som":{"auto_inbound":false,"auto_buy":false,"auto_deliver":false,"save_product_price":false,"auto_approve_order":true},"ptm":{"require_drawing":true,"auto_buy":false,"auto_outbound_demand":true,"auto_approve_modify":true,"require_workpiece_id":false,"expire_time_day":18},"wms":{"qualify_mode":0},"finance":{"check_date":0}}
+      current_ai_assist: {}
     };
   },
   computed: {
+    ...mapGetters(['token','department_list','job_list']),
     changeName() {
       if (this.assistantRadio === "finance") {
         return "财务助理";
@@ -217,18 +221,211 @@ export default {
       }
     },
   },
-  mounted() {
-    this.drawWorkFlow(this.currentWorkFlow);
-  },
   created() {
-    
+    this.getDefaultWorkflow(this.getCompayWorkflow);
+    this.getDepartMentList();
+    this.getAllJobList();
+    this.getAIconfig();
   },
   methods: {
-    clickSelect(){},
+    getDefaultWorkflow(callback) {
+      get_default_workflow_template({
+        access_token: this.token
+      }).then((result) => {
+        if (result.code == 0) {
+          this.defaultWorkFlowList = result.default_workflow_template_list;
+          this.activeIndex = this.defaultWorkFlowList[0].id.toString();
+          this.defaultWorkFlowList.forEach((item) => {
+            item.work_point_list.forEach((it) => {
+              it.timeChecked = false;
+            });
+          });
+          callback();
+        }
+      });
+    },
+    getCompayWorkflow() {
+      get_workflow_template({
+        access_token: this.token
+      }).then((result) => {
+        if (result.code == 0) {
+          this.companyWorkList = result.workflow_template_list;
+          this.radio = this.defaultWorkFlowList[0].id;
+          this.changeTheme(this.radio);
+        }
+      });
+    },
+    changeTheme(val) {
+      if (this.isInclude(val)) {
+        this.showWorkflow = false;
+        this.currentWorkFlow = this.companyWorkList.filter((item) => {
+          return item.id == val;
+        })[0];
+      } else {
+        this.currentWorkFlow = "";
+        this.showWorkflow = true;
+      }
+
+      this.drawWorkFlow(this.currentWorkFlow);
+    },
+    isInclude(val) {
+      let flag = false;
+      for (let i = 0; i < this.companyWorkList.length; i++) {
+        if (val == this.companyWorkList[i].id) {
+          flag = true;
+        }
+      }
+      return flag;
+    },
+    clickSelect(index,indexPath){
+      if(this.type==='first'){
+        this.radio = parseInt(index);
+        this.changeTheme(this.radio);
+      }else if(this.type==='second'){
+        this.assistantRadio = index;
+        this.changeToolItem(this.assistantRadio);
+      } 
+    },
     handleOpen(key){
       this.type = key;
     },
-    startWorkFlow(){},
+    getDepartMentList(){
+      this.staff_list_all = [];
+      this.department_list_all = this.department_list;
+      this.department_list_all.forEach((item) => {
+        this.staff_list_all.push(...item.staff_list);
+      });
+    },
+    getAllJobList(){
+      this.job_list_all = this.job_list;
+    },
+    async getAIconfig() {
+      let result = await get_ai_assist_config({
+        access_token: this.token
+      })
+      if (result.code === 0) {
+        this.ai_assist_template = result.ai_assist;
+        if(!this.ai_assist_template.ptm.expire_time_day) this.ai_assist_template.ptm.expire_time_day=30  
+        this.current_ai_assist = this.$DeepClone(this.ai_assist_template)
+        if(this.current_ai_assist.scm.auto_outbound){
+          this.disAutoReceive = true;
+        }else{
+          this.disAutoReceive = false;
+        }
+      }
+    },
+    startWorkFlow() {
+      this.showWorkflow = false;
+      // 深拷贝
+      let temp = JSON.stringify(
+        this.defaultWorkFlowList.filter((item) => {
+          return item.id == this.radio;
+        })[0]
+      );
+      this.currentWorkFlow = JSON.parse(temp);
+      this.companyWorkList.push(this.currentWorkFlow);
+
+      this.drawWorkFlow(this.currentWorkFlow);
+    },
+    saveWorkFlow() {
+      let temp = JSON.parse(JSON.stringify(this.currentWorkFlow));
+      this.clearID(temp.work_point_list);
+      
+      edit_workflow_template({
+        access_token: this.token,
+        workflow_template: temp,
+      }).then((result) => {
+        if (result.code == 0) {
+          this.$notify({
+            type: 'success',
+            title: '成功',
+            message: '保存流程成功'
+          })
+        }
+      });
+    },
+    disableWorkFlow() {
+       this.$confirm('确定关闭“ ' + this.currentWorkFlow.name + ' ”流程, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          delete_workflow_template({
+            access_token: this.token,
+            workflow_id: this.currentWorkFlow.id,
+          }).then((result) => {
+            if (result.code == 0) {
+              this.$notify({
+                type: 'success',
+                title: '成功',
+                message: '关闭成功'
+              })
+              this.getDefaultWorkflow(this.getCompayWorkflow);
+            }
+          });
+        }).catch(()=>{})
+      
+    },
+    resetCurrentWorkFlow() {
+      this.defaultWorkFlowList.some((item) => {
+        if (this.currentWorkFlow.id == item.id) {
+          this.currentWorkFlow = JSON.parse(JSON.stringify(item));
+          this.drawWorkFlow(this.currentWorkFlow);
+          return true;
+        }
+      });
+    },
+    clearID(workPointList) {
+      workPointList.forEach((point) => {
+        if (WORK_POINT_CONDITION === point.type) {
+          point.condition_list.forEach((node) => {
+            delete node.condition.id;
+
+            this.clearID(node.work_point_list);
+          });
+        } else {
+          delete point.id;
+        }
+      });
+    },
+
+    getCaptionForCondition(condition, form) {
+      if (!condition || 0 == condition.length || !form) {
+        return "无效条件表达";
+      }
+
+      let ret = "";
+
+      condition.forEach((node) => {
+        ret = ret ? ret + " 及 " : "";
+
+        if (PARAM_OPERATOR_LT === node.operator) {
+          ret += form[node.index].name + "小于" + node.value[0];
+        } else if (PARAM_OPERATOR_LTE === node.operator) {
+          ret += form[node.index].name + "小于等于" + node.value[0];
+        } else if (PARAM_OPERATOR_E === node.operator) {
+          ret += form[node.index].name + "等于" + node.value[0];
+        } else if (PARAM_OPERATOR_MTE === node.operator) {
+          ret += form[node.index].name + "大于等于" + node.value[0];
+        } else if (PARAM_OPERATOR_MT === node.operator) {
+          ret += form[node.index].name + "大于" + node.value[0];
+        } else if (PARAM_OPERATOR_IN === node.operator) {
+          ret +=
+            form[node.index].name +
+            "介于 （" +
+            node.value[0] +
+            ", " +
+            node.value[1] +
+            "）之间";
+        } else if (PARAM_OPERATOR_AND === node.operator) {
+          ret += form[node.index].name + "包含" + node.value;
+        } else {
+          ret += form[node.index].name + "包含任意" + node.value;
+        }
+      });
+
+      return ret;
+    },
     drawWorkFlow(workFlow) {
       if (!workFlow)return;
       
@@ -326,6 +523,65 @@ export default {
       });
 
       return y;
+    },
+    drawCondition(ctx, x, y, condition, i, form) {
+      x += (ITEM_WIDTH - RECT_WIDTH) / 2;
+
+      this.drawLine(
+        ctx,
+        x + RECT_WIDTH / 2,
+        y,
+        x + RECT_WIDTH / 2,
+        y + RECT_HEIGHT / 2,
+        "#808080"
+      );
+
+      condition.condition.id = this.drawRect(
+        ctx,
+        x,
+        y + RECT_HEIGHT / 2,
+        RECT_WIDTH,
+        RECT_HEIGHT,
+        "#16B90B"
+      );
+      this.drawRect(
+        ctx,
+        x,
+        y + RECT_HEIGHT / 2,
+        RECT_WIDTH,
+        RECT_HEADER_HEIGHT,
+        "#16B90B",
+        true
+      );
+
+      this.drawText(
+        ctx,
+        "条件" + i,
+        x + RECT_WIDTH / 2,
+        y + RECT_HEIGHT / 2 + (RECT_HEADER_HEIGHT - FONT_SIZE),
+        "#FFFFFF",
+        "middle"
+      );
+      this.drawText(
+        ctx,
+        this.getCaptionForCondition(condition.condition, form),
+        x + 8,
+        y +
+          RECT_HEIGHT / 2 +
+          RECT_HEADER_HEIGHT +
+          (RECT_BODY_HEIGHT - FONT_SIZE) / 2,
+        "#000000",
+        "left"
+      );
+
+      this.drawLine(
+        ctx,
+        x + RECT_WIDTH / 2,
+        y + RECT_HEIGHT / 2 + RECT_HEIGHT,
+        x + RECT_WIDTH / 2,
+        y + RECT_HEIGHT + RECT_HEIGHT,
+        "#808080"
+      );
     },
     drawLine(ctx, x1, y1, x2, y2, color) {
       let node = document.createElementNS("http://www.w3.org/2000/svg", "line");
@@ -548,6 +804,67 @@ export default {
         width: w,
         height: h,
       };
+    },
+    getWidth(condition) {
+      if (!condition) {
+        return 0;
+      }
+
+      if (condition.work_point_list && 0 < condition.work_point_list.length) {
+        let w = 0;
+        condition.work_point_list.forEach((point) => {
+          if (!point) {
+            return;
+          }
+
+          let ww = 0;
+          if (WORK_POINT_CONDITION === point.type) {
+            point.condition_list.forEach((node) => {
+              ww += this.getWidth(node);
+            });
+          } else {
+            ww = ITEM_WIDTH;
+          }
+
+          w = ww < w ? w : ww;
+        });
+
+        return w;
+      } else {
+        return ITEM_WIDTH;
+      }
+    },
+    getHeight(condition) {
+      if (!condition) {
+        return 0;
+      }
+
+      if (condition.work_point_list && 0 < condition.work_point_list.length) {
+        let h = ITEM_HEIGHT;
+        condition.work_point_list.forEach((point) => {
+          if (!point) {
+            return;
+          }
+
+          let hh = 0;
+          if (WORK_POINT_CONDITION === point.type) {
+            point.condition_list.forEach((node) => {
+              let hhh = this.getHeight(node);
+              hh = hhh < hh ? hh : hhh;
+            });
+
+            hh += RECT_HEIGHT / 2;
+          } else {
+            hh += ITEM_HEIGHT;
+          }
+
+          h += hh;
+        });
+
+        return h;
+      } else {
+        return ITEM_HEIGHT;
+      }
     },
   },
 };
