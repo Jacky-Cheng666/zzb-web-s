@@ -85,7 +85,7 @@
       </el-form>
     </fieldset>
 
-    <el-table class="mb8" :height="screen_height-410" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
+    <el-table class="mb8" :height="screen_height-410" v-loading="loading" ref="multipleTable" :data="tableData" @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="50" />
       <el-table-column align="center" label="名称" prop="element_info.element_name" width="180" />
       <el-table-column align="center" label="型号" prop="element_info.spec_code" width="240" />
@@ -114,10 +114,10 @@
                  accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>
         <el-button @click="uploadFile" type="info" icon="el-icon-upload2" size="mini">导入</el-button>
         <el-button @click="handExportOrder('销售订单导入模板', [{'guest_element_code':'', 'guest_element_name':'必填', 'guest_spec_code':'必填', 'brand':'必填', 'version':'' , 'unit':'必填', 'num':'必填', 'delivery_time':'必填', 'price':'两种价格必须且只能填一个', 'tax_price':'', 'remark':'', 'element_code':'', 'element_name':'必填', 'spec_code':'必填', 'workpiece_name': '必填'}])" type="primary" icon="el-icon-upload2" size="mini">下载模板</el-button>
-        <el-button type="danger" icon="el-icon-delete" size="mini">删除</el-button>
+        <el-button @click="handleRemoveMaterial" type="danger" icon="el-icon-delete" size="mini">删除</el-button>
         <el-button @click="batchAddClick" type="primary" icon="el-icon-plus" size="mini">批量新增</el-button>
         <el-button @click="addElement" type="primary" icon="el-icon-plus" size="mini">新增</el-button>
-        <el-button type="success" icon="el-icon-folder-add" size="mini">暂存</el-button>
+        <el-button type="success" disabled icon="el-icon-folder-add" size="mini">暂存</el-button>
         <el-button type="success" icon="el-icon-check" size="mini">提交</el-button>
       </div>
     </pagination>
@@ -280,6 +280,7 @@ export default {
       payTypeOptions: [],
       //
       startDatePicker: this.beginDate(),
+      multipleSelection: []
     }
   },
   computed: {
@@ -300,7 +301,9 @@ export default {
     this.workpiece_define_list = JSON.parse(window.localStorage.getItem('saleBasicInfo')).workpiece_define_list || []
   },
   methods: {
-    handleSelectionChange(){},
+    handleSelectionChange(val){
+      this.multipleSelection = val
+    },
     toggleSearch(){
       this.showSearch = !this.showSearch
     },
@@ -338,7 +341,7 @@ export default {
       }
     },
     setSaleBasicInfo(){
-      let tmpInfo = this.$store.state.saleBasicInfo || JSON.parse(localStorage.getItem("saleBasicInfo"))
+      let tmpInfo = JSON.parse(localStorage.getItem("saleBasicInfo"))
       let userInfo = JSON.parse(localStorage.getItem('org'))
 
       //账本
@@ -918,6 +921,31 @@ export default {
       })
       return workpiece_id;
     },
+    handleRemoveMaterial(){
+      let len = this.multipleSelection.length
+      if(len <= 0){
+        this.$confirm('确定要删除所选物料吗?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.multipleSelection.forEach(item => {
+            let n = this.tableData.indexOf(item)
+            if(n > -1){
+              this.tableData.splice(n, 1)
+            }
+          })
+        }).catch(() => {
+
+        })
+      } else{
+        this.$message({
+          showClose: true,
+          type: 'warning',
+          message: '请先选择物料'
+        })
+      }
+    }
   },
 }
 </script>
