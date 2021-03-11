@@ -6,7 +6,7 @@ import settings from './modules/settings'
 import user from './modules/user'
 import tagsView from './modules/tagsView'
 import permission from './modules/permission'
-import cwm from './modules/cwm'
+import zzb from './modules/zzb'
 
 Vue.use(Vuex)
 
@@ -17,7 +17,7 @@ const store = new Vuex.Store({
     user,
     tagsView,
     permission,
-    cwm
+    zzb
   },
   getters
 })

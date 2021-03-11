@@ -8,11 +8,11 @@ const getters = {
   screen_height: state => state.app.screenHeight,
   companies: state => state.user.profile?state.user.profile.companies: [],
   login_company_no: state => state.user.company_no,
-  tax_list: state => state.cwm.tax_list,
-  encode_rule_list: state => state.cwm.encode_rule_list,
-  workpiece_list: state => state.cwm.workpiece_list,
-  job_list: state => state.cwm.job_list,
-  department_list: state => state.cwm.department_list
+  tax_list: state => state.zzb.tax_list,
+  encode_rule_list: state => state.zzb.encode_rule_list,
+  workpiece_list: state => state.zzb.workpiece_list,
+  job_list: state => state.zzb.job_list,
+  department_list: state => state.zzb.department_list
 
 }
 export default getters
