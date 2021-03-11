@@ -44,17 +44,18 @@ const actions = {
   login({ commit }, userInfo) {
     return new Promise((resolve, reject) => {
       login({ ...userInfo }).then(response => {
-        // console.log('登录',response);
-        commit('SET_TOKEN', response.access_token)
-        commit('SET_NAME', response.profile.name)
-        commit('SET_PROFILE', response.profile)
-        commit('SET_ORG', response.org)
-        commit('SET_COMPANY_NO', response.company_no)
+        if(response.code===0){
+          commit('SET_TOKEN', response.access_token)
+          commit('SET_NAME', response.profile.name)
+          commit('SET_PROFILE', response.profile)
+          commit('SET_ORG', response.org)
+          commit('SET_COMPANY_NO', response.company_no)
 
-        setToken('zzb_web_s_token',response.access_token)
-        setToken('profile', response.profile)
-        setToken('org', response.org)
-        setToken('company_no', response.company_no)
+          setToken('zzb_web_s_token',response.access_token)
+          setToken('profile', response.profile)
+          setToken('org', response.org)
+          setToken('company_no', response.company_no)
+        }
         resolve(response)
       }).catch(error => {
         reject(error)

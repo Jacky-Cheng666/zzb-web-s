@@ -201,8 +201,10 @@ export default {
           phone: this.phone,
           terminal_id: this.phone,
           verify_code: this.verify_code
-        }).then(()=>{
-          this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+        }).then((result)=>{
+          if(result.code===0){
+            this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+          }
         })
       },
       loginBtn(e){
