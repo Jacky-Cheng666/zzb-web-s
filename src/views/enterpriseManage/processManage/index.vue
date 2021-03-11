@@ -18,7 +18,7 @@
           </el-submenu>
       </el-menu>
     </div>
-    <div class="mainContent">
+    <div class="mainContent" v-loading="loading" element-loading-text="加载中...">
       <template v-if="type==='first'">
       <!-- 启用工作流展示页面 -->
         <div v-if="showWorkflow" class="contentWrap">
@@ -48,8 +48,8 @@
           <div style="display:flex;justify-content:space-between">
             <div class="menuName">{{changeName}}</div>
             <div>
-              <el-button icon="el-icon-refresh" size="mini">重置</el-button>
-              <el-button type="success" size="mini">
+              <el-button @click="resetAIconfig" icon="el-icon-refresh" size="mini">重置</el-button>
+              <el-button @click="saveAIconfig" type="success" size="mini">
                 <svg-icon icon-class="save" class-name="btn_icon_svg" />&nbsp;保存
               </el-button>
             </div>
@@ -123,12 +123,20 @@
         </div>
       </template>
     </div>
+
+    <processSetting :workflowTemplate="currentWorkFlow" :point="POINT" :processType="processType" 
+      :all_department_list="department_list_all"
+      :all_staff_list="staff_list_all"
+      :all_job_list="job_list_all"
+      ref="processSetting"/>
   </div>
 </template>
 
 <script>
 import { get_default_workflow_template, get_workflow_template, get_ai_assist_config, edit_workflow_template,
-delete_workflow_template } from '@/api/enterpriseManage'
+delete_workflow_template, set_ai_assist_config } from '@/api/enterpriseManage'
+import addStaff from "./components/addStaff";
+import processSetting from "./components/processSetting";
 import { mapGetters } from 'vuex'
 const WORK_POINT_CREATE = 0; //发起
 const WORK_POINT_APPROVE = 1; //审批
@@ -166,8 +174,10 @@ const FONT_SIZE = 8;
 
 export default {
   name: "processManage",
+  components: {processSetting,addStaff},
   data() {
     return {
+      loading: false,
       itemIndex: "ptm",
       staff_list_all: [],
       job_list_all: [],
@@ -202,7 +212,9 @@ export default {
           value: "finance",
         },
       ],
-      current_ai_assist: {}
+      current_ai_assist: {},
+      processType: "",
+      POINT: "",
     };
   },
   computed: {
@@ -229,6 +241,7 @@ export default {
   },
   methods: {
     getDefaultWorkflow(callback) {
+      this.loading = true;
       get_default_workflow_template({
         access_token: this.token
       }).then((result) => {
@@ -249,6 +262,7 @@ export default {
         access_token: this.token
       }).then((result) => {
         if (result.code == 0) {
+          this.loading = false;
           this.companyWorkList = result.workflow_template_list;
           this.radio = this.defaultWorkFlowList[0].id;
           this.changeTheme(this.radio);
@@ -286,8 +300,70 @@ export default {
         this.changeToolItem(this.assistantRadio);
       } 
     },
+    changeToolItem(val) {
+      this.itemIndex = val;
+    },
+    autoDeliver(val){
+      if(val){
+        this.disAutoReceive = true;
+        this.current_ai_assist.scm.auto_outbound_demand = val;
+      }else{
+        this.disAutoReceive = false;
+      }
+    },
+    saveAIconfig() {
+      let keyName = "";
+      for (let key in this.current_ai_assist) {
+        // console.log(key);
+        if (key === this.assistantRadio) {
+          keyName = this.assistantRadio;
+          let params = {
+            [keyName]: this.current_ai_assist[key],
+          };
+          console.log(params);
+          this.setAiAssistConfig(params);
+          return true;
+        }
+      }
+    },
+    resetAIconfig() {
+      for (let key in this.ai_assist_template) {
+        if (key === this.assistantRadio) {
+          for (let key2 in this.current_ai_assist[key]) {
+            this.current_ai_assist[key][key2] = this.ai_assist_template[key][
+              key2
+            ];
+          }
+        }
+      }
+    },
+    async setAiAssistConfig(params) {
+      let result = await set_ai_assist_config({
+        access_token: this.token,
+        ai_assist: {
+          ...params,
+        },
+      });
+      if (result.code === 0) {
+        this.$notify({
+          type: 'success',
+          title: '成功',
+          message: '操作成功'
+        })
+        this.getAIconfig();
+      }
+    },
     handleOpen(key){
       this.type = key;
+      if(this.type==='first'){
+        this.$nextTick(()=>{
+          this.changeTheme(this.radio);
+        })
+      }else{
+        this.$nextTick(()=>{
+          this.changeToolItem(this.assistantRadio);
+        })
+      }
     },
     getDepartMentList(){
       this.staff_list_all = [];
@@ -300,10 +376,12 @@ export default {
       this.job_list_all = this.job_list;
     },
     async getAIconfig() {
+      this.loading = true;
       let result = await get_ai_assist_config({
         access_token: this.token
       })
       if (result.code === 0) {
+        this.loading = false;
         this.ai_assist_template = result.ai_assist;
         if(!this.ai_assist_template.ptm.expire_time_day) this.ai_assist_template.ptm.expire_time_day=30  
         this.current_ai_assist = this.$DeepClone(this.ai_assist_template)
@@ -330,7 +408,7 @@ export default {
     saveWorkFlow() {
       let temp = JSON.parse(JSON.stringify(this.currentWorkFlow));
       this.clearID(temp.work_point_list);
-      
+      this.loading = true;
       edit_workflow_template({
         access_token: this.token,
         workflow_template: temp,
@@ -341,6 +419,7 @@ export default {
             title: '成功',
             message: '保存流程成功'
           })
+          this.loading = false;
         }
       });
     },
@@ -374,6 +453,38 @@ export default {
           return true;
         }
       });
+    },
+    refreshDraw() {
+      this.drawWorkFlow(this.currentWorkFlow);
+    },
+    getPoint(id, workPointList) {
+      for (let i in workPointList) {
+        let point = workPointList[i];
+
+        if (WORK_POINT_CONDITION === point.type) {
+          for (let j in point.condition_list) {
+            let node = point.condition_list[j];
+
+            if (id === node.condition.id) {
+              return node.condition;
+            } else {
+              if (node.work_point_list && 0 < node.work_point_list.length) {
+                let ret = this.getPoint(id, node.work_point_list);
+
+                if (ret) {
+                  return ret;
+                }
+              }
+            }
+          }
+        } else {
+          if (id === point.id) {
+            return point;
+          }
+        }
+      }
+
+      return null;
     },
     clearID(workPointList) {
       workPointList.forEach((point) => {
@@ -866,6 +977,18 @@ export default {
         return ITEM_HEIGHT;
       }
     },
+    onPoint(e){
+      let point = this.getPoint(
+        e.target.id,
+        this.currentWorkFlow.work_point_list
+      );
+
+      this.processType = !point.type && WORK_POINT_CREATE !== point.type ? WORK_POINT_CONDITION : point.type;
+      this.$refs.processSetting.drawer = true;
+      this.$set(point, "timeChecked", !point.duration ? true : false);
+      this.$set(point, "disabled", !point.duration ? true : false);
+      this.POINT = point;
+    }
   },
 };
 </script>

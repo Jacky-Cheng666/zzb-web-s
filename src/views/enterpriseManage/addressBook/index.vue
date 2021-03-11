@@ -39,10 +39,10 @@
             <el-table-column align="center" type="selection" width="55" />
             <el-table-column align="center" label="姓名" show-overflow-tooltip>
               <template slot-scope="scope">
-                <div v-if="scope.row.is_admin&&scope.row.isDirector" style="width: 80%;height: 100%;cursor: pointer;display:inline-block;" @click="toStaffEdit(false,scope.row)">{{scope.row.name}}（管理员)（主管）</div>
-                <div v-else-if="scope.row.is_admin" style="width: 80%;height: 100%;cursor: pointer;display:inline-block;" @click="toStaffEdit(false,scope.row)">{{scope.row.name}}（管理员）</div>
-                <div v-else-if="scope.row.isDirector" style="width: 80%;height: 100%;cursor: pointer;display:inline-block;" @click="toStaffEdit(false,scope.row)">{{scope.row.name}}（主管）</div>
-                <div v-else style="width: 80%;height: 100%;cursor: pointer;display:inline-block;" @click="toStaffEdit(false,scope.row)">{{scope.row.name}}</div>
+                <div v-if="scope.row.is_admin&&scope.row.isDirector" style="width: 80%;height: 100%;cursor: pointer;display:inline-block;" @click="toStaffEdit(scope.row)">{{scope.row.name}}（管理员)（主管）</div>
+                <div v-else-if="scope.row.is_admin" style="width: 80%;height: 100%;cursor: pointer;display:inline-block;" @click="toStaffEdit(scope.row)">{{scope.row.name}}（管理员）</div>
+                <div v-else-if="scope.row.isDirector" style="width: 80%;height: 100%;cursor: pointer;display:inline-block;" @click="toStaffEdit(scope.row)">{{scope.row.name}}（主管）</div>
+                <div v-else style="width: 80%;height: 100%;cursor: pointer;display:inline-block;" @click="toStaffEdit(scope.row)">{{scope.row.name}}</div>
               </template>
             </el-table-column>
 
