@@ -264,3 +264,18 @@ export function add_elements(data) {
         data
     })
 }
+
+export function delete_elements(data) {
+    return request({
+        url: '/corp/company/delete_elements',
+        method: 'post',
+        data
+    })
+}
+export function get_all_element(data) {
+    return request({
+        url: '/corp/company/get_all_element',
+        method: 'post',
+        data
+    })
+}

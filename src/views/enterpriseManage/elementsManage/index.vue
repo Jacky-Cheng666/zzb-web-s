@@ -88,7 +88,7 @@
         <el-table-column align="center" label="操作" width="160px" fixed="right">
           <template slot-scope="scope">
             <el-button @click="toElementsEdit(scope.row)" size="mini" type="text" icon="el-icon-edit">编辑</el-button>
-            <el-button size="mini" type="text" icon="el-icon-delete" class="text-danger">删除</el-button>    
+            <el-button @click="deleteElements(scope.row)" size="mini" type="text" icon="el-icon-delete" class="text-danger">删除</el-button>    
           </template>
         </el-table-column>
       </el-table>
@@ -125,7 +125,7 @@
 import dtime from "time-formater";
 import { mapGetters } from 'vuex'
 import { get_supplier_list, get_encode_rule, get_content_elements, get_element_list, get_all_workpiece_list, 
-search_elements, add_elements,is_elements_repeat } from '@/api/enterpriseManage.js'
+search_elements, add_elements,is_elements_repeat,delete_elements, get_all_element} from '@/api/enterpriseManage.js'
 import { getToken,setToken,removeToken } from '@/utils/auth'
 export default {
   name: 'elementsManage',
@@ -1216,7 +1216,256 @@ export default {
           error_message: '以下内容包含特殊字符: ' + errorMessage + '，请检查！！！'
         })
       }
-    }
+    },
+    deleteElements(element) {
+      if (!element && this.multipleSelection.length == 0) {
+        this.$message({
+          type: "warning",
+          message: "请至少选择一项物料"
+        });
+        return;
+      }
+
+      let arr = [],
+        list = [];
+      if (element) {
+        if (element.element_code) {
+          arr.push(element.element_code);
+        } else {
+          list.push({
+            element_name: element.element_name,
+            brand: element.brand,
+            spec_code:
+              element.spec_code + (element.version ? element.version : "")
+          });
+        }
+      } else {
+        this.multipleSelection.forEach(item => {
+          if (item.element_code) {
+            arr.push(item.element_code);
+          } else {
+            list.push({
+              element_name: item.element_name,
+              brand: item.brand,
+              spec_code: item.spec_code + (item.version ? item.version : "")
+            });
+          }
+        });
+      }
+
+      let msg = element ? "确定删除该物料？" : "确定删除这一批物料？";
+      this.$confirm(msg, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          delete_elements({
+            access_token: this.token,
+            element_code_list: arr,
+            element_list: list
+          }).then(result => {
+            if (result.code == 0) {
+              this.$notify({
+                type: "success",
+                title: '成功',
+                message: "删除成功"
+              });
+              this.getContentElements();
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+    },
+    downloadAll() {
+      this.$confirm("确定导出全部物料清单？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        get_all_element({
+          access_token: this.token
+        }).then(result => {
+            if (result.code == 0) {
+              result.element_list.forEach(item => {
+                if (item.version) {
+                  item.spec_code = item.spec_code.slice(
+                    0,
+                    item.spec_code.length - item.version.length
+                  );
+                }
+
+                item.content_name = item.workpiece_name;
+                delete item.workpiece_name;
+              });
+
+              this.downloadTemp(result.element_list);
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消导出"
+          });
+        });
+    },
+    downloadTemp(list) {
+      if (list) {
+        this.handExportOrder(list, "物料清单");
+      } else {
+        this.handExportOrder([], "物料清单模板");
+      }
+    },
+    handExportOrder(elements, name) {
+      let _this = this;
+      let filterVal = [
+        "element_code",
+        "element_name",
+        "brand",
+        "spec_code",
+        "version",
+        "unit",
+        "min_pack_num",
+        "workpiece_name",
+        "content_name"
+      ];
+      let tHeader = [
+        "物料代码",
+        "物料名称",
+        "材质/品牌",
+        "规格型号",
+        "版本",
+        "单位",
+        "最小包装",
+        "供应商分类",
+        "品类最末级"
+      ];
+
+      if (!elements || 0 == elements.length) {
+        filterVal = [
+          "element_code",
+          "element_name",
+          "brand",
+          "spec_code",
+          "version",
+          "unit",
+          "min_pack_num",
+          "workpiece_name",
+          "content_name"
+        ];
+        tHeader = [
+          "物料代码",
+          "物料名称",
+          "材质/品牌",
+          "规格型号",
+          "版本",
+          "单位",
+          "最小包装",
+          "供应商分类",
+          "品类最末级"
+        ];
+      } else {
+        elements.forEach(item => {
+          this.workpiece_list.forEach(node => {
+            if (node.id == item.workpiece_id) {
+              item.workpiece_name = node.name;
+            }
+          });
+        });
+      }
+
+      let data = _this.formatJson(filterVal, elements);
+      data.unshift(tHeader);
+
+      this.exportOrder(data, name);
+    },
+    exportOrder(data, orderName) {
+      let _this = this;
+      var tmpdata = []; //用来保存转换好的json
+      data
+        .map((row, i) =>
+          row.map((v, j) =>
+            Object.assign(
+              {},
+              {
+                v: v ? v : undefined,
+                position: String.fromCharCode(65 + j) + (i + 1)
+              }
+            )
+          )
+        )
+        .reduce((prev, next) => prev.concat(next))
+        .forEach(
+          (v, i) =>
+            (tmpdata[v.position] = {
+              v: v.v
+            })
+        );
+
+      var outputPos = Object.keys(tmpdata); //设置区域,比如表格从A1到D10
+      var wb = {
+        SheetNames: ["sheet1"], //保存的表标题
+        Sheets: {
+          sheet1: Object.assign(
+            {},
+            tmpdata, //内容
+            {
+              "!ref": outputPos[0] + ":" + outputPos[outputPos.length - 1] //设置填充区域
+            }
+          )
+        }
+      };
+
+      //        const wb = {SheetNames: ['Sheet1'],Sheets: {}, Props: {}};
+      //        wb.Sheets['Sheet1'] = XLSX.utils.json_to_sheet(data); //通过json_to_sheet转成单页(Sheet)数据
+      _this.saveAs(
+        new Blob(
+          [
+            _this.s2ab(
+              XLSX.write(wb, {
+                bookType: "xlsx",
+                bookSST: false,
+                type: "binary"
+              })
+            )
+          ],
+          {
+            type: ""
+          }
+        ),
+        orderName + ".xlsx"
+      );
+    },
+    saveAs(obj, fileName) {
+      let tmpa = document.createElement("a");
+      tmpa.download = fileName;
+      tmpa.href = URL.createObjectURL(obj);
+      tmpa.click();
+      setTimeout(function() {
+        URL.revokeObjectURL(obj);
+      }, 100);
+    },
+    s2ab(s) {
+      if (typeof ArrayBuffer !== "undefined") {
+        var buf = new ArrayBuffer(s.length);
+        var view = new Uint8Array(buf);
+        for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xff;
+        return buf;
+      } else {
+        var buf = new Array(s.length);
+        for (var i = 0; i != s.length; ++i) buf[i] = s.charCodeAt(i) & 0xff;
+        return buf;
+      }
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => v[j]));
+    },
   },
 }
 </script>
