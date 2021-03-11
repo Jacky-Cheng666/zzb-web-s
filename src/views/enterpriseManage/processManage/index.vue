@@ -123,12 +123,20 @@
         </div>
       </template>
     </div>
+
+    <processSetting :workflowTemplate="currentWorkFlow" :point="POINT" :processType="processType" 
+      :all_department_list="department_list_all"
+      :all_staff_list="staff_list_all"
+      :all_job_list="job_list_all"
+      ref="processSetting"/>
   </div>
 </template>
 
 <script>
 import { get_default_workflow_template, get_workflow_template, get_ai_assist_config, edit_workflow_template,
 delete_workflow_template } from '@/api/enterpriseManage'
+import addStaff from "./components/addStaff";
+import processSetting from "./components/processSetting";
 import { mapGetters } from 'vuex'
 const WORK_POINT_CREATE = 0; //发起
 const WORK_POINT_APPROVE = 1; //审批
@@ -166,6 +174,7 @@ const FONT_SIZE = 8;
 
 export default {
   name: "processManage",
+  components: {processSetting,addStaff},
   data() {
     return {
       itemIndex: "ptm",
@@ -202,7 +211,9 @@ export default {
           value: "finance",
         },
       ],
-      current_ai_assist: {}
+      current_ai_assist: {},
+      processType: "",
+      POINT: "",
     };
   },
   computed: {
@@ -374,6 +385,38 @@ export default {
           return true;
         }
       });
+    },
+    refreshDraw() {
+      this.drawWorkFlow(this.currentWorkFlow);
+    },
+    getPoint(id, workPointList) {
+      for (let i in workPointList) {
+        let point = workPointList[i];
+
+        if (WORK_POINT_CONDITION === point.type) {
+          for (let j in point.condition_list) {
+            let node = point.condition_list[j];
+
+            if (id === node.condition.id) {
+              return node.condition;
+            } else {
+              if (node.work_point_list && 0 < node.work_point_list.length) {
+                let ret = this.getPoint(id, node.work_point_list);
+
+                if (ret) {
+                  return ret;
+                }
+              }
+            }
+          }
+        } else {
+          if (id === point.id) {
+            return point;
+          }
+        }
+      }
+
+      return null;
     },
     clearID(workPointList) {
       workPointList.forEach((point) => {
@@ -866,6 +909,18 @@ export default {
         return ITEM_HEIGHT;
       }
     },
+    onPoint(e){
+      let point = this.getPoint(
+        e.target.id,
+        this.currentWorkFlow.work_point_list
+      );
+
+      this.processType = !point.type && WORK_POINT_CREATE !== point.type ? WORK_POINT_CONDITION : point.type;
+      this.$refs.processSetting.drawer = true;
+      this.$set(point, "timeChecked", !point.duration ? true : false);
+      this.$set(point, "disabled", !point.duration ? true : false);
+      this.POINT = point;
+    }
   },
 };
 </script>
