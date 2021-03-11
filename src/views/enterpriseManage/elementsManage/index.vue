@@ -51,13 +51,10 @@
             <img style="vertical-align:middle;margin-top:-4px;margin-right:4px" src="@/assets/imgs/download.png" alt="">
             <span style="font-size: 14px;color:#333333;">下载模板</span>
           </span>
-          <!-- <importBtn
-          style="margin-left:0"
-          :workpiece_list="workpiece_list"
-          :encode_rule="encode_rule"
-          @refreshData="refreshData(true)"
-          ></importBtn> -->
-          <el-button icon="el-icon-upload2" size="mini" type="info" @click="downloadTemp(allRows)">批量导入</el-button>
+
+          <input type="file" @change="OnFileChanged(this)" ref="imFile" style="display: none"
+           accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>
+          <el-button icon="el-icon-upload2" size="mini" type="info" @click="uploadFile">批量导入</el-button>
 
           <el-button icon="el-icon-download" size="mini" type="info" @click="downloadAll()">全部导出</el-button>
           <el-button icon="el-icon-download" size="mini" type="info" @click="downloadTemp(allRows)">批量导出</el-button>
@@ -91,7 +88,7 @@
         <el-table-column align="center" label="操作" width="160px" fixed="right">
           <template slot-scope="scope">
             <el-button @click="toElementsEdit(scope.row)" size="mini" type="text" icon="el-icon-edit">编辑</el-button>
-            <el-button size="mini" type="text" icon="el-icon-delete" class="text-danger">删除</el-button>    
+            <el-button @click="deleteElements(scope.row)" size="mini" type="text" icon="el-icon-delete" class="text-danger">删除</el-button>    
           </template>
         </el-table-column>
       </el-table>
@@ -128,7 +125,7 @@
 import dtime from "time-formater";
 import { mapGetters } from 'vuex'
 import { get_supplier_list, get_encode_rule, get_content_elements, get_element_list, get_all_workpiece_list, 
-search_elements } from '@/api/enterpriseManage.js'
+search_elements, add_elements,is_elements_repeat,delete_elements, get_all_element, delete_all_element} from '@/api/enterpriseManage.js'
 import { getToken,setToken,removeToken } from '@/utils/auth'
 export default {
   name: 'elementsManage',
@@ -150,7 +147,15 @@ export default {
       pageSize: 50,
       supplier_list: [],
       loading: false,
-      multipleSelection: []
+      multipleSelection: [],
+      imFile: "", // 导入文件el
+      rABS: false, // 导入文件el
+      propMap: {
+        spec_code: '型号',
+        element_name: '名称',
+        unit: '单位',
+        brand: '品牌',
+      }
     }
   },
   created() {
@@ -701,7 +706,793 @@ export default {
     },
     setSafeStorage(){
       this.$router.push('/enterpriseManage/inventoryManage/setSafeStock')
-    }
+    },
+    uploadFile(){
+      this.imFile = this.$refs.imFile
+      this.imFile.click();
+    },
+    OnFileChanged() {
+      let _this=this
+      var files = this.imFile.files;
+      var file = new FileReader();
+      file.readAsArrayBuffer(files[0]);
+      file.onload = function (e) {
+        try {
+          var fileContent = e.target.result;
+          var wb =XLSX.read(_this.fixdata(fileContent), { type: 'binary' });
+          var items =XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+          _this.ReadElementList(items)
+          _this.$refs.imFile.value = ""
+        }
+        catch (error) {
+          console.log(error);
+          return;
+        }
+      }
+    },
+    fixdata(data) {
+      var o = "";
+      var l = 0;
+      var w = 10240;
+      for (; l < data.byteLength / w; ++l) {
+        o += String.fromCharCode.apply(
+          null,
+          new Uint8Array(data.slice(l * w, l * w + w))
+        );
+      }
+      o += String.fromCharCode.apply(null, new Uint8Array(data.slice(l * w)));
+      return o;
+    },
+    ReadElementList(elemsRaw) {
+      let match_result = null
+      this.matchAllForSpecialCharater(elemsRaw, function(result){
+        match_result = result
+      })
+      if(match_result && match_result.code === 1){
+        this.$message({
+          showClose: true,
+          duration: 0,
+          message: match_result.error_message,
+          type: 'warning'
+        })
+
+        return
+      }
+
+      let elementList = [];
+
+      let contentNameErrorList = [];
+      let workpieceErrorList = [];
+      let maxDisplayError = 10;
+
+      for (let i in elemsRaw) {
+        elemsRaw[i]['物料代码'] = elemsRaw[i]['物料代码'] ? elemsRaw[i]['物料代码'].trim() : elemsRaw[i]['物料代码']
+        elemsRaw[i]['物料名称'] = elemsRaw[i]['物料名称'] ? elemsRaw[i]['物料名称'].trim() : elemsRaw[i]['物料名称']
+        elemsRaw[i]['材质/品牌'] = elemsRaw[i]['材质/品牌'] ? elemsRaw[i]['材质/品牌'].trim() : elemsRaw[i]['材质/品牌']
+        elemsRaw[i]['规格型号'] = elemsRaw[i]['规格型号'] ? elemsRaw[i]['规格型号'].trim() : elemsRaw[i]['规格型号']
+        elemsRaw[i]['版本'] = elemsRaw[i]['版本'] ? elemsRaw[i]['版本'].trim() : elemsRaw[i]['版本']
+
+        elemsRaw[i]['单位'] = elemsRaw[i]['单位'] ? elemsRaw[i]['单位'].trim() : elemsRaw[i]['单位']
+        elemsRaw[i]['最小包装'] = elemsRaw[i]['最小包装'] ? elemsRaw[i]['最小包装'].trim() : elemsRaw[i]['最小包装']
+        elemsRaw[i]['供应商分类'] = elemsRaw[i]['供应商分类'] ? elemsRaw[i]['供应商分类'].trim() : elemsRaw[i]['供应商分类']
+        elemsRaw[i]['品类最末级'] = elemsRaw[i]['品类最末级'] ? elemsRaw[i]['品类最末级'].trim() : elemsRaw[i]['品类最末级']
+
+        let workpiece_id, content_code, content_name
+        let index = Number(i) + 2
+        /*if (!elemsRaw[i]['物料代码']) {
+          this.$message({
+            type: 'warning',
+            message: "第 " + index + " 行 物料代码 为空"
+          });
+          return
+        }*/
+        let tmpElementCode = elemsRaw[i]['物料代码']
+        if(tmpElementCode && tmpElementCode.toString().trim().length > 24){
+          this.$message({
+            showClose: true,
+            type: 'warning',
+            message: "第"+ index + "行的 物料代码 过长，请检查"
+          });
+          return
+        }
+
+        if (!elemsRaw[i]['物料名称']) {
+          this.$message({
+            type: 'warning',
+            showClose: true,
+            duration: 0,
+            message: "第 " + index + " 行 物料名称 为空。请确所有的 物料名称 都不为空！"
+          });
+          return
+        }
+
+        let tmpElementName = elemsRaw[i]['物料名称']
+        if (tmpElementName.toString().trim().length > 32) {
+          this.$message({
+            showClose: true,
+            type: 'warning',
+            message: "第"+ index +"行的 物料名称 过长，请检查"
+          });
+          return
+        }
+
+
+        if (!elemsRaw[i]['材质/品牌']) {
+          this.$message({
+            type: 'warning',
+            showClose: true,
+            duration: 0,
+            message: "第 " + index + " 行 材质/品牌 为空。请确保所有的 材质/品牌 都不为空！"
+          });
+          return
+        }
+
+        let tmpBrand = elemsRaw[i]['材质/品牌']
+        if(tmpBrand && tmpBrand.toString().trim().length > 32){
+          this.$message({
+            showClose: true,
+            type: 'warning',
+            message: "第"+(index+1)+"行的 品牌 过长，请检查"
+          });
+          return
+        }
+
+        if (!elemsRaw[i]['规格型号']) {
+          this.$message({
+            type: 'warning',
+            showClose: true,
+            duration: 0,
+            message: "第 " + index + " 行 规格型号 为空。请确保所有的 规格型号 都不为空！"
+          });
+          return
+        }
+
+        let tmpSpecCode = elemsRaw[i]['规格型号']
+        let tmpVersion = elemsRaw[i]['版本']
+        let tmpStr = tmpSpecCode + tmpVersion
+        if(tmpSpecCode && tmpStr.trim().length > 64){
+          this.$message({
+            showClose: true,
+            type: 'warning',
+            message: "第"+ index + "行的 规格型号 过长，请检查"
+          });
+          return
+        }
+        /*if (!elemsRaw[i]['版本']) {
+          this.$message({
+            type: 'warning',
+            message: "第 " + index + " 行 版本 为空"
+          });
+          return
+        }*/
+        if (!elemsRaw[i]['单位']) {
+          this.$message({
+            type: 'warning',
+            showClose: true,
+            duration: 0,
+            message: "第 " + index + " 行 单位 为空。请确保所有的 单位 都不为空！"
+          });
+          return
+        }
+
+        let tmpUnit = elemsRaw[i]['单位']
+        if(tmpUnit && tmpUnit.toString().trim().length > 12){
+          this.$message({
+            showClose: true,
+            type: 'warning',
+            message: "第"+(index+1)+"行的 单位 过长，请检查"
+          });
+          return
+        }
+
+        let tmpRemark = elemsRaw[i]['备注'] ? elemsRaw[i]['备注'] : ''
+        if(tmpRemark && tmpRemark.toString().trim().length > 1024){
+          this.$message({
+            showClose: true,
+            type: 'warning',
+            message: "第"+(index+1)+"行的 备注 过长，请检查"
+          });
+          return
+        }
+        
+        if (!elemsRaw[i]['最小包装']) {
+          this.$message({
+            type: 'warning',
+            showClose: true,
+            duration: 0,
+            message: "第 " + index + " 行 最小包装 为空。请确保所有的 最小包装 都不为空！"
+          });
+          return
+        }
+
+        
+        if (elemsRaw[i]['供应商分类']) {
+          //console.log(JSON.stringify(this.workpiece_list))
+          this.workpiece_list.forEach(item => {
+            if (item.name == elemsRaw[i]['供应商分类']) {
+              workpiece_id = item.id
+            }
+          });
+
+          if (!workpiece_id) {
+            if (maxDisplayError > workpieceErrorList.length) {
+              workpieceErrorList.push({ pos: index });
+            }
+            else if (maxDisplayError === workpieceErrorList.length) {
+              workpieceErrorList.push({ pos: "……" });
+            }
+          }
+        }
+
+        if (elemsRaw[i]['品类最末级']) {
+          let rule_name = elemsRaw[i]['品类最末级']
+          let first = this.encode_rule[0]
+          let second = this.encode_rule[1]
+          let third = this.encode_rule[2]
+
+          let third_name, second_name
+          content_name = ''
+          content_code = ''
+
+          if (third && 0 < third.length) {
+            third.forEach(item => {
+              if (item.name == rule_name) {
+                content_name = rule_name
+                content_code = item.code
+
+                third_name = item.name
+              }
+            })
+          }
+
+          if (second && 0 < second.length) {
+            second.forEach(item => {
+              if (item.sub_index && 0 < item.sub_index.length) {
+                item.sub_index.forEach(son => {
+                  if (son == third_name) {
+                    content_code = item.code + content_code
+
+                    second_name = item.name
+                  }
+                })
+              } else {
+                if (!third_name && item.name == rule_name) {
+                  content_name = rule_name
+                  content_code = item.code + '000'
+
+                  second_name = item.name
+                }
+              }
+            })
+          }
+
+          if (first && 0 < first.length) {
+            first.forEach(item => {
+              if (item.sub_index && 0 < item.sub_index.length) {
+                item.sub_index.forEach(son => {
+                  if (son == second_name) {
+                    content_code = item.code + content_code
+                  }
+                })
+              } else {
+                if (!second_name && item.name == rule_name) {
+                  content_name = rule_name
+                  content_code = item.code + '00000'
+                }
+              }
+            })
+          }
+
+          if (!content_code) {
+            if (maxDisplayError > contentNameErrorList.length) {
+              contentNameErrorList.push({
+                pos: index,
+                content_name: rule_name
+              });
+            }
+            else if (maxDisplayError === contentNameErrorList.length){
+              contentNameErrorList.push({
+                pos: "……",
+                content_name: "……"
+              });
+            }
+          }
+        }
+
+        var element = {
+          element_code: elemsRaw[i]['物料代码'],
+          element_name: elemsRaw[i]['物料名称'],
+          brand: elemsRaw[i]['材质/品牌'],
+          spec_code: elemsRaw[i]['规格型号'] + (elemsRaw[i]['版本'] ? elemsRaw[i]['版本'] : ''),
+          version: elemsRaw[i]['版本'] ? elemsRaw[i]['版本'] : '',
+          unit: elemsRaw[i]['单位'],
+          min_pack_num: elemsRaw[i]['最小包装'],
+          workpiece_id: workpiece_id,
+          content_code: content_code,
+          content_name: content_name,
+          major: elemsRaw[i]['关键物料'] ? 1 : 0,
+          remark: elemsRaw[i]['备注'] ? elemsRaw[i]['备注'].substring(0, 2000) : '',
+        };
+
+        elementList.push(element);
+      }
+
+      if (workpieceErrorList.length || contentNameErrorList.length) {
+        let errMessage = "";
+        let errIndex = 1;
+        if (workpieceErrorList.length) {
+          errMessage = errMessage + "<h2>" + errIndex + "：下列 供应商分类 和系统不匹配，请使用系统的</h2>";
+          errMessage = errMessage + "<lo>"
+          workpieceErrorList.forEach(function (item, index, array) {
+            errMessage = errMessage + "<li>"
+            errMessage = errMessage + "第 " + item.pos + " 行"
+            errMessage = errMessage + "</li>"
+          });
+          errMessage = errMessage + "</lo>"
+
+          errIndex += 1;
+        }
+
+        if (contentNameErrorList.length) {
+          errMessage = errMessage + "<h2>" + errIndex + "：下列 品类 和系统不匹配，请使用最末级品类名称</h2>";
+          errMessage = errMessage + "<lo>"
+          contentNameErrorList.forEach(function (item, index, array) {
+            errMessage = errMessage + "<li>"
+            errMessage = errMessage + "第 " + item.pos + " 行的“" + item.content_name + "”"
+            errMessage = errMessage + "</li>"
+          });
+          errMessage = errMessage + "</lo>"
+        }
+
+        this.$message({
+          type: 'warning',
+          showClose: true,
+          duration: 0,
+          message: errMessage,
+          dangerouslyUseHTMLString: true
+        });
+
+        return
+      }
+
+      if(elementList.length>0){
+        this.importOnhandElements(elementList)
+      }else {
+        this.$message({
+          type: 'warning',
+          message: "文件不匹配或者没有任何物料数据！"
+        });
+      }
+
+    },
+
+    checkRepeat(elementList, callback) {
+      if (0 == elementList.length) {
+        return;
+      }
+
+      var specCodeList = [];
+
+      for (var i = 0; i < elementList.length; i++) {
+        specCodeList.push(elementList[i].spec_code)
+      }
+
+      is_elements_repeat({
+        access_token: this.token,
+        spec_code_list: specCodeList
+      }).then(response => {
+
+          var repeatSpecCodeList = response.repeat_spec_code_list;
+          callback(repeatSpecCodeList)
+        })
+    },
+
+    importOnhandElements(elementList){
+      this.$confirm('确定导入物料清单？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.checkRepeat(elementList, repeatSpecCodeList => {
+          if (repeatSpecCodeList) {
+            add_elements({
+              access_token: this.token,
+              element_list: elementList
+            }).then(response => {
+                if (response.code == 0) {
+                  if (repeatSpecCodeList.length) {
+                    var tipMsg = "已加入到系统中的下列规格型号和系统中的重复，请您检查添加的物料是否异常！这些物料的规格型号为：";
+
+                    tipMsg += '“';
+                    for (var i = 0; i < repeatSpecCodeList.length; i++) {
+                      if (0 != i) {
+                        tipMsg += '，';
+                      }
+                      tipMsg += repeatSpecCodeList[i];
+                    }
+                    tipMsg += '”';
+
+                    this.$alert(tipMsg, '', {
+                      confirmButtonText: '确定',
+                      callback: action => {
+                        this.$emit('refreshData')
+                      }
+                    });
+                  }
+                  else {
+                    this.$notify({
+                      type: 'success',
+                      title: '成功',
+                      message: "批量添加物料成功"
+                    });
+                    this.getContentElements();
+                  }
+                }
+              })
+          }
+        })
+      }).catch(() => {
+
+      });
+    },
+    matchSpecialCharacter(str) {
+      return false
+      if(str.length <= 0){
+        return false
+      }
+      let rules = /[!#$&*\/]/im
+
+      if (rules.test(str)) {
+        return true
+      } else{
+        return false
+      }
+    },
+    //全匹配检测特殊字符
+    matchAllForSpecialCharater(elementList, callback) {
+      if(elementList.length <= 0){
+        callback({
+          code: 0
+        })
+        return
+      }
+      
+      let errorList = []
+      let errorMessage = []
+      let blankErrorList = []
+      let blankErrorMessage = []
+
+      elementList.forEach((list, index) => {
+        if(list.length <= 0){
+          callback({
+            code: 0
+          })
+          return
+        }
+      
+        for(var o in list){
+          if (list.hasOwnProperty(o)) {
+            if(list[o] && this.matchSpecialCharacter(list[o])){
+              errorList.push({
+                row: index,
+                prop: o,
+                val: list[o]
+              })
+            } 
+            // else if(typeof list[o] == 'string' && list[o].indexOf(' ') >= 0) {
+            //   blankErrorList.push({
+            //     row: index,
+            //     prop: o,
+            //     val: list[o]
+            //   })
+            // }
+          }
+        }
+      })
+      
+      blankErrorList.forEach(item => {
+        blankErrorMessage.push('第' + (item.row + 1) + '行-' + item.prop + '(' + item.val + ')')
+      })
+
+      errorList.forEach(item => {
+        errorMessage.push('第' +(item.row + 1) + '行-' + item.prop + '(' + item.val + ')')
+      })
+
+      if(blankErrorMessage.length > 0){
+        callback({
+          code: 1,
+          error_message: '以下内容包含空格: ' + blankErrorMessage + '，请检查！！！'
+        })
+        return
+      }
+      
+      if(errorMessage.length <= 0){
+        callback({
+          code: 0
+        })
+      } else{
+        callback({
+          code: 1,
+          error_message: '以下内容包含特殊字符: ' + errorMessage + '，请检查！！！'
+        })
+      }
+    },
+    deleteElements(element) {
+      if (!element && this.multipleSelection.length == 0) {
+        this.$message({
+          type: "warning",
+          message: "请至少选择一项物料"
+        });
+        return;
+      }
+
+      let arr = [],
+        list = [];
+      if (element) {
+        if (element.element_code) {
+          arr.push(element.element_code);
+        } else {
+          list.push({
+            element_name: element.element_name,
+            brand: element.brand,
+            spec_code:
+              element.spec_code + (element.version ? element.version : "")
+          });
+        }
+      } else {
+        this.multipleSelection.forEach(item => {
+          if (item.element_code) {
+            arr.push(item.element_code);
+          } else {
+            list.push({
+              element_name: item.element_name,
+              brand: item.brand,
+              spec_code: item.spec_code + (item.version ? item.version : "")
+            });
+          }
+        });
+      }
+
+      let msg = element ? "确定删除该物料？" : "确定删除这一批物料？";
+      this.$confirm(msg, "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          delete_elements({
+            access_token: this.token,
+            element_code_list: arr,
+            element_list: list
+          }).then(result => {
+            if (result.code == 0) {
+              this.$notify({
+                type: "success",
+                title: '成功',
+                message: "删除成功"
+              });
+              this.getContentElements();
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+    },
+    downloadAll() {
+      this.$confirm("确定导出全部物料清单？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        get_all_element({
+          access_token: this.token
+        }).then(result => {
+            if (result.code == 0) {
+              result.element_list.forEach(item => {
+                if (item.version) {
+                  item.spec_code = item.spec_code.slice(
+                    0,
+                    item.spec_code.length - item.version.length
+                  );
+                }
+
+                item.content_name = item.workpiece_name;
+                delete item.workpiece_name;
+              });
+
+              this.downloadTemp(result.element_list);
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消导出"
+          });
+        });
+    },
+    downloadTemp(list) {
+      if (list) {
+        this.handExportOrder(list, "物料清单");
+      } else {
+        this.handExportOrder([], "物料清单模板");
+      }
+    },
+    handExportOrder(elements, name) {
+      let _this = this;
+      let filterVal = [
+        "element_code",
+        "element_name",
+        "brand",
+        "spec_code",
+        "version",
+        "unit",
+        "min_pack_num",
+        "workpiece_name",
+        "content_name"
+      ];
+      let tHeader = [
+        "物料代码",
+        "物料名称",
+        "材质/品牌",
+        "规格型号",
+        "版本",
+        "单位",
+        "最小包装",
+        "供应商分类",
+        "品类最末级"
+      ];
+
+      if (!elements || 0 == elements.length) {
+        filterVal = [
+          "element_code",
+          "element_name",
+          "brand",
+          "spec_code",
+          "version",
+          "unit",
+          "min_pack_num",
+          "workpiece_name",
+          "content_name"
+        ];
+        tHeader = [
+          "物料代码",
+          "物料名称",
+          "材质/品牌",
+          "规格型号",
+          "版本",
+          "单位",
+          "最小包装",
+          "供应商分类",
+          "品类最末级"
+        ];
+      } else {
+        elements.forEach(item => {
+          this.workpiece_list.forEach(node => {
+            if (node.id == item.workpiece_id) {
+              item.workpiece_name = node.name;
+            }
+          });
+        });
+      }
+
+      let data = _this.formatJson(filterVal, elements);
+      data.unshift(tHeader);
+
+      this.exportOrder(data, name);
+    },
+    exportOrder(data, orderName) {
+      let _this = this;
+      var tmpdata = []; //用来保存转换好的json
+      data
+        .map((row, i) =>
+          row.map((v, j) =>
+            Object.assign(
+              {},
+              {
+                v: v ? v : undefined,
+                position: String.fromCharCode(65 + j) + (i + 1)
+              }
+            )
+          )
+        )
+        .reduce((prev, next) => prev.concat(next))
+        .forEach(
+          (v, i) =>
+            (tmpdata[v.position] = {
+              v: v.v
+            })
+        );
+
+      var outputPos = Object.keys(tmpdata); //设置区域,比如表格从A1到D10
+      var wb = {
+        SheetNames: ["sheet1"], //保存的表标题
+        Sheets: {
+          sheet1: Object.assign(
+            {},
+            tmpdata, //内容
+            {
+              "!ref": outputPos[0] + ":" + outputPos[outputPos.length - 1] //设置填充区域
+            }
+          )
+        }
+      };
+
+      //        const wb = {SheetNames: ['Sheet1'],Sheets: {}, Props: {}};
+      //        wb.Sheets['Sheet1'] = XLSX.utils.json_to_sheet(data); //通过json_to_sheet转成单页(Sheet)数据
+      _this.saveAs(
+        new Blob(
+          [
+            _this.s2ab(
+              XLSX.write(wb, {
+                bookType: "xlsx",
+                bookSST: false,
+                type: "binary"
+              })
+            )
+          ],
+          {
+            type: ""
+          }
+        ),
+        orderName + ".xlsx"
+      );
+    },
+    saveAs(obj, fileName) {
+      let tmpa = document.createElement("a");
+      tmpa.download = fileName;
+      tmpa.href = URL.createObjectURL(obj);
+      tmpa.click();
+      setTimeout(function() {
+        URL.revokeObjectURL(obj);
+      }, 100);
+    },
+    s2ab(s) {
+      if (typeof ArrayBuffer !== "undefined") {
+        var buf = new ArrayBuffer(s.length);
+        var view = new Uint8Array(buf);
+        for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xff;
+        return buf;
+      } else {
+        var buf = new Array(s.length);
+        for (var i = 0; i != s.length; ++i) buf[i] = s.charCodeAt(i) & 0xff;
+        return buf;
+      }
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => v[j]));
+    },
+    deleteAllElements() {
+      this.$confirm("确定要清空物料库？请谨慎操作", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          delete_all_element({
+            access_token: this.token
+          }).then(result => {
+              if (result.code == 0) {
+                this.$notify({
+                  type: "success",
+                  title: '成功',
+                  message: "清空成功"
+                });
+                this.getContentElements();
+              }
+            });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+    },
   },
 }
 </script>

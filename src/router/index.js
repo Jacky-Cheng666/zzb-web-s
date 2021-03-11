@@ -330,7 +330,7 @@ export const asyncRoutes = [
         path: 'processManage',
         name: 'processManage',
         component: () => import('@/views/enterpriseManage/processManage/index'),
-        meta: { title: '流程管理',icon: 'el-icon-refresh' }
+        meta: { title: '流程管理',icon: 'el-icon-refresh',noCache:true }
       },
       {
         path: 'inventoryManage',

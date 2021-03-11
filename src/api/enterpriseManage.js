@@ -256,3 +256,75 @@ export function edit_encode_rule(data) {
         data
     })
 }
+
+export function add_elements(data) {
+    return request({
+        url: '/corp/company/add_elements',
+        method: 'post',
+        data
+    })
+}
+
+export function delete_elements(data) {
+    return request({
+        url: '/corp/company/delete_elements',
+        method: 'post',
+        data
+    })
+}
+export function get_all_element(data) {
+    return request({
+        url: '/corp/company/get_all_element',
+        method: 'post',
+        data
+    })
+}
+
+export function delete_all_element(data) {
+    return request({
+        url: '/corp/company/delete_all_element',
+        method: 'post',
+        data
+    })
+}
+
+export function get_default_workflow_template(data) {
+    return request({
+        url: '/corp/workflow/get_default_workflow_template',
+        method: 'post',
+        data
+    })
+}
+
+export function get_workflow_template(data) {
+    return request({
+        url: '/corp/workflow/get_workflow_template',
+        method: 'post',
+        data
+    })
+}
+
+export function get_ai_assist_config(data) {
+    return request({
+        url: '/corp/company/get_ai_assist_config',
+        method: 'post',
+        data
+    })
+}
+
+export function edit_workflow_template(data) {
+    return request({
+        url: '/corp/workflow/edit_workflow_template',
+        method: 'post',
+        data
+    })
+}
+
+export function delete_workflow_template(data) {
+    return request({
+        url: '/corp/workflow/delete_workflow_template',
+        method: 'post',
+        data
+    })
+}
+

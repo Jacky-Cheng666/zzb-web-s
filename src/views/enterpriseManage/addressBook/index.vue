@@ -30,7 +30,7 @@
             <el-button size="mini" type="primary" icon="el-icon-plus">添加成员</el-button>
           </router-link>
           <el-button style="margin-left: 10px;" icon="el-icon-plus" type="primary" size="mini" @click="addDepart()">新增部门</el-button>
-          <el-button size="mini" icon="el-icon-sort" type="warning" @click="transferAdmin" style="background-color: #6299DB;border-color:#6299DB" >转让管理员</el-button>
+          <el-button v-if="is_admin" size="mini" icon="el-icon-sort" type="warning" @click="transferAdmin" style="background-color: #6299DB;border-color:#6299DB" >转让管理员</el-button>
           <el-button size="mini" icon="el-icon-user" @click="setDepartmentDirector" type="warning" style="background-color: #2ED0C2;border-color:#2ED0C2">设为部门主管</el-button>
         </div>
 
@@ -135,7 +135,7 @@ export default {
     };
   },
   computed:{
-    ...mapGetters(['token'])
+    ...mapGetters(['token','is_admin'])
   },
   created() {
     this.getDepartmentList()

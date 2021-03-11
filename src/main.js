@@ -43,9 +43,10 @@ Vue.use(ElementUI)
 
 Vue.config.productionTip = false
 
-import { filterFun, localeCompare } from '@/utils'
+import { filterFun, localeCompare,deepClone } from '@/utils'
 Vue.prototype.$FilterFun = filterFun
 Vue.prototype.localeCompare = localeCompare
+Vue.prototype.$DeepClone = deepClone
 
 new Vue({
   el: '#app',
