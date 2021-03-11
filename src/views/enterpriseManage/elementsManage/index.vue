@@ -125,7 +125,7 @@
 import dtime from "time-formater";
 import { mapGetters } from 'vuex'
 import { get_supplier_list, get_encode_rule, get_content_elements, get_element_list, get_all_workpiece_list, 
-search_elements, add_elements,is_elements_repeat,delete_elements, get_all_element} from '@/api/enterpriseManage.js'
+search_elements, add_elements,is_elements_repeat,delete_elements, get_all_element, delete_all_element} from '@/api/enterpriseManage.js'
 import { getToken,setToken,removeToken } from '@/utils/auth'
 export default {
   name: 'elementsManage',
@@ -1465,6 +1465,33 @@ export default {
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => v[j]));
+    },
+    deleteAllElements() {
+      this.$confirm("确定要清空物料库？请谨慎操作", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          delete_all_element({
+            access_token: this.token
+          }).then(result => {
+              if (result.code == 0) {
+                this.$notify({
+                  type: "success",
+                  title: '成功',
+                  message: "清空成功"
+                });
+                this.getContentElements();
+              }
+            });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
     },
   },
 }
