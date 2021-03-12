@@ -250,6 +250,14 @@ export function add_staff(data) {
     })
 }
 
+export function edit_staff(data) {
+    return request({
+        url: '/corp/company/edit_staff',
+        method: 'post',
+        data
+    })
+}
+
 export function delete_staff(data) {
     return request({
         url: '/corp/company/delete_staff',
