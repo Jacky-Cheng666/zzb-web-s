@@ -50,7 +50,7 @@
           </div>
         </el-form-item>
         <el-form-item label="品类" prop="content_code" :rules="{ required: true, message: '品类为必选项' }">
-          <encodeRule @input="handleChangerRule(ruleFormAdd)" v-model="encode_code_list" />
+          <encodeRule :formData="ruleFormAdd" v-model="encode_code_list" />
         </el-form-item>
         <el-form-item label="供应商分类" prop="workpiece_id" :rules="{ required: true, message: '供应商分类为必选项' }">
           <el-select size="mini" style="width: 400px" v-model.number="ruleFormAdd.workpiece_id" placeholder="供应商分类">
