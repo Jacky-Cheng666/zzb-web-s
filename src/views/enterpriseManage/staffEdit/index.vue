@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import { add_staff, get_staff_info} from '@/api/enterpriseManage'
+import { add_staff,edit_staff, get_staff_info} from '@/api/enterpriseManage'
 import { mapGetters } from 'vuex'
 export default {
   name: "staffEdit",
@@ -115,14 +115,13 @@ export default {
         access_token: this.token,
         staff_id: parseInt(staff_id)
       })
-      console.log('单个员工信息', result);
       if(result.code===0){
         let staff_info = {
           department_name: result.staff_info.department_name || '',
           staff: {
             phone: result.staff_info.phone || '',
             name: result.staff_info.name || '',
-
+            staff_id: result.staff_info.staff_id,
             job: result.staff_info.job || '',
             employee_id: result.staff_info.employee_id || '',
             config: {
@@ -130,8 +129,9 @@ export default {
             },
           }
         }
-        console.log('staff_info',staff_info);
-        this.ruleFormAdd = this.$DeepClone(staff_info)
+        let temp_list = staff_info.staff.config.workpieces.map(item=>item.id);
+        this.ruleFormAdd = staff_info
+        this.workpieces = this.$DeepClone(temp_list)
       }
     },
     isGetAll(){
@@ -167,10 +167,7 @@ export default {
         })
       })
 
-      let result = await add_staff({
-        access_token: this.token,
-        ...forData
-      });
+      let result = !this.isEdit ? await add_staff({access_token: this.token,...forData}) : await edit_staff({access_token: this.token,...forData});
       if(result.code===0){
         this.loading = false;
         this.$notify({
@@ -178,7 +175,11 @@ export default {
           title: '成功',
           message: '操作成功!'
         });
-        this.resetForm(formName)
+        if(!this.isEdit){
+          this.resetForm(formName)
+        }else{
+          this.getStaffInfo();
+        }
       }else{
         this.loading = false;
       }
