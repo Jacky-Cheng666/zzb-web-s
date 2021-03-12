@@ -281,6 +281,14 @@ export function add_elements(data) {
     })
 }
 
+export function edit_element(data) {
+    return request({
+        url: '/corp/company/edit_element',
+        method: 'post',
+        data
+    })
+}
+
 export function delete_elements(data) {
     return request({
         url: '/corp/company/delete_elements',
@@ -291,6 +299,14 @@ export function delete_elements(data) {
 export function get_all_element(data) {
     return request({
         url: '/corp/company/get_all_element',
+        method: 'post',
+        data
+    })
+}
+
+export function get_element(data) {
+    return request({
+        url: '/corp/company/get_element',
         method: 'post',
         data
     })

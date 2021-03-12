@@ -419,6 +419,8 @@ export default {
 
       this.content_name_list = name_list;
       this.getContentElements();
+      setToken('encode_code', this.encode_code)
+      this.$store.commit('zzb/SET_ENCODE_CODE', this.encode_code)
     },
     async getContentElements() {
       this.unusable = false;

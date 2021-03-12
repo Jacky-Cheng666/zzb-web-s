@@ -14,5 +14,7 @@ const getters = {
   job_list: state => state.zzb.job_list,
   department_list: state => state.zzb.department_list,
   is_admin: state => state.user.is_admin,
+  encode_rule: state => state.zzb.saleBasicInfo.element_code_encode_info,
+  encode_code: state => state.zzb.encode_code
 }
 export default getters

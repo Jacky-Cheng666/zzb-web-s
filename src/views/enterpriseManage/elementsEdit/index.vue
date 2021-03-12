@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import { check_element_exists, is_elements_repeat, add_elements} from '@/api/enterpriseManage'
+import { check_element_exists, is_elements_repeat, add_elements, get_element, edit_element} from '@/api/enterpriseManage'
 import { mapGetters } from 'vuex'
 import encodeRule from '@/components/encodeRule'
 export default {
@@ -111,12 +111,103 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['token','encode_rule_list','workpiece_list']),
+    ...mapGetters(['token','encode_rule_list','workpiece_list','encode_rule','encode_code']),
     isEdit(){
         return this.$route.meta.isEdit
     }
   },
+  created() {
+    if(this.isEdit){
+      this.getElement();
+    }
+  },
   methods: {
+      async getElement(){
+        const element_code = this.$route && this.$route.params.element_code
+        let result = await get_element({
+          access_token: this.token,
+          element_code
+        })
+        // console.log('result', result);
+        if(result.code===0){
+          for(var i in  this.ruleFormAdd) {
+            this.ruleFormAdd[i] = result.elementInfo[i]
+          }
+
+          this.ruleFormAdd.disable = this.ruleFormAdd.disable ? true : false;
+          this.ruleFormAdd.major = this.ruleFormAdd.major ? true : false;
+
+          this.encode_code_list = this.getCententCodes(result.elementInfo.workpiece_name)
+          if (0 == this.encode_code_list.length) {
+            this.encode_code.forEach((code, index) => {
+              if (code) {
+                this.encode_code_list[index] = code
+              }
+            })
+          }
+
+        this.handleChangerRule(this.ruleFormAdd)
+        this.ruleFormAdd.workpiece_id = this.ruleFormAdd.workpiece_id? this.ruleFormAdd.workpiece_id-0 : 1000
+        this.unusable = this.ruleFormAdd.element_code?false:true
+        }
+      },
+      getCententCodes(content_name) {
+        if (!content_name) {
+          return []
+        }
+
+        let rule_name = content_name
+        let first = this.encode_rule[0]
+        let second = this.encode_rule[1]
+        let third = this.encode_rule[2]
+
+        let third_name, second_name, content_codes = []
+
+        if (third && 0 < third.length) {
+          third.forEach(item => {
+            if (item.name == rule_name) {
+              content_codes[2] = item.code
+              third_name = item.name
+            }
+          })
+        }
+
+        if (second && 0 < second.length) {
+          second.forEach(item => {
+            if (item.sub_index && 0 < item.sub_index.length) {
+              item.sub_index.forEach(son => {
+                if (son == third_name) {
+                  content_codes[1] = item.code
+                  second_name = item.name
+                }
+              })
+            } else {
+              if (!third_name && item.name == rule_name) {
+                content_codes[1] = item.code
+                second_name = item.name
+              }
+            }
+          })
+        }
+
+        if (first && 0 < first.length) {
+          first.forEach(item => {
+            if (item.sub_index && 0 < item.sub_index.length) {
+              item.sub_index.forEach(son => {
+                if (son == second_name) {
+                  content_codes[0] = item.code
+                }
+              })
+            } else {
+              if (!second_name && item.name == rule_name) {
+                content_codes[0] = item.code
+              }
+            }
+          })
+        }
+
+        return content_codes
+      },
       boxChange(){},
       goToElementsManage(){},
       submitForm(formName) {
@@ -269,7 +360,7 @@ export default {
         }
 
         let checkElementList = [this.ruleFormAdd];
-        this.checkRepeat(checkElementList, repeatSpecCodeList => {
+        this.checkRepeat(checkElementList, async (repeatSpecCodeList) => {
           // let url = formName == "ruleFormAdd" ? "add_elements" : this.unusable ? "perfect_element" : "edit_element"
           let forData = !this.isEdit ? { element_list: [this.ruleFormAdd] } : this.ruleFormAdd
           if (forData.major) {
@@ -279,46 +370,41 @@ export default {
             forData.major = 0;
           }
           
-          add_elements({
-            access_token: this.token,
-            ...forData
-          }).then(result => {
-              if (result.code == 0) {
-                if (repeatSpecCodeList.length && formName == "ruleFormAdd") {
-                  var tipMsg = formName == "ruleFormAdd" ? "添加的规格型号为:“" : "修改的规格型号为:“";
-                  tipMsg += repeatSpecCodeList[0]
-                  tipMsg += "”的物料和系统中的一些物料的规格型号重复，请您检查该物料是否异常！"
+          let result = !this.isEdit ? await add_elements({ access_token: this.token, ...forData }): await edit_element({ access_token: this.token, ...forData})
 
-                  this.$alert(tipMsg, '', {
-                    confirmButtonText: '确定',
-                    callback: action => {
-                      let contentCode = this[formName].content_code
-                      let workpeceId = this[formName].workpiece_id
-                      this.$refs[formName].resetFields();
-                      this[formName].content_code = contentCode
-                      this[formName].workpiece_id = workpeceId
+          if (result.code == 0) {
+              if (repeatSpecCodeList.length && formName == "ruleFormAdd") {
+                var tipMsg = formName == "ruleFormAdd" ? "添加的规格型号为:“" : "修改的规格型号为:“";
+                tipMsg += repeatSpecCodeList[0]
+                tipMsg += "”的物料和系统中的一些物料的规格型号重复，请您检查该物料是否异常！"
 
-                    }
-                  });
-                }
-                else {
-                  this.$message({
-                    type: 'success',
-                    message: '操作成功!'
-                  });
+                this.$alert(tipMsg, '', {
+                  confirmButtonText: '确定',
+                  callback: action => {
+                    if(this.isEdit) return
+                    let contentCode = this[formName].content_code
+                    let workpeceId = this[formName].workpiece_id
+                    this.$refs[formName].resetFields();
+                    this[formName].content_code = contentCode
+                    this[formName].workpiece_id = workpeceId
 
-                  let contentCode = this[formName].content_code
-                  let workpeceId = this[formName].workpiece_id
-                  this.$refs[formName].resetFields();
-                  this[formName].content_code = contentCode
-                  this[formName].workpiece_id = workpeceId
-
-                }
+                  }
+                });
               }
-            })
-            .catch(error => {
-              console.log(error);
-            });
+              else {
+                this.$message({
+                  type: 'success',
+                  message: '操作成功!'
+                });
+                if(this.isEdit) return
+                let contentCode = this[formName].content_code
+                let workpeceId = this[formName].workpiece_id
+                this.$refs[formName].resetFields();
+                this[formName].content_code = contentCode
+                this[formName].workpiece_id = workpeceId
+
+              }
+            }
         });
       },
       matchAllForSpecialCharater(list, callback) {

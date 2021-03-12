@@ -9,7 +9,8 @@ const state = {
     saleBasicInfo: {},
     workpiece_list: getToken('profile')?getToken('profile').config.workpieces:"",
     department_list: getToken('department_list'),
-    job_list: getToken('job_list')
+    job_list: getToken('job_list'),
+    encode_code: getToken('encode_code')
 }
 
 const mutations = {
@@ -108,6 +109,9 @@ const mutations = {
     },
     SET_JOB_LIST: (state, job_list) => {
         state.job_list = job_list;
+    },
+    SET_ENCODE_CODE: (state, encode_code) => {
+        state.encode_code = encode_code
     }
 }
 
