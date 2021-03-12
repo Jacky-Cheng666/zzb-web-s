@@ -78,7 +78,7 @@
       <el-table-column align="center" type="selection" width="50" :reserve-selection="true" :selectable="checkCanSelect"/>
       <el-table-column align="center" label="订单号" prop="order_name" width="160">
         <template slot-scope="scope">
-          <router-link :to="'/saleManage/saleOrder/'+scope.row.order_name">
+          <router-link :to="{path: '/saleManage/saleOrder/'+ scope.row.order_name + '/' + scope.row.order_no}">
             <el-link :underline="false" type="primary">{{scope.row.order_name}}</el-link>
           </router-link>
         </template>

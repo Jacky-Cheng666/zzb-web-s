@@ -40,6 +40,14 @@ export function getAttachOrderList(data) {
   })
 }
 
+export function getAttachOrder(data) {
+  return request({
+    url: '/som/attachOrder/get_attach_order',
+    method: 'post',
+    data
+  })
+}
+
 export function exportAttachOrders(data) {
   return request({
     url: '/som/attachOrder/export_attach_orders',
