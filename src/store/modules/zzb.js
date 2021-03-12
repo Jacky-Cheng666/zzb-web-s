@@ -4,7 +4,7 @@ import { getSaleBasicInfo } from '@/api/saleManage'
 import { getToken,setToken,removeToken } from '@/utils/auth'
 const state = {
     tax_list: [],
-    encode_rule_list: getToken('encode_rule_list'),
+    encode_rule_list: '',
     workpiece_list: getToken('profile')?getToken('profile').config.workpieces:"",
     saleBasicInfo: {},
     workpiece_list: getToken('profile')?getToken('profile').config.workpieces:"",
@@ -15,9 +15,6 @@ const state = {
 const mutations = {
     SET_TAX_LIST: (state, tax_list) => {
         state.tax_list = tax_list
-    },
-    SET_PINGLEI: (state, encode_rule_list) => {
-        state.encode_rule_list = encode_rule_list
     },
     setSaleBasicInfo(state, result){
         state.saleBasicInfo = result.sale_basic_info

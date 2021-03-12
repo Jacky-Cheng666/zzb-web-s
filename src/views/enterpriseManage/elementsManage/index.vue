@@ -271,8 +271,6 @@ export default {
           list0.push(newNode);
         });
       }
-      this.$store.commit('zzb/SET_PINGLEI',list0)
-      setToken('encode_rule_list',list0)
       this.encode_rule_list = list0;
     },
     async getWorkpieces(refresh){
