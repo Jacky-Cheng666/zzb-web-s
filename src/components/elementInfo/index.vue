@@ -26,6 +26,7 @@
                       <el-input style="width:170px" v-model="elementInfoForm.element_info.min_purchase" placeholder="最少购买" clearable size="small"/>
                   </el-form-item>
                   <el-form-item label="品类" prop="work_piece_id">
+                      <encodeRule :formData="elementInfoForm" v-model="encode_code_list" />
                       <!-- <el-cascader filterable style="width: 100%;" placeholder="请选择物料品类" @change="handleChangerRule(elementInfoForm)"
                         :props="select_props" :options="encode_rule_list" v-model="encode_code_list" clearable>
                       </el-cascader> -->
@@ -58,6 +59,12 @@
 </template>
 
 <script>
+// import { check_element_exists, is_elements_repeat, add_elements} from '@/api/enterpriseManage'
+
+import { mapGetters } from 'vuex'
+
+import encodeRule from '@/components/encodeRule'
+
 export default {
     name: "element_info",
     props:{
@@ -71,9 +78,13 @@ export default {
             
         }
     },
+    components: {
+        encodeRule
+    },
     data() {
         return {
             openElementInfo: false,
+            encode_code_list: []
             // elementInfoForm: {
             //     element_info: {},
             //     buy_info: {},
@@ -99,50 +110,9 @@ export default {
 
     },
     methods: {
-        // handleChangerRule(ruleForm) {
-        //     let codes = []
-        //     ruleForm.content_code = ""
-        //     this.encode_code_list.forEach((item, index)=>{
-        //         ruleForm.content_code += item
-        //         codes[index] = item
-        //     })
-
-        //     let first, second
-        //     ruleForm.content_name = ""
-        //     codes.forEach((code, index) => {
-        //         if (0 == index) {
-        //         this.encode_rule_list.forEach((item, i1) => {
-        //             if (item.code == code) {
-        //             first = i1
-        //             ruleForm.content_name = item.name
-        //             }
-        //         })
-        //         }
-
-        //         if (1 == index) {
-        //         this.encode_rule_list[first].sub_list.forEach((item, i2) => {
-        //             if (item.code == code) {
-        //             second = i2
-        //             ruleForm.content_name = item.name
-        //             }
-        //         })
-        //         }
-
-        //         if (2 == index) {
-        //         this.encode_rule_list[first].sub_list[second].sub_list.forEach((item) => {
-        //             if (item.code == code) {
-        //             ruleForm.content_name = item.name
-        //             }
-        //         })
-        //         }
-        //     })
-
-        //     if (this.encode_code_list.length <= 1) {
-        //         ruleForm.content_code += '00000'
-        //     } else if (this.encode_code_list.length <= 2) {
-        //         ruleForm.content_code += '000'
-        //     }
-        // }
+        handleChangerRule(ruleForm) {
+            
+        }
     }
 }
 </script>

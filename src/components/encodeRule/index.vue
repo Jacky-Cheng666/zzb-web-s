@@ -23,6 +23,12 @@ export default {
         return [];
       },
     },
+    formData: {
+      type: Object,
+      default: function () {
+        return {};
+      },
+    }
   },
   data() {
     return {
@@ -42,8 +48,54 @@ export default {
   },
   methods: {
     handleChangerRule(val) {
+      this.encode_code_list = val
+      this.handleChangeFormData(this.formData)
       this.$emit("input", val);
     },
+    handleChangeFormData(ruleForm) {
+        let codes = []
+        ruleForm.content_code = ""
+        this.encode_code_list.forEach((item, index)=>{
+          ruleForm.content_code += item
+          codes[index] = item
+        })
+
+        let first, second
+        ruleForm.content_name = ""
+        codes.forEach((code, index) => {
+          if (0 == index) {
+            this.encode_rule_list.forEach((item, i1) => {
+              if (item.code == code) {
+                first = i1
+                ruleForm.content_name = item.name
+              }
+            })
+          }
+
+          if (1 == index) {
+            this.encode_rule_list[first].sub_list.forEach((item, i2) => {
+              if (item.code == code) {
+                second = i2
+                ruleForm.content_name = item.name
+              }
+            })
+          }
+
+          if (2 == index) {
+            this.encode_rule_list[first].sub_list[second].sub_list.forEach((item) => {
+              if (item.code == code) {
+                ruleForm.content_name = item.name
+              }
+            })
+          }
+        })
+
+        if (this.encode_code_list.length <= 1) {
+          ruleForm.content_code += '00000'
+        } else if (this.encode_code_list.length <= 2) {
+          ruleForm.content_code += '000'
+        }
+      },
   },
 };
 </script>

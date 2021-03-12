@@ -161,7 +161,7 @@ export const asyncRoutes = [
         ]
       },
       {
-        path: 'saleOrder/:order_name',
+        path: 'saleOrder/:order_name/:order_no',
         name: 'saleOrder',
         component: () => import('@/views/saleManage/saleOrder/index'),
         meta: { title: '销售订单',icon: 'el-icon-takeaway-box',activeMenu: '/saleManage/saleRecords' },
