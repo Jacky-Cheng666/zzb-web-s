@@ -193,6 +193,7 @@ export default {
       this.queryParams.searchInputValue = ''
       this.queryParams.valueBookType = 0
       this.queryParams.valueOrderType = 0
+      this.handleQuery()
     },
     handleSelectionChange(val){
       this.multipleSelection = val

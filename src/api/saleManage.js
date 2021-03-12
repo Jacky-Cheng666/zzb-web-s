@@ -31,3 +31,19 @@ export function createPlanOrder(data) {
     data
   })
 }
+
+export function getAttachOrderList(data) {
+  return request({
+    url: '/som/attachOrder/get_attach_order_list',
+    method: 'post',
+    data
+  })
+}
+
+export function exportAttachOrders(data) {
+  return request({
+    url: '/som/attachOrder/export_attach_orders',
+    method: 'post',
+    data
+  })
+}
