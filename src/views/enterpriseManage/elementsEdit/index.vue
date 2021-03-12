@@ -28,7 +28,12 @@
         <el-form-item label="最小包装" prop="min_pack_num" :rules="{required: true, message: '最小包装为必填项', trigger: 'blur'}">
           <el-input size="mini" type="number" style="width: 400px" v-model="ruleFormAdd.min_pack_num" auto-complete="off" placeholder="最小包装，即最小购买数量"/>
         </el-form-item>
-        <el-form-item label="代码" prop="element_code" :rules="{ required: !checked, message: '代码为必填项' }">
+
+        <el-form-item v-show="!unusable" label="代码" prop="element_code" :rules="{required: false, message: '代码为必填项',}">
+          <el-input size='mini' style="width: 400px;" :readonly="true" v-model="ruleFormAdd.element_code" auto-complete="off" placeholder="物料代码"></el-input>
+        </el-form-item>
+
+        <el-form-item  v-show="unusable" label="代码" prop="element_code" :rules="{ required: !checked, message: '代码为必填项' }">
           <div>
             <el-checkbox v-model="checked">系统生成</el-checkbox>
             <span style="font-size: 12px;color: #999999;margin-left: 10px;font-weight: bold;">
@@ -45,17 +50,7 @@
           </div>
         </el-form-item>
         <el-form-item label="品类" prop="content_code" :rules="{ required: true, message: '品类为必选项' }">
-          <el-cascader
-            filterable
-            style="width: 400px"
-            size="mini"
-            placeholder="请选择物料品类"
-            @change="handleChangerRule(ruleFormAdd)"
-            :props="select_props"
-            :options="encode_rule_list"
-            v-model="encode_code_list"
-            clearable
-          ></el-cascader>
+          <encodeRule @input="handleChangerRule(ruleFormAdd)" v-model="encode_code_list" />
         </el-form-item>
         <el-form-item label="供应商分类" prop="workpiece_id" :rules="{ required: true, message: '供应商分类为必选项' }">
           <el-select size="mini" style="width: 400px" v-model.number="ruleFormAdd.workpiece_id" placeholder="供应商分类">
@@ -73,7 +68,7 @@
           <router-link to="/enterpriseManage/inventoryManage/elementsManage">
             <el-button size="mini" @click="goToElementsManage">取 消</el-button>
           </router-link>
-          <el-button style="margin-left: 20px" type="primary" size="mini" @click="submitForm('ruleFormAdd', true)">保 存</el-button>
+          <el-button style="margin-left: 20px" type="primary" size="mini" @click="submitForm('ruleFormAdd')">保 存</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -81,10 +76,12 @@
 </template>
 
 <script>
-import { check_element_exists, is_elements_repeat} from '@/api/enterpriseManage'
+import { check_element_exists, is_elements_repeat, add_elements} from '@/api/enterpriseManage'
 import { mapGetters } from 'vuex'
+import encodeRule from '@/components/encodeRule'
 export default {
   name: "elementsEdit",
+  components: {encodeRule},
   data() {
     return {
         select_props: {
@@ -109,7 +106,8 @@ export default {
         },
         checked: true,
         isNameOk: "",
-        isNickNameOk: ""
+        isNickNameOk: "",
+        unusable: true,
     };
   },
   computed: {
@@ -121,11 +119,10 @@ export default {
   methods: {
       boxChange(){},
       goToElementsManage(){},
-      submitForm(formName, key) {
+      submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            alert('恭喜，输入通过')
-            this.handleDiaSureAdd(formName,key)
+            this.handleDiaSureAdd(formName)
           } else {
             this.$message({
               type: 'warning',
@@ -209,7 +206,7 @@ export default {
           ruleForm.content_code += '000'
         }
       },
-      handleDiaSureAdd(formName,key){
+      handleDiaSureAdd(formName){
         if (!this.isEdit) {
           let match_result = null
           this.matchAllForSpecialCharater(this.ruleFormAdd, function(result){
@@ -242,7 +239,7 @@ export default {
 
         } else {
           let match_result = null
-          this.matchAllForSpecialCharater(this.ruleFormSet, function(result){
+          this.matchAllForSpecialCharater(this.ruleFormAdd, function(result){
             match_result = result
           })
           if(match_result && match_result.code === 1){
@@ -256,37 +253,37 @@ export default {
             return
           }
 
-          for(var o in this.ruleFormSet){
-            if(typeof this.ruleFormSet[o] == 'string'){
-              this.ruleFormSet[o] = this.ruleFormSet[o].trim();
+          for(var o in this.ruleFormAdd){
+            if(typeof this.ruleFormAdd[o] == 'string'){
+              this.ruleFormAdd[o] = this.ruleFormAdd[o].trim();
             }
           }
-          if (!this.ruleFormSet.content_name) {
+          if (!this.ruleFormAdd.content_name) {
             this.$message({
               type: 'warning',
               message: '必须指定物料品类！'
             });
             return
           }
-          this.ruleFormSet.spec_code = this.ruleFormSet.spec_code + (this.ruleFormSet.version?String(this.ruleFormSet.version):'')
+          this.ruleFormAdd.spec_code = this.ruleFormAdd.spec_code + (this.ruleFormAdd.version?String(this.ruleFormAdd.version):'')
         }
 
-        let checkElementList = formName == "ruleFormAdd" ? [this.ruleFormAdd] : [this.ruleFormSet];
+        let checkElementList = [this.ruleFormAdd];
         this.checkRepeat(checkElementList, repeatSpecCodeList => {
-          let url = formName == "ruleFormAdd" ? "add_elements" : this.unusable ? "perfect_element" : "edit_element"
-          let forData = formName == "ruleFormAdd" ? { element_list: [this.ruleFormAdd] } : this.ruleFormSet
+          // let url = formName == "ruleFormAdd" ? "add_elements" : this.unusable ? "perfect_element" : "edit_element"
+          let forData = !this.isEdit ? { element_list: [this.ruleFormAdd] } : this.ruleFormAdd
           if (forData.major) {
             forData.major = 1;
           }
           else {
             forData.major = 0;
           }
-          axios.post(process.env.API_HOST + 'company/' + url, {
-            access_token: this.access_token,
+          
+          add_elements({
+            access_token: this.token,
             ...forData
-          })
-            .then(response => {
-              if (response.data.code == 0) {
+          }).then(result => {
+              if (result.code == 0) {
                 if (repeatSpecCodeList.length && formName == "ruleFormAdd") {
                   var tipMsg = formName == "ruleFormAdd" ? "添加的规格型号为:“" : "修改的规格型号为:“";
                   tipMsg += repeatSpecCodeList[0]
@@ -297,15 +294,10 @@ export default {
                     callback: action => {
                       let contentCode = this[formName].content_code
                       let workpeceId = this[formName].workpiece_id
-                      this.$emit('refreshData', true)
-                      this.resetForm(formName)
+                      this.$refs[formName].resetFields();
                       this[formName].content_code = contentCode
                       this[formName].workpiece_id = workpeceId
 
-                      if (key) {
-                        this.$router.push("/elementsManage")
-                        this.goToElementsManage()
-                      }
                     }
                   });
                 }
@@ -317,15 +309,10 @@ export default {
 
                   let contentCode = this[formName].content_code
                   let workpeceId = this[formName].workpiece_id
-                  this.$emit('refreshData', true)
-                  this.resetForm(formName)
+                  this.$refs[formName].resetFields();
                   this[formName].content_code = contentCode
                   this[formName].workpiece_id = workpeceId
 
-                  if (key) {
-                    this.$router.push("/elementsManage")
-                    this.goToElementsManage()
-                  }
                 }
               }
             })
@@ -387,6 +374,19 @@ export default {
             code: 1,
             error_message: '以下内容包含特殊字符: ' + errorMessage + '，请检查！！！'
           })
+        }
+      },
+      matchSpecialCharacter(str) {
+        return false
+        if(str.length <= 0){
+          return false
+        }
+        let rules = /[!#$&*\/]/im
+
+        if (rules.test(str)) {
+          return true
+        } else{
+          return false
         }
       },
       async checkRepeat(elementList, callback) {
