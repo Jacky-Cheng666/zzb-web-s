@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container elementsEdit">
+  <div class="app-container elementsEdit" v-loading="loading" element-loading-text="加载中...">
     <div>
       <div class="titleEdit">{{isEdit?'编辑物料':'添加物料'}}</div>
       <el-form :model="ruleFormAdd" ref="ruleFormAdd" label-width="120px">
@@ -79,7 +79,7 @@
 </template>
 
 <script>
-import { check_element_exists, is_elements_repeat, add_elements, get_element, edit_element} from '@/api/enterpriseManage'
+import { check_element_exists, is_elements_repeat, add_elements, get_element, edit_element, perfect_element} from '@/api/enterpriseManage'
 import { mapGetters } from 'vuex'
 import encodeRule from '@/components/encodeRule'
 export default {
@@ -112,6 +112,7 @@ export default {
         isNameOk: "",
         isNickNameOk: "",
         unusable: true,
+        loading: false
     };
   },
   computed: {
@@ -128,6 +129,7 @@ export default {
   methods: {
       async getElement(){
         const { brand, element_name, spec_code,element_code }  = this.$route && this.$route.query
+        this.loading = true;
         let result = await get_element({
           access_token: this.token,
           element_code,
@@ -137,6 +139,7 @@ export default {
         })
         // console.log('result', result);
         if(result.code===0){
+          this.loading = false;
           for(var i in  this.ruleFormAdd) {
             this.ruleFormAdd[i] = result.elementInfo[i]
           }
@@ -378,7 +381,7 @@ export default {
             forData.major = 0;
           }
           
-          let result = !this.isEdit ? await add_elements({ access_token: this.token, ...forData }): await edit_element({ access_token: this.token, ...forData})
+          let result = !this.isEdit ? await add_elements({ access_token: this.token, ...forData }): this.unusable ? await perfect_element({ access_token: this.token, ...forData}): await edit_element({ access_token: this.token, ...forData})
 
           if (result.code == 0) {
               if (repeatSpecCodeList.length && !this.isEdit) {

@@ -566,9 +566,9 @@ export default {
     toElementsEdit(row){
       console.log('row', row);
       if(row.element_code){
-        this.$router.push('/enterpriseManage/inventoryManage/elementsEdit/?element_code=' + row.element_code)
+        this.$router.push('/enterpriseManage/inventoryManage/elementsEdit?element_code=' + row.element_code)
       }else {
-        this.$router.push('/enterpriseManage/inventoryManage/elementsEdit/?brand=' + row.brand + '&spec_code=' + row.spec_code + '&element_name=' + row.element_name)
+        this.$router.push('/enterpriseManage/inventoryManage/elementsEdit?brand=' + row.brand + '&spec_code=' + row.spec_code + '&element_name=' + row.element_name)
       }
       
     },

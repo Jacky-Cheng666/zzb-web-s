@@ -289,6 +289,14 @@ export function edit_element(data) {
     })
 }
 
+export function perfect_element(data) {
+    return request({
+        url: '/corp/company/perfect_element',
+        method: 'post',
+        data
+    })
+}
+
 export function delete_elements(data) {
     return request({
         url: '/corp/company/delete_elements',
