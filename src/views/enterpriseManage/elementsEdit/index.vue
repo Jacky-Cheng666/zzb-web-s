@@ -3,6 +3,9 @@
     <div>
       <div class="titleEdit">{{isEdit?'编辑物料':'添加物料'}}</div>
       <el-form :model="ruleFormAdd" ref="ruleFormAdd" label-width="120px">
+        <el-form-item v-if="isEdit">
+          <el-checkbox v-model="ruleFormAdd.disable">禁用</el-checkbox>
+        </el-form-item>
         <el-form-item label="型号" prop="spec_code" :rules="{required: true, message: '规格型号为必填项', trigger: 'blur',}">
           <el-input size="mini" style="width: 320px" v-model="ruleFormAdd.spec_code" auto-complete="off" placeholder="规格型号" />
           <el-input size="mini" style="margin-left: 10px; width: 70px" v-model="ruleFormAdd.version" auto-complete="off" placeholder="版本" />
@@ -91,6 +94,7 @@ export default {
         },
         encode_code_list: [],
         ruleFormAdd: {
+          disable: "",
           "spec_code": "",
           "version": "",
           "brand": "",

@@ -68,7 +68,7 @@
         <el-table-column align="center" type="selection" width="60" />
         <el-table-column align="center" prop="element_code" label="物料代码" show-overflow-tooltip width="140" sortable="custom">
           <template slot-scope="scope">
-            <i style="float: left;margin-left: 10px;color: gray;" class="iconfont icon-guansuo" v-show="scope.row.disable"></i>
+            <i style="float:left;margin-top:2px;color: gray;font-size:16px" class="el-icon-lock" v-show="scope.row.disable"></i>
             {{scope.row.element_code}}
           </template>
         </el-table-column>
@@ -565,6 +565,12 @@ export default {
     },
     toElementsEdit(row){
       console.log('row', row);
+      if(!row.element_code){
+        return this.$message({
+          type: 'warning',
+          message: '没有物料代码!'
+        })
+      }
       this.$router.push('/enterpriseManage/inventoryManage/elementsEdit/' + row.element_code)
     },
     exportTemplate(){
