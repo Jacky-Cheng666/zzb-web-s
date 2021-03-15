@@ -127,10 +127,13 @@ export default {
   },
   methods: {
       async getElement(){
-        const element_code = this.$route && this.$route.params.element_code
+        const { brand, element_name, spec_code,element_code }  = this.$route && this.$route.query
         let result = await get_element({
           access_token: this.token,
-          element_code
+          element_code,
+          brand,
+          element_name,
+          spec_code
         })
         // console.log('result', result);
         if(result.code===0){
