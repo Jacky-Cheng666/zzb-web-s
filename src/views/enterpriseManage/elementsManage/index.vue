@@ -111,7 +111,7 @@
 
           <el-col :span="2">
             <div style="margin-top: 6px;float:right;">
-              <el-button disabled icon="el-icon-lock" size="mini" @click="setSafeStorage" type="primary">设置安全库存</el-button>
+              <el-button icon="el-icon-lock" size="mini" @click="setSafeStorage" type="primary">设置安全库存</el-button>
             </div>
           </el-col>
         </el-row>
@@ -710,6 +710,15 @@ export default {
       );
     },
     setSafeStorage(){
+      let tempArr = this.multipleSelection;
+      if (tempArr.length == 0) {
+        this.$message({
+          type: "warning",
+          message: "请至少选择一项物料"
+        });
+        return;
+      }
+      this.$store.commit("zzb/SET_SAFE_STORAGE", tempArr);
       this.$router.push('/enterpriseManage/inventoryManage/setSafeStock')
     },
     uploadFile(){

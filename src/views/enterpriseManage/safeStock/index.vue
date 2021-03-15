@@ -24,16 +24,16 @@
       <el-table-column align="center" prop="element_code" label="物料代码" show-overflow-tooltip width="120px" sortable />
       <el-table-column align="center" prop="element_name" label="名称" show-overflow-tooltip width="360px" sortable />
       <el-table-column align="center" prop="spec_code" label="图号/规格型号" show-overflow-tooltip  sortable />
-      <el-table-column align="center" prop="brand" label="材质/品牌" show-overflow-tooltip width="140px" sortable />
+      <el-table-column align="center" prop="brand" label="材质/品牌" show-overflow-tooltip width="200px" sortable />
       <el-table-column align="center" prop="unit" label="单位" width="80px" show-overflow-tooltip />
       <el-table-column align="center" prop="min_pack_num" label="最小包装" width="80px" show-overflow-tooltip />
-      <el-table-column align="center" prop="min_storage" label="库存下限" width="140px" show-overflow-tooltip>
+      <el-table-column align="center" prop="min_storage" label="库存下限" width="160px" show-overflow-tooltip>
         <template slot-scope="scope">
           <input @change="limitMinStorage($event,scope.row)" type="number" class="table_input" v-model.number="scope.row.min_storage"/>
           <i class="el-icon-edit"></i>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="max_storage" label="库存上限" width="140px" show-overflow-tooltip>
+      <el-table-column align="center" prop="max_storage" label="库存上限" width="160px" show-overflow-tooltip>
         <template slot-scope="scope">
           <input @change="limitMaxStorage($event,scope.row)" type="number" class="table_input" v-model.number="scope.row.max_storage"/>
           <i class="el-icon-edit"></i>
@@ -84,6 +84,9 @@ export default {
     ...mapGetters(['screen_height','token']),
     isChecked(){
         return this.$route.meta.isChecked
+    },
+    safeStorageArr(){
+      return this.$store.state.zzb.safeStorageArr
     }
   },
   created() {
@@ -104,7 +107,47 @@ export default {
           // this.queryParams.pageNum = 1;
           // this.tableData = this.allRows.slice(0, this.queryParams.pageSize);
           this.handleQuery();
+        }else {
+          let tempArr = result.element_list;
+          this.allRows = [];
+          this.allRows = this.safeStorageArr;
+          this.allRows.some(item => {
+            tempArr.some(it => {
+              if (item.element_code == it.element_code) {
+                this.$set(item, "min_storage", it.min_storage);
+                this.$set(item, "max_storage", it.max_storage);
+                // console.log(it);
+                return true;
+              }
+            });
+          });
+          this.handleQuery();
         }
+      }
+    },
+    limitMinStorage(e, row) {
+      // console.log(parseFloat(e.target.value));
+      if (parseFloat(e.target.value) % row.min_pack_num != 0) {
+        this.$message({
+          type: "warning",
+          message: "只能为最小包装的整数倍"
+        });
+        row.min_storage = 0;
+      }
+      if (parseFloat(e.target.value) < 0) {
+        row.min_storage = 0;
+      }
+    },
+    limitMaxStorage(e, row) {
+      if (parseFloat(e.target.value) % row.min_pack_num != 0) {
+        this.$message({
+          type: "warning",
+          message: "只能为最小包装的整数倍"
+        });
+        row.max_storage = 0;
+      }
+      if (parseFloat(e.target.value) < row.min_storage) {
+        row.max_storage = row.min_storage;
       }
     },
     searchSafeStorage() {},
@@ -295,7 +338,6 @@ export default {
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
-    limitMinStorage(){},
     handleSizeChange(){},
     handleCurrentChange({page:currentPage,limit: pageSize}){
       this.tableData = this.paginationRows.slice(
@@ -335,7 +377,7 @@ export default {
         }).catch(()=>{})
       }
     },
-    async submit(){
+    submit(){
       if (this.multipleSelection.length == 0) {
         this.$message({
           type: "warning",
@@ -343,21 +385,25 @@ export default {
         });
         return;
       }
-      let element_list = this.multipleSelection;
-      let result = await set_element_stock_controls({
-        access_token: this.token,
-        element_list
-      })
-      if(result.code===0){
-        this.$notify({
-          title: '成功',
-          message: '操作成功',
-          type: 'success'
+      this.$confirm('确认设置安全库存, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async() => {
+        let element_list = this.multipleSelection;
+        let result = await set_element_stock_controls({
+          access_token: this.token,
+          element_list
         })
-        if (!this.isChecked) {
+        if(result.code===0){
+          this.$notify({
+            title: '成功',
+            message: '操作成功',
+            type: 'success'
+          })
           this.getElementSafeStockList();
         }
-      }
+      }).catch(()=>{})
     },
     goToElementsManage(){},
     handleQuery(){

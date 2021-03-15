@@ -10,7 +10,8 @@ const state = {
     workpiece_list: getToken('profile')?getToken('profile').config.workpieces:"",
     department_list: getToken('department_list'),
     job_list: getToken('job_list'),
-    encode_code: getToken('encode_code')
+    encode_code: getToken('encode_code'),
+    safeStorageArr: []
 }
 
 const mutations = {
@@ -112,6 +113,9 @@ const mutations = {
     },
     SET_ENCODE_CODE: (state, encode_code) => {
         state.encode_code = encode_code
+    },
+    SET_SAFE_STORAGE: (state,safeStorageArr) => {
+        state.safeStorageArr = safeStorageArr
     }
 }
 
