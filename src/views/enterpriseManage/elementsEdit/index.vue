@@ -396,17 +396,20 @@ export default {
                 });
               }
               else {
-                this.$message({
+                this.$notify({
                   type: 'success',
+                  title: '成功',
                   message: '操作成功!'
                 });
-                if(this.isEdit) return
-                let contentCode = this[formName].content_code
-                let workpeceId = this[formName].workpiece_id
-                this.$refs[formName].resetFields();
-                this[formName].content_code = contentCode
-                this[formName].workpiece_id = workpeceId
-
+                if(this.isEdit){
+                  this.getElement();
+                }else{
+                  let contentCode = this[formName].content_code
+                  let workpeceId = this[formName].workpiece_id
+                  this.$refs[formName].resetFields();
+                  this[formName].content_code = contentCode
+                  this[formName].workpiece_id = workpeceId
+                }
               }
             }
         });
