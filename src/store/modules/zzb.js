@@ -4,7 +4,7 @@ import { getSaleBasicInfo } from '@/api/saleManage'
 import { getToken,setToken,removeToken } from '@/utils/auth'
 const state = {
     tax_list: [],
-    encode_rule_list: '',
+    encode_rule_list: getToken('encode_rule_list'),
     workpiece_list: getToken('profile')?getToken('profile').config.workpieces:"",
     saleBasicInfo: {},
     workpiece_list: getToken('profile')?getToken('profile').config.workpieces:"",
@@ -100,7 +100,7 @@ const mutations = {
             }
 
             encode_rule_list = list0
-
+            setToken('encode_rule_list', encode_rule_list)
             state.encode_rule_list = encode_rule_list
         }
     },
