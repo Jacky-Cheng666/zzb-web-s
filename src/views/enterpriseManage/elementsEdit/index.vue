@@ -140,6 +140,7 @@ export default {
 
           this.ruleFormAdd.disable = this.ruleFormAdd.disable ? true : false;
           this.ruleFormAdd.major = this.ruleFormAdd.major ? true : false;
+          this.ruleFormAdd.spec_code = this.ruleFormAdd.spec_code.slice(0,this.ruleFormAdd.spec_code.length - this.ruleFormAdd.version.length);
 
           this.encode_code_list = this.getCententCodes(result.elementInfo.workpiece_name)
           if (0 == this.encode_code_list.length) {
@@ -377,7 +378,7 @@ export default {
           let result = !this.isEdit ? await add_elements({ access_token: this.token, ...forData }): await edit_element({ access_token: this.token, ...forData})
 
           if (result.code == 0) {
-              if (repeatSpecCodeList.length && formName == "ruleFormAdd") {
+              if (repeatSpecCodeList.length && !this.isEdit) {
                 var tipMsg = formName == "ruleFormAdd" ? "添加的规格型号为:“" : "修改的规格型号为:“";
                 tipMsg += repeatSpecCodeList[0]
                 tipMsg += "”的物料和系统中的一些物料的规格型号重复，请您检查该物料是否异常！"
@@ -385,13 +386,15 @@ export default {
                 this.$alert(tipMsg, '', {
                   confirmButtonText: '确定',
                   callback: action => {
-                    if(this.isEdit) return
-                    let contentCode = this[formName].content_code
-                    let workpeceId = this[formName].workpiece_id
-                    this.$refs[formName].resetFields();
-                    this[formName].content_code = contentCode
-                    this[formName].workpiece_id = workpeceId
-
+                    if(this.isEdit){
+                      this.getElement();
+                    }else{
+                      let contentCode = this[formName].content_code
+                      let workpeceId = this[formName].workpiece_id
+                      this.$refs[formName].resetFields();
+                      this[formName].content_code = contentCode
+                      this[formName].workpiece_id = workpeceId
+                    }
                   }
                 });
               }

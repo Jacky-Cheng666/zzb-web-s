@@ -111,7 +111,7 @@
 
           <el-col :span="2">
             <div style="margin-top: 6px;float:right;">
-              <el-button icon="el-icon-lock" size="mini" @click="setSafeStorage" type="primary">设置安全库存</el-button>
+              <el-button disabled icon="el-icon-lock" size="mini" @click="setSafeStorage" type="primary">设置安全库存</el-button>
             </div>
           </el-col>
         </el-row>
