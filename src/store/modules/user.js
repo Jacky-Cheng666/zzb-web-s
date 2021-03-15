@@ -1,6 +1,7 @@
 import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
+import store from '../index'
 
 const getDefaultState = () => {
   return {
@@ -63,6 +64,7 @@ const actions = {
           setToken('org', response.org)
           setToken('company_no', response.company_no)
           setToken('is_admin',response.is_admin)
+          store.commit('zzb/INITIALIZE_STATE') //修复bug
         }
         resolve(response)
       }).catch(error => {

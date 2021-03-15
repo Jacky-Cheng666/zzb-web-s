@@ -2,19 +2,25 @@ import store from '@/store/index.js'
 import { get_tax_list } from '@/api/enterpriseManage'
 import { getSaleBasicInfo } from '@/api/saleManage'
 import { getToken,setToken,removeToken } from '@/utils/auth'
-const state = {
-    tax_list: [],
-    encode_rule_list: getToken('encode_rule_list'),
-    workpiece_list: getToken('profile')?getToken('profile').config.workpieces:"",
-    saleBasicInfo: {},
-    workpiece_list: getToken('profile')?getToken('profile').config.workpieces:"",
-    department_list: getToken('department_list'),
-    job_list: getToken('job_list'),
-    encode_code: getToken('encode_code'),
-    safeStorageArr: []
+const getDefaultState = () => {
+    return {
+        tax_list: [],
+        encode_rule_list: getToken('encode_rule_list'),
+        workpiece_list: getToken('profile')?getToken('profile').config.workpieces:"",
+        saleBasicInfo: {},
+        workpiece_list: getToken('profile')?getToken('profile').config.workpieces:"",
+        department_list: getToken('department_list'),
+        job_list: getToken('job_list'),
+        encode_code: getToken('encode_code'),
+        safeStorageArr: []
+    }
 }
+const state = getDefaultState()
 
 const mutations = {
+    INITIALIZE_STATE: (state) => { //初始化state值。
+    Object.assign(state, getDefaultState())
+    },
     SET_TAX_LIST: (state, tax_list) => {
         state.tax_list = tax_list
     },
