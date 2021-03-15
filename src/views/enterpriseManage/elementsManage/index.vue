@@ -78,7 +78,7 @@
         <el-table-column align="center" prop="version" label="版本" show-overflow-tooltip width="50" />
         <el-table-column align="center" prop="unit" label="单位" width="80" show-overflow-tooltip />
         <el-table-column align="center" prop="min_pack_num" label="最小包装" width="80" show-overflow-tooltip />
-        <el-table-column align="center" prop="content_name" label="品类" width="120" show-overflow-tooltip sortable="custom" />
+        <el-table-column align="center" prop="content_name" label="品类" width="140" show-overflow-tooltip sortable="custom" />
         <el-table-column align="center" prop="create_time" label="创建时间" width="120" show-overflow-tooltip />
         <el-table-column align="center" prop="major" label="关键物料" width="80" show-overflow-tooltip>
           <template slot-scope="scope">{{scope.row.major?"是":"否"}}</template>
