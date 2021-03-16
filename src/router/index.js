@@ -301,30 +301,10 @@ export const asyncRoutes = [
     alwaysShow: true,
     children: [
       {
-        path: 'basicInfo',
-        name: 'basicInfo',
-        component: () => import('@/views/enterpriseManage/basicInfo/index'),
-        meta: { title: '基本信息',icon: 'el-icon-info', noCache: true}
-      },
-      {
         path: 'addressBook',
         name: 'addressBook',
         component: () => import('@/views/enterpriseManage/addressBook/index'),
         meta: { title: '通讯录',icon: 'el-icon-notebook-2', noCache: true}
-      },
-      {
-        path: 'addStaff',
-        name: 'staffEdit',
-        component: () => import('@/views/enterpriseManage/staffEdit/index'),
-        meta: { title: '添加成员', activeMenu: '/enterpriseManage/addressBook'},
-        hidden: true
-      },
-      {
-        path: 'staffEdit/:staff_id(\\d+)',
-        name: 'staffEdit',
-        component: () => import('@/views/enterpriseManage/staffEdit/index'),
-        meta: { title: '编辑成员', activeMenu: '/enterpriseManage/addressBook', noCache: true, isEdit: true},
-        hidden: true
       },
       {
         path: 'processManage',
@@ -380,6 +360,26 @@ export const asyncRoutes = [
         name: 'categoryManage',
         component: () => import('@/views/enterpriseManage/categoryManage/index'),
         meta: { title: '品类管理',icon: 'el-icon-set-up',noCache: true }
+      },
+      {
+        path: 'basicInfo',
+        name: 'basicInfo',
+        component: () => import('@/views/enterpriseManage/basicInfo/index'),
+        meta: { title: '基本信息',icon: 'el-icon-info', noCache: true}
+      },
+      {
+        path: 'addStaff',
+        name: 'staffEdit',
+        component: () => import('@/views/enterpriseManage/staffEdit/index'),
+        meta: { title: '添加成员', activeMenu: '/enterpriseManage/addressBook'},
+        hidden: true
+      },
+      {
+        path: 'staffEdit/:staff_id(\\d+)',
+        name: 'staffEdit',
+        component: () => import('@/views/enterpriseManage/staffEdit/index'),
+        meta: { title: '编辑成员', activeMenu: '/enterpriseManage/addressBook', noCache: true, isEdit: true},
+        hidden: true
       },
     ]
   },
