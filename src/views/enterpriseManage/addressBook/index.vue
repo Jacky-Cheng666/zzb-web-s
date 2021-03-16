@@ -375,7 +375,7 @@ export default {
             });
             this.getDepartmentList()
           }
-        })
+        }).catch(()=>{})
     },
     transferAdmin(){
       if(this.multipleSelection.length==0){
