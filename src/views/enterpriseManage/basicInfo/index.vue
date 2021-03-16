@@ -8,7 +8,7 @@
         <div>
           <el-input v-model="financialBookName" style="width:120px" size="mini" placeholder="输入账本名称"></el-input>
           <el-button @click="saveFinancialBook" size="mini" type="primary">保存账本名称</el-button>
-          <el-select style="width:140px;margin:0 10px" size="mini" @change="switchFinancialBook" v-model="CurrentFinancialBook" placeholder="请选择">
+          <el-select style="width:120px;margin:0 10px" size="mini" @change="switchFinancialBook" v-model="CurrentFinancialBook" placeholder="请选择">
             <el-option v-for="item in bookList" :key="item.financial_book_no" :label="item.financial_book_name" :value="item.financial_book_no" />
           </el-select>
         </div>
