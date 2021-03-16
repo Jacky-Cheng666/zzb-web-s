@@ -339,55 +339,43 @@ export default {
       }).catch(()=>{})
     },
     addDepart() {
-      if(!this.new_department_name) {
-        this.$message({
-          type: 'warning',
-          message: '请输入部门名称'
-        });
-        return
-      }
+      this.$prompt('', '新增部门', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          inputPlaceholder: '请输入部门名称',
+          inputPattern: /\S/,
+          inputErrorMessage: '部门名称不能为空'
+        }).then(async({ value }) => {
 
-      let has_num = 0
-      this.department_list.forEach(item=>{
-        if(this.new_department_name == item.name){
-          has_num ++
-          return
-        }
-      })
+          let has_num = 0
+          this.department_list.forEach(item=>{
+            if( value.trim() == item.name){
+              has_num ++
+              return
+            }
+          })
 
-      if (0 < has_num) {
-        this.$message({
-          type: 'warning',
-          message: '部门：' + this.new_department_name + ' 已存在，请重新输入'
-        });
-        return
-      }
+          if (0 < has_num) {
+            this.$message({
+              type: 'error',
+              message: '部门：' + value.trim() + ' 已存在，请重新输入'
+            });
+            return false
+          }
 
-      this.$confirm('确定新增部门：' + this.new_department_name + '？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(async () => {
-        
-        let result = await add_department({
-          access_token: this.token,
-          department_name:this.new_department_name,
+          let result = await add_department({
+            access_token: this.token,
+            department_name: value.trim(),
+          })
+          if (result.code == 0) {
+            this.$notify({
+              type: 'success',
+              title: '成功',
+              message:"操作成功"
+            });
+            this.getDepartmentList()
+          }
         })
-        if (result.code == 0) {
-          this.$notify({
-            type: 'success',
-            title: '成功',
-            message:"操作成功"
-          });
-          this.getDepartmentList()
-        }
-
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消新增部门'
-        });
-      });
     },
     transferAdmin(){
       if(this.multipleSelection.length==0){
