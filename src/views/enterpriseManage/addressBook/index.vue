@@ -342,7 +342,7 @@ export default {
       this.$prompt('', '新增部门', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          inputPlaceholder: '请输入部门名称',
+          inputPlaceholder: '新部门名称',
           inputPattern: /\S/,
           inputErrorMessage: '部门名称不能为空'
         }).then(async({ value }) => {
