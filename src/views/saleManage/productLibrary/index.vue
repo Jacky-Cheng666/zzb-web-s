@@ -24,7 +24,7 @@
     </el-row>
 
     
-    <el-table class="mb8" stripe row-key="spec_id" :tree-props="{children: 'children', hasChildren: 'hasChildren'}" :height="screen_height-350" v-loading="loading" :data="tableData">
+    <el-table class="mb8" stripe row-key="spec_id" :tree-props="{children: 'children', hasChildren: 'hasChildren'}" :height="screen_height-350" v-loading="loading" element-loading-text="加载中..." :data="tableData">
       <el-table-column align="center" label="名称" prop="product_name" width="180" />
       <el-table-column align="center" label="规格型号" prop="spec_code" width="240">
         <template slot-scope="scope">
@@ -60,7 +60,7 @@
       <div>
         <el-button type="primary" icon="el-icon-plus" size="mini">新增产品</el-button>
         <el-tooltip class="item" effect="dark" content="刷新" placement="top">
-            <el-button size="mini" circle icon="el-icon-refresh"/>
+            <el-button @click="getProductList" size="mini" circle icon="el-icon-refresh"/>
         </el-tooltip>
       </div>
     </pagination>
@@ -95,11 +95,13 @@ export default {
   },
   methods: {
     async getProductList(){
+      this.loading = true;
       let result = await get_product_list({
         access_token: this.token
       })
       console.log('result', result);
       if(result.code===0){
+        this.loading = false;
         let tmpList = result.product_list
         tmpList.forEach(item=>{
           item.spec_id = item.product_id;
