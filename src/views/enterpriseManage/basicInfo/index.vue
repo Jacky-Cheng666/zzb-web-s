@@ -259,6 +259,7 @@ export default {
         });
         this.financialBookName = "";
         this.getCompanyBasicInfo();
+        this.$store.dispatch('zzb/getSaleBasicInfo') //通知更新vuex
       }
     },
     async saveBasicInfo() {

@@ -1,14 +1,12 @@
 <template>
   <div class="app-container productLibrary">
-    <el-form class="mb10" :model="queryParams" ref="queryForm" v-show="showSearch" :inline="true">
+    <el-form class="mb10" :model="queryParams" ref="queryForm" :inline="true">
       <el-form-item>
         <el-input v-model="queryParams.inputValue" placeholder="输入关键字" clearable size="small" style="width: 180px" @keyup.enter.native="handleQuery"/>
       </el-form-item>
       <el-form-item>
         <el-select v-model="queryParams.selectStatus" size="small" style="width: 100px">
-          <el-option label="默认账本" value="all"></el-option>
-          <el-option label="账本1" value="notVoice"></el-option>
-          <el-option label="账本4" value="invoiced"></el-option>
+          <el-option :label="item.financial_book_name" :value="item.financial_book_no" v-for="(item,index) in financial_book_list" :key="index"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -26,13 +24,30 @@
     </el-row>
 
     
-    <el-table class="mb8" :height="screen_height-350" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
-      <el-table-column align="center" type="selection" width="50" />
-      <el-table-column align="center" label="名称" prop="element_name" width="180" />
-      <el-table-column align="center" label="规格型号" prop="spec_code" width="240" />
+    <el-table class="mb8" stripe row-key="spec_id" :tree-props="{children: 'children', hasChildren: 'hasChildren'}" :height="screen_height-350" v-loading="loading" :data="tableData">
+      <el-table-column align="center" label="名称" prop="product_name" width="180" />
+      <el-table-column align="center" label="规格型号" prop="spec_code" width="240">
+        <template slot-scope="scope">
+          <span v-if="!scope.row.disabled">{{scope.row.spec_list.length}}个型号</span>
+          <span v-else>{{scope.row.spec_code}}</span>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="品牌" prop="brand" width="100" />
       <el-table-column align="center" label="单位" prop="unit" width="60" />
-      <el-table-column align="center" label="属性" />
+      <el-table-column align="center" label="属性">
+        <template slot-scope="scope">
+          <div v-if="!scope.row.disabled" style="display: flex; flex-direction: row; align-items: center; justify-content: center;">
+            <span @click="editProduct(scope.row)" style="color: #3893E6; cursor: pointer;margin-right:20px">编辑产品</span>
+            <span style="color: #3893E6; cursor: pointer;margin-right:20px">上传图片</span>
+            <span @click="addNewSpecCode(scope.row)" style="color: #3893E6; cursor: pointer;margin-right:20px">新增型号</span>
+            <span @click="deleteProduct(scope.row)" style="color: #E34348; cursor: pointer;">删除产品</span>
+          </div>
+          <div v-else>
+              <span style="margin-right:48px" v-for="item in scope.row.property_list" :key="item.spec_id">{{item.name}}：{{item.value}}</span>
+              <i @click="editSpec(scope.row)" style="float:right;margin-right:8px;font-size:16px;color:#3894FF;cursor:pointer" class="el-icon-edit"></i>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="操作" width="120">
         <template>
           <el-button size="mini" icon="el-icon-money" type="text">报价</el-button>
@@ -55,62 +70,68 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { get_product_list } from '@/api/saleManage'
 export default {
   name: 'productLibrary',
   data() {
     return {
       queryParams: {
         inputValue: "",
-        pay_period: "全部",
-        invoiceStatus: "all",
-        selectStatus: "all",
         pageNum: 1,
         pageSize: 100,
       },
-      showSearch: true,
       loading: false,
-      tableData: [{request_name: "IO144415422"}],
+      tableData: [],
       total: 0,
       allRows: [],
-      value2:[],
-      pickerOptions: {
-        shortcuts: [{
-          text: '最近一周',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-            picker.$emit('pick', [start, end]);
-          }
-        }, {
-          text: '最近一个月',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-            picker.$emit('pick', [start, end]);
-          }
-        }, {
-          text: '最近三个月',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-            picker.$emit('pick', [start, end]);
-          }
-        }]
-      },
-      checked: false
+      paginationRows: [],
     }
   },
   computed: {
-    ...mapGetters(['screen_height'])
+    ...mapGetters(['screen_height','token','financial_book_list'])
+  },
+  created() {
+    this.getProductList()
   },
   methods: {
-    handleQuery(){},
+    async getProductList(){
+      let result = await get_product_list({
+        access_token: this.token
+      })
+      console.log('result', result);
+      if(result.code===0){
+        let tmpList = result.product_list
+        tmpList.forEach(item=>{
+          item.spec_id = item.product_id;
+          item.spec_list.forEach(it=>{
+            it.disabled = true;
+            it.product_name = item.product_name;
+            it.brand = item.brand;
+            it.unit = item.unit;
+            it.product_id = item.product_id;
+            it.product_property_list = item.property_list;
+          })
+          item.children = item.spec_list;
+        })
+        this.allRows = tmpList;
+        this.handleQuery();
+      }
+    },
+    handleQuery(){
+      let temp = [];
+      this.allRows.forEach(item=>{
+        // if ( this.queryParams.status == "未设置" && item.min_storage != 0 && item.max_storage != 0)return;
+        // if ( this.queryParams.status == "已设置" && (item.min_storage == 0 || item.max_storage == 0))return;
+        if(!this.$FilterFun(this.queryParams.inputValue,item))return
+        temp.push(item)
+      })
+      this.total = temp.length;
+      this.paginationRows = temp;
+      this.queryParams.pageNum = 1;
+      this.tableData = this.paginationRows.slice(0, this.queryParams.pageSize);
+    },
     resetQuery(){},
     getPayDemandList(){},
-    handleSelectionChange(){},
     handleCurrentChange(){},
     viewSalesOrder(row){
       this.$router.push('/saleManage/saleOrder'+row.order_name)

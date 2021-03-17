@@ -134,6 +134,10 @@
   padding: 0;
   height: 32px;
 }
+.el-table__row.el-table__row--level-0 .el-table__expand-icon {
+  float: left;
+  margin-left: 12px;
+}
 
 .pagination-container {
   position: relative;
