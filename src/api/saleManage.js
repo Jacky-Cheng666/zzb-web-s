@@ -55,3 +55,11 @@ export function exportAttachOrders(data) {
     data
   })
 }
+
+export function setPlanOrderReceiveInfo(data) {
+  return request({
+    url: '/som/planOrder/set_plan_order_receiver_info',
+    method: 'post',
+    data
+  })
+}

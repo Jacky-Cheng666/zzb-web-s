@@ -73,7 +73,7 @@
           <el-date-picker :clearable="false" value-format="yyyy-MM-dd" style="width:140px" size="small" v-model="queryParams.deliver_time" type="date" placeholder="选择日期" :picker-options="startDatePicker"></el-date-picker>
         </el-form-item>
         <el-form-item>
-          <el-badge :value="payPlanList.length" class="item" type="primary">
+          <el-badge :value="payPlanLength" class="item" type="primary">
             <el-button @click="editPayPlan" type="primary" size="mini">付款计划</el-button>
           </el-badge>
         </el-form-item>
@@ -93,8 +93,16 @@
       <el-table-column align="center" label="单位" prop="element_info.unit" width="60" />
       <el-table-column align="center" label="数量" prop="buy_info.num" width="80" />
       <el-table-column align="center" label="未税价格" prop="buy_info.buy_price" width="100" />
-      <el-table-column align="center" label="税金" prop="tax_amount" width="100" ></el-table-column>
-      <el-table-column align="center" label="税价合计" prop="total_money_with_tax" width="100" />
+      <el-table-column align="center" label="税金" prop="trade_info.total_tax" width="100" >
+        <template slot-scope="scope">
+          <span>{{ getTotalTax(scope.row) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="税价合计" prop="trade_info.total_tax_price" width="100">
+        <template slot-scope="scope">
+          <span>{{ getTotalTaxPrice(scope.row) }}</span>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="物料代码" prop="element_info.element_code" width="100" />
       <el-table-column align="center" label="客户物料名称" prop="element_info.guest_element_name" width="100" />
       <el-table-column align="center" label="客户物料型号" prop="element_info.guest_spec_code" width="100" />
@@ -126,10 +134,10 @@
       <back-to-top :custom-style="myBackToTopStyle" :visibility-height="300" :back-position="0" transition-name="fade" />
     </el-tooltip> -->
 
-    <pay-plan v-model="payPlanList" ref="payPlan"></pay-plan>
+    <pay-plan @sendPlanResult="handleReceivePlanResult" :receivedTotalPrice="order_total_pay" ref="payPlan"></pay-plan>
     <address-dialog v-model="addressList" ref="addressDialog"></address-dialog>
 
-    <element-info :elementInfoForm="elementInfoForm" myElementTitleName="我方产品信息" titleName="产品信息" ref="elementInfo">
+    <element-info @editSingleMaterial="handleEditSingleMaterial" :elementInfoForm="elementInfoForm" myElementTitleName="我方产品信息" titleName="产品信息" ref="elementInfo">
       <template slot="content-wrap">
         <el-form-item label="客户物料信息：" label-width="110px">
           <el-form-item label="名称" prop="guest_element_name">
@@ -148,14 +156,41 @@
         <el-form-item>
           <div>交易信息：</div>
           <el-form-item label="数量" prop="trade_num" style="margin-right:126px">
-              <el-input v-model="elementInfoForm.buy_info.num" placeholder="输入数字" clearable size="small" style="width: 100px"/>
+              <el-input 
+                v-model="elementInfoForm.buy_info.num" 
+                placeholder="输入数字"
+                @change="buyNumChange($event, elementInfoForm)" 
+                @mousewheel.native.prevent
+                type="number" 
+                clearable 
+                size="small" 
+                style="width: 100px"/>
           </el-form-item>
           <el-form-item>
               <el-form-item label="未税价" label-width="70px">
-                  <el-switch v-model="elementInfoForm.buy_info.isHasTax"></el-switch>
+                  <el-switch v-model="elementInfoForm.isHasNoTax"></el-switch>
               </el-form-item>
               <el-form-item label="价格">
-                  <el-input v-model="elementInfoForm.buy_info.buy_price" placeholder="输入数字" clearable size="small" style="width: 120px;"/>
+                  <el-input 
+                    v-if="elementInfoForm.isHasNoTax" 
+                    v-model="elementInfoForm.buy_info.buy_price" 
+                    placeholder="输入数字"
+                    @change="buyPriceChange($event, elementInfoForm)"
+                    @mousewheel.native.prevent 
+                    type="number" 
+                    clearable 
+                    size="small" 
+                    style="width: 120px;"/>
+                  <el-input 
+                    v-else 
+                    v-model="elementInfoForm.buy_info.offer_price" 
+                    placeholder="输入数字" 
+                    @change="buyPriceChangeEx($event, elementInfoForm)"
+                    @mousewheel.native.prevent 
+                    type="number" 
+                    clearable 
+                    size="small" 
+                    style="width: 120px;"/>
               </el-form-item>
           </el-form-item>
         </el-form-item>
@@ -232,32 +267,9 @@ export default {
       },
       showSearch: true,
       loading: false,
-      // tableData: [{element_name:'特斯拉汽车',spec_code:'Model3 高级版 磨砂黑',brand:'特斯拉',unit: '个',num:999,total_money:9999,remark:'我是一条备注'},
-      //   {element_name:'特斯拉汽车',spec_code:'Model3 高级版 磨砂黑',brand:'特斯拉',unit: '个',num:999,total_money:9999,remark:'我是一条备注'},
-      //   {element_name:'特斯拉汽车',spec_code:'Model3 高级版 磨砂黑',brand:'特斯拉',unit: '个',num:999,total_money:9999,remark:'我是一条备注'},
-      //   {element_name:'特斯拉汽车',spec_code:'Model3 高级版 磨砂黑',brand:'特斯拉',unit: '个',num:999,total_money:9999,remark:'我是一条备注'},
-      //   {element_name:'特斯拉汽车',spec_code:'Model3 高级版 磨砂黑',brand:'特斯拉',unit: '个',num:999,total_money:9999,remark:'我是一条备注'},
-      //   {element_name:'特斯拉汽车',spec_code:'Model3 高级版 磨砂黑',brand:'特斯拉',unit: '个',num:999,total_money:9999,remark:'我是一条备注'},
-      //   {element_name:'特斯拉汽车',spec_code:'Model3 高级版 磨砂黑',brand:'特斯拉',unit: '个',num:999,total_money:9999,remark:'我是一条备注'},
-      //   {element_name:'特斯拉汽车',spec_code:'Model3 高级版 磨砂黑',brand:'特斯拉',unit: '个',num:999,total_money:9999,remark:'我是一条备注'},
-      //   {element_name:'特斯拉汽车',spec_code:'Model3 高级版 磨砂黑',brand:'特斯拉',unit: '个',num:999,total_money:9999,remark:'我是一条备注'},
-      //   {element_name:'特斯拉汽车',spec_code:'Model3 高级版 磨砂黑',brand:'特斯拉',unit: '个',num:999,total_money:9999,remark:'我是一条备注'},
-      //   {element_name:'特斯拉汽车',spec_code:'Model3 高级版 磨砂黑',brand:'特斯拉',unit: '个',num:999,total_money:9999,remark:'我是一条备注'},
-      //   {element_name:'特斯拉汽车',spec_code:'Model3 高级版 磨砂黑',brand:'特斯拉',unit: '个',num:999,total_money:9999,remark:'我是一条备注'},
-      //   {element_name:'特斯拉汽车',spec_code:'Model3 高级版 磨砂黑',brand:'特斯拉',unit: '个',num:999,total_money:9999,remark:'我是一条备注'},
-      //   {element_name:'特斯拉汽车',spec_code:'Model3 高级版 磨砂黑',brand:'特斯拉',unit: '个',num:999,total_money:9999,remark:'我是一条备注'},
-      //   {element_name:'特斯拉汽车',spec_code:'Model3 高级版 磨砂黑',brand:'特斯拉',unit: '个',num:999,total_money:9999,remark:'我是一条备注'},
-      //   {element_name:'特斯拉汽车',spec_code:'Model3 高级版 磨砂黑',brand:'特斯拉',unit: '个',num:999,total_money:9999,remark:'我是一条备注'},
-      //   {element_name:'特斯拉汽车',spec_code:'Model3 高级版 磨砂黑',brand:'特斯拉',unit: '个',num:999,total_money:9999,remark:'我是一条备注'},
-      //   {element_name:'特斯拉汽车',spec_code:'Model3 高级版 磨砂黑',brand:'特斯拉',unit: '个',num:999,total_money:9999,remark:'我是一条备注'},
-      //   {element_name:'特斯拉汽车',spec_code:'Model3 高级版 磨砂黑',brand:'特斯拉',unit: '个',num:999,total_money:9999,remark:'我是一条备注'},
-      //   {element_name:'特斯拉汽车',spec_code:'Model3 高级版 磨砂黑',brand:'特斯拉',unit: '个',num:999,total_money:9999,remark:'我是一条备注'},
-      //   {element_name:'特斯拉汽车',spec_code:'Model3 高级版 磨砂黑',brand:'特斯拉',unit: '个',num:999,total_money:9999,remark:'我是一条备注'},
-      //   {element_name:'特斯拉汽车',spec_code:'Model3 高级版 磨砂黑',brand:'特斯拉',unit: '个',num:999,total_money:9999,remark:'我是一条备注'},
-      // ],
       tableData: [],
       total: 0,
-      payPlanList:[{pay_time:new Date(),pay_money:"",percent:"",remark:"",payed:false}],
+      payPlanResult: {},
       addressList: {
         receiver: '',
         receiver_phone: '',
@@ -267,7 +279,8 @@ export default {
         element_info: {},
         buy_info: {},
         sale_info: {},
-        trade_info: {}
+        trade_info: {},
+        isHasNoTax: true
       },
       //
       workpiece_define_list: [],
@@ -280,7 +293,9 @@ export default {
       payTypeOptions: [],
       //
       startDatePicker: this.beginDate(),
-      multipleSelection: []
+      multipleSelection: [],
+      order_total_pay: 0,
+      payPlanLength: 0
     }
   },
   computed: {
@@ -297,18 +312,18 @@ export default {
     // } else{
     //   this.getPreOrderInfo()
     // }
+    
     this.workpiece_define_list = JSON.parse(window.localStorage.getItem('saleBasicInfo')).workpiece_define_list || []
   },
   methods: {
     handleSelectionChange(val){
       this.multipleSelection = val
     },
-    toggleSearch(){
-      this.showSearch = !this.showSearch
-    },
-    getList(){},
-    editPayPlan(){
-      this.$refs.payPlan.openPlan = true;
+    // toggleSearch(){
+    //   this.showSearch = !this.showSearch
+    // },
+    getList(){
+
     },
     editAddress(){
       this.$refs.addressDialog.openAddress = true;
@@ -318,18 +333,12 @@ export default {
     },
     editElement(row){
       this.elementInfoForm = row
+      // this.elementInfoForm.isHasNoTax = true
       this.$refs.elementInfo.openElementInfo = true;
     },
     batchAddClick(){
       this.$refs.battchAdd.openBatchAdd = true;
     },
-    handleImport(){
-      this.$refs.uploadFile.upload.open = true;
-    },
-    handleDownloadTemplate(){
-
-    },
-    //
     //日期选择起始时间限制
     beginDate(){
       let self = this
@@ -948,8 +957,19 @@ export default {
     handleAddMaterial(data){
       if(data.length > 0){
         data.forEach(item => {
-          this.tableData.push(item)
+          let tempEle = JSON.parse(JSON.stringify(item))
+          this.tableData.push(tempEle)
         })
+      }
+    },
+    handleEditSingleMaterial(){
+      let row = this.elementInfoForm
+      if(!row.isHasNoTax){
+        let tmp = common.fixFloat6((parseFloat(row.buy_info.offer_price)/(1 + parseFloat(this.queryParams.valueTax.value))))
+        row.buy_info.buy_price = isNaN(tmp) ? '' : tmp
+      } else{
+        let tmp = common.fixFloat4((parseFloat(row.buy_info.buy_price)*(1 + parseFloat(this.queryParams.valueTax.value))))
+        row.buy_info.offer_price = isNaN(tmp) ? '' : tmp
       }
     },
     //保存创建的订单
@@ -1093,9 +1113,9 @@ export default {
           purchase_full_name: this.businessInfo.purchase_full_name,
           buyer: this.businessInfo.contact,
           buyer_phone: this.businessInfo.phone,
-          receiver_address: this.businessInfo.receive_addr,
-          receiver: this.businessInfo.receiver_name,
-          receiver_phone: this.businessInfo.receiver_phone,
+          receiver_address: this.addressList.receiver_address,
+          receiver: this.addressList.receiver,
+          receiver_phone: this.addressList.receiver_phone,
           order_describe: this.queryParams.orderExplainText?this.queryParams.orderExplainText.trim():'',
           order_use_name: this.queryParams.valueSaleType.label,
           order_use_type: this.queryParams.valueSaleType.value,
@@ -1123,6 +1143,76 @@ export default {
           }
         })
       })
+    },
+    buyPriceChange(e, row){
+      if(e <= 0){
+        row.buy_info.buy_price = 0
+      } else{
+        row.buy_info.buy_price = common.fixFloat2(e)
+      }
+    },
+    buyPriceChangeEx(e, row){
+      if(e <= 0){
+        row.buy_info.offer_price = 0
+      } else{
+        row.buy_info.offer_price = common.fixFloat2(e)
+      }
+    },
+    buyNumChange(e,row){
+      if(e <= 0){
+        row.buy_info.num = 0
+      } else{
+        row.buy_info.num = common.fixFloat3(e)
+      }
+    },
+    getTotalTax(row){
+      let tempTotalPrice = common.fixFloat2( row.buy_info.buy_price * row.buy_info.num )
+      let tempTotalTaxPrice = common.fixFloat2( row.buy_info.buy_price * row.buy_info.num * (1 + parseFloat(this.queryParams.valueTax.value)) )
+      let tempTotalTax = common.fixFloat2( tempTotalTaxPrice - tempTotalPrice )
+
+      this.$set(row.trade_info, "total_tax", isNaN(tempTotalTax) ? '' : tempTotalTax)
+
+      return tempTotalTax
+    },
+    getTotalPrice(row){
+      let tempTotalPrice = common.fixFloat2( row.buy_info.buy_price * row.buy_info.num )
+      this.$set(row.trade_info, "total_price", isNaN(tempTotalPrice) ? '' : tempTotalPrice)
+
+      return tempTotalPrice
+    },
+    getTotalTaxPrice(row){
+      let tempTotalTaxPrice = common.fixFloat2( row.buy_info.buy_price * row.buy_info.num * (1 + parseFloat(this.queryParams.valueTax.value)) )
+      this.$set(row.trade_info, "total_tax_price", isNaN(tempTotalTaxPrice) ? '' : tempTotalTaxPrice)
+
+      return tempTotalTaxPrice
+    },
+    editPayPlan(){
+      let totalPay = 0
+      this.tableData.forEach(item => {
+        let tempTotalTaxPrice = item.trade_info.total_tax_price
+        if(tempTotalTaxPrice){
+          totalPay += tempTotalTaxPrice
+        }
+      })
+
+      if(totalPay === 0){
+        this.$message({
+          showClose: true,
+          message: '该订单总金额为0，无需编辑付款计划！',
+          type: 'warning'
+        })
+
+        return
+      }
+
+      this.order_total_pay = totalPay
+
+      this.$refs.payPlan.startPlan()
+      this.$refs.payPlan.openPlan = true;
+    },
+    handleReceivePlanResult(obj){
+      this.payPlanResult = obj
+      this.payPlanLength = obj.pay_plan.length
     }
   }
 }
