@@ -6,9 +6,8 @@ const getDefaultState = () => {
     return {
         tax_list: [],
         encode_rule_list: getToken('encode_rule_list'),
-        workpiece_list: getToken('profile')?getToken('profile').config.workpieces:"",
-        saleBasicInfo: {},
-        workpiece_list: getToken('profile')?getToken('profile').config.workpieces:"",
+        saleBasicInfo: getToken('saleBasicInfo'),
+        workpiece_list: getToken('saleBasicInfo')?getToken('saleBasicInfo').workpiece_define_list:"",
         department_list: getToken('department_list'),
         job_list: getToken('job_list'),
         encode_code: getToken('encode_code'),
@@ -18,7 +17,7 @@ const getDefaultState = () => {
 const state = getDefaultState()
 
 const mutations = {
-    INITIALIZE_STATE: (state) => { //初始化state值。
+    RESET_STATE: (state) => { //初始化state值。
     Object.assign(state, getDefaultState())
     },
     SET_TAX_LIST: (state, tax_list) => {
@@ -28,7 +27,7 @@ const mutations = {
         state.saleBasicInfo = result.sale_basic_info
         localStorage.setItem('saleBasicInfo',JSON.stringify(result.sale_basic_info))
 
-        let tmpEncodeRuleList = result.sale_basic_info.element_code_encode_info
+        let tmpEncodeRuleList = result.sale_basic_info.element_code_encode_info || []
         let encode_rule = []
         let encode_rule_list = []
         tmpEncodeRuleList.forEach(item => {
@@ -137,6 +136,7 @@ const actions = {
         let res = await getSaleBasicInfo({ access_token: store.getters.token })
         if (res.code === 0) {
             commit('setSaleBasicInfo', res)
+            commit('RESET_STATE') //修复bug
         }
     }
 }
