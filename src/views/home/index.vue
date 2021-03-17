@@ -102,6 +102,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { switch_company } from '@/api/user.js'
+import { getToken,setToken } from '@/utils/auth'
 export default {
   name: "home",
   data() {
@@ -177,22 +178,19 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(async ()=>{
-        let response = await switch_company({
+        let result = await switch_company({
           access_token: this.token,
           company_no: this.company_no
         })
-        console.log('切换主题', response);
-        if(res.code===0){
-          // this.$store.commit('user/SET_TOKEN', response.access_token)
-          // this.$store.commit('user/SET_NAME', response.profile.name)
-          // this.$store.commit('user/SET_PROFILE', response.profile)
-          // this.$store.commit('user/SET_ORG', response.org)
-          // this.$store.commit('user/SET_COMPANY_NO', response.company_no)
-
-          // setToken('zzb_web_s_token',response.access_token)
-          // setToken('profile', response.profile)
-          // setToken('org', response.org)
-          // setToken('company_no', response.company_no)
+        if(result.code===0){
+          let profile = getToken('profile')
+          profile.department_id = result.profile.department_id
+          profile.department_name = result.profile.department_name
+          profile.job = result.profile.job
+          setToken('profile',profile)
+          setToken('company_no',result.company_no)
+          this.$store.commit('user/SET_COMPANY_NO',result.company_no)
+          this.$message.success("公司主体切换成功!")
         }
       }).catch(()=>{})
     }
