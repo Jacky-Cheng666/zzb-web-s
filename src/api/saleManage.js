@@ -63,3 +63,19 @@ export function setPlanOrderReceiveInfo(data) {
     data
   })
 }
+
+export function get_product_list(data) {
+  return request({
+    url: '/som/product/get_product_list',
+    method: 'post',
+    data
+  })
+}
+
+export function delete_product_spec(data) {
+  return request({
+    url: '/som/product/delete_product_spec',
+    method: 'post',
+    data
+  })
+}

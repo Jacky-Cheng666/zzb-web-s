@@ -64,7 +64,6 @@ const actions = {
           setToken('org', response.org)
           setToken('company_no', response.company_no)
           setToken('is_admin',response.is_admin)
-          store.commit('zzb/INITIALIZE_STATE') //修复bug
         }
         resolve(response)
       }).catch(error => {
@@ -95,6 +94,7 @@ const actions = {
           dispatch('resetToken')
           resetRouter()
           commit('RESET_STATE')
+          dispatch('tagsView/delAllViews', null, { root: true })
         }
         resolve()
       }).catch(error => {
@@ -108,6 +108,7 @@ const actions = {
     return new Promise(resolve => {
       window.localStorage.clear()
       commit('RESET_STATE')
+      store.commit('zzb/RESET_STATE')
       resolve()
     })
   }
