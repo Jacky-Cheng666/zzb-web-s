@@ -49,9 +49,9 @@
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作" width="120">
-        <template>
+        <template slot-scope="scope" v-if="scope.row.disabled"> 
           <el-button size="mini" icon="el-icon-money" type="text">报价</el-button>
-          <el-button size="mini" icon="el-icon-delete" type="text" class="text-danger">删除</el-button>
+          <el-button @click="deleteSpec(scope.row)" size="mini" icon="el-icon-delete" type="text" class="text-danger">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -70,7 +70,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { get_product_list } from '@/api/saleManage'
+import { get_product_list, delete_product_spec } from '@/api/saleManage'
 export default {
   name: 'productLibrary',
   data() {
@@ -85,6 +85,7 @@ export default {
       total: 0,
       allRows: [],
       paginationRows: [],
+      currentSpecRow: {}
     }
   },
   computed: {
@@ -99,7 +100,6 @@ export default {
       let result = await get_product_list({
         access_token: this.token
       })
-      console.log('result', result);
       if(result.code===0){
         this.loading = false;
         let tmpList = result.product_list
@@ -118,6 +118,28 @@ export default {
         this.allRows = tmpList;
         this.handleQuery();
       }
+    },
+    deleteSpec(row){
+      this.currentSpecRow = this.$DeepClone(row)
+      this.$confirm('确定删除 “'+ row.spec_code +'” , 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        let result = await delete_product_spec({
+          access_token: this.token,
+          product_id: this.currentSpecRow.product_id,
+          spec_id: this.currentSpecRow.spec_id
+        })
+        if(result.code===0){
+          this.$notify({
+            type: 'success',
+            title: '成功',
+            message: '操作成功'
+          })
+          this.getProductList();
+        }
+      }).catch(()=>{})
     },
     handleQuery(){
       let temp = [];
