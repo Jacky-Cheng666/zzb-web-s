@@ -1,5 +1,5 @@
 import store from '@/store/index.js'
-import { get_tax_list } from '@/api/enterpriseManage'
+import { get_tax_list, get_all_workpiece_list } from '@/api/enterpriseManage'
 import { getSaleBasicInfo } from '@/api/saleManage'
 import { getToken,setToken,removeToken } from '@/utils/auth'
 const getDefaultState = () => {
@@ -7,7 +7,7 @@ const getDefaultState = () => {
         tax_list: [],
         encode_rule_list: getToken('encode_rule_list'),
         saleBasicInfo: getToken('saleBasicInfo'),
-        workpiece_list: getToken('saleBasicInfo')?getToken('saleBasicInfo').workpiece_define_list:"",
+        workpiece_list: [],
         department_list: getToken('department_list'),
         job_list: getToken('job_list'),
         encode_code: getToken('encode_code'),
@@ -121,6 +121,9 @@ const mutations = {
     },
     SET_SAFE_STORAGE: (state,safeStorageArr) => {
         state.safeStorageArr = safeStorageArr
+    },
+    SET_WORKPIECE_LIST: (state, workpiece_list) => {
+        state.workpiece_list = workpiece_list
     }
 }
 
@@ -132,11 +135,16 @@ const actions = {
         }
     },
 
+    async getAllWorkPieceList({commit}){
+        let result = await get_all_workpiece_list({access_token: store.getters.token})
+        if(result.code===0){
+            commit('SET_WORKPIECE_LIST', result.workpiece_list)
+        }
+    },
     async getSaleBasicInfo({ commit }) {
         let res = await getSaleBasicInfo({ access_token: store.getters.token })
         if (res.code === 0) {
             commit('setSaleBasicInfo', res)
-            commit('RESET_STATE') //修复bug
         }
     }
 }

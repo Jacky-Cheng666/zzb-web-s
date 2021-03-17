@@ -30,6 +30,7 @@ router.beforeEach(async(to, from, next) => {
           router.addRoutes(accessRoutes)
           store.commit('app/CALCULATE_SCREEN_HEIGHT')
           store.dispatch('zzb/getTaxList')
+          store.dispatch('zzb/getAllWorkPieceList')
           store.dispatch('zzb/getSaleBasicInfo')
           next({ ...to, replace: true })
 

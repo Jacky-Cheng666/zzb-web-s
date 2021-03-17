@@ -94,6 +94,7 @@ const actions = {
           dispatch('resetToken')
           resetRouter()
           commit('RESET_STATE')
+          dispatch('tagsView/delAllViews', null, { root: true })
         }
         resolve()
       }).catch(error => {

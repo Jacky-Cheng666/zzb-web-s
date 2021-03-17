@@ -55,3 +55,11 @@ export function exportAttachOrders(data) {
     data
   })
 }
+
+export function get_product_list(data) {
+  return request({
+    url: '/som/product/get_product_list',
+    method: 'post',
+    data
+  })
+}
