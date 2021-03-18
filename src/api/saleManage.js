@@ -79,3 +79,11 @@ export function delete_product_spec(data) {
     data
   })
 }
+
+export function delete_product(data) {
+  return request({
+    url: '/som/product/delete_product',
+    method: 'post',
+    data
+  })
+}
