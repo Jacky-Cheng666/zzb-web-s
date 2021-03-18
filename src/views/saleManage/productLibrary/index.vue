@@ -1,11 +1,11 @@
 <template>
   <div class="app-container productLibrary">
     <el-form class="mb10" :model="queryParams" ref="queryForm" :inline="true">
-      <el-form-item>
+      <el-form-item prop="inputValue">
         <el-input v-model="queryParams.inputValue" placeholder="输入关键字" clearable size="small" style="width: 180px" @keyup.enter.native="handleQuery"/>
       </el-form-item>
-      <el-form-item>
-        <el-select v-model="queryParams.selectStatus" size="small" style="width: 100px">
+      <el-form-item prop="selectStatus">
+        <el-select disabled v-model="queryParams.selectStatus" size="small" style="width: 100px">
           <el-option :label="item.financial_book_name" :value="item.financial_book_no" v-for="(item,index) in financial_book_list" :key="index"></el-option>
         </el-select>
       </el-form-item>
@@ -70,7 +70,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { get_product_list, delete_product_spec } from '@/api/saleManage'
+import { get_product_list, delete_product_spec, delete_product } from '@/api/saleManage'
 export default {
   name: 'productLibrary',
   data() {
@@ -79,6 +79,7 @@ export default {
         inputValue: "",
         pageNum: 1,
         pageSize: 100,
+        selectStatus: ""
       },
       loading: false,
       tableData: [],
@@ -141,6 +142,27 @@ export default {
         }
       }).catch(()=>{})
     },
+    deleteProduct(row){
+      this.$confirm('确认删除 “'+ row.product_name +'” , 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          delete_product({
+            access_token: this.token,
+            product_id: row.product_id
+          }).then(result=>{
+              if(result.code===0){
+                this.$notify({
+                  type: 'success',
+                  title: '成功',
+                  message: '操作成功'
+                })
+                this.getProductList();
+              }
+            })
+        }).catch(()=>{})
+    },
     handleQuery(){
       let temp = [];
       this.allRows.forEach(item=>{
@@ -154,7 +176,10 @@ export default {
       this.queryParams.pageNum = 1;
       this.tableData = this.paginationRows.slice(0, this.queryParams.pageSize);
     },
-    resetQuery(){},
+    resetQuery(){
+      this.$refs.queryForm.resetFields();
+      this.handleQuery();
+    },
     getPayDemandList(){},
     handleCurrentChange(){},
     viewSalesOrder(row){
