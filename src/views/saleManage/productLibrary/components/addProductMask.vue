@@ -1,6 +1,6 @@
 <template>
   <div class="addProductMask">
-    <el-dialog width="900px" center title="产品信息" :visible.sync="dialogFormVisible">
+    <el-dialog @closed="dialogClosed" width="900px" center title="产品信息" :visible.sync="dialogFormVisible">
       <el-form ref="ruleForm" :model="form" :rules="rules">
         <el-form-item prop="product_id">
           <!-- <el-cascader style="width:100%" v-model="form.product_id" :options="product_type_list" :props="{ expandTrigger: 'hover',value: 'id', label: 'name',children: 'items'}" @change="handleChange"></el-cascader> -->
@@ -164,6 +164,17 @@ export default {
       str = arr.join(",");
       this.$set(row, "options", str);
     },
+    dialogClosed(){
+        // this.$refs.ruleForm.resetFields();
+        // let resetObj = {
+        //   product_name: "",
+        //   brand: "",
+        //   unit: "",
+        //   product_id: [],
+        //   property_list: [],
+        // }
+        // this.form = this.$DeepClone(resetObj)
+    }
   },
 };
 </script>
