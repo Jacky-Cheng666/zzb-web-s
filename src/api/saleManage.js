@@ -87,3 +87,19 @@ export function delete_product(data) {
     data
   })
 }
+
+export function get_type_list(data) {
+  return request({
+    url: '/som/product/get_type_list',
+    method: 'post',
+    data
+  })
+}
+
+export function add_product(data) {
+  return request({
+    url: '/som/product/add_product',
+    method: 'post',
+    data
+  })
+}
