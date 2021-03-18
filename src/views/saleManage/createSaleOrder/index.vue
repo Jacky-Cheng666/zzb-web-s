@@ -78,9 +78,7 @@
           </el-badge>
         </el-form-item>
         <el-form-item>
-          <el-badge :value="1" class="item" type="primary">
-            <el-button @click="editAddress" type="primary" size="mini">收货地址</el-button>
-          </el-badge>
+          <el-button @click="editAddress" type="primary" size="mini">收货地址</el-button>
         </el-form-item>
       </el-form>
     </fieldset>

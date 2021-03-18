@@ -1,7 +1,7 @@
 <template>
   <div class="addressDialog">
-    <el-dialog center title="收货人地址" :visible.sync="openAddress" width="960px" append-to-body>
-      <!-- <div class="tooltip-title">收货人地址</div> -->
+    <div class="address-tooltip" v-show="openAddress">
+      <div class="tooltip-title">收货人地址</div>
       <div class="tooltip-top">
         <el-input
           style="width: 150px;"
@@ -31,7 +31,7 @@
           <el-button size="mini" type="primary" @click="submitAddress">保 存</el-button>
         </div>
       </div>
-    </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -131,5 +131,9 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style scoped lang="stylus">
+@import '~@/styles/mixin.styl'
+
+.address-tooltip
+  address-tooltip-edit()
 </style>
