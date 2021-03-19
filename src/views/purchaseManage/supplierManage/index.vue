@@ -51,7 +51,7 @@
                     <el-table-column align="center" label="操作" width="120">
                         <template slot-scope="scope" >
                         <el-button size="mini" type="text" icon="el-icon-edit">编辑</el-button>
-                        <el-button size="mini" type="text" icon="el-icon-delete" class="text-danger">删除</el-button>              
+                        <el-button @click="deleteMachine(scope.row.supplier_code)" size="mini" type="text" icon="el-icon-delete" class="text-danger">删除</el-button>              
                         </template>
                     </el-table-column>
                 </el-table>
@@ -78,7 +78,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { get_supplier_list, add_multi_suppliers } from '@/api/purchaseManage'
+import { get_supplier_list, add_multi_suppliers, delete_supplier } from '@/api/purchaseManage'
 export default {
   name: "supplierManage",
   data() {
@@ -405,6 +405,34 @@ export default {
 
     });
     },
+    deleteMachine(machine_code){
+        this.$confirm('确定删除该供应商？', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+        }).then(() => {
+            delete_supplier({
+                access_token:this.token,
+                supplier_code:machine_code,
+            })
+            .then(result => {
+                if (result.code == 0) {
+                    this.$notify({
+                        type: 'success',
+                        title: '操作成功',
+                        message:"删除成功"
+                    });
+                    this.getSupplierList();
+                }
+            })
+
+        }).catch(() => {
+            this.$message({
+            type: 'info',
+            message: '已取消删除'
+            });
+        });
+    },
     changeFun(){},
     handleSizeChange(val) {
         this.pageSize=val
@@ -417,7 +445,87 @@ export default {
     exportTemplate(){
         window.location.href = process.env.VUE_APP_BASEURL + "/template/供应商导入模板.xlsx";
     },
-    exportSupplierList(){}
+    exportSupplierList(){
+        var WorkpieceMap = {}
+        this.workpiece_list.forEach(function(workpiece){
+            WorkpieceMap[workpiece.id] = workpiece.name;
+            })
+
+        const tHeader = ['供应商名称', '简称', '供应商编号', '是否协同', '联系人', '联系人手机','地址', '评级', '营业类型', '工件品类', '代理品牌','账期', '发票类型']
+        let data = [];
+        for(var i in this.allRows){
+            var supplier = this.allRows[i]
+            var workpieceNames = []
+            for(var i in supplier.workpieces){
+            workpieceNames[i] = WorkpieceMap[supplier.workpieces[i]];
+            }
+            var rowItem = [
+            supplier.name,
+            supplier.supplier_name,
+            supplier.code_name,
+            supplier.is_synergy ? '是': '否',
+            supplier.contact,
+            supplier.phone,
+            supplier.address,
+            supplier.star,
+            supplier.business_type==3?'产品贸易,加工制造':(supplier.business_type==0?'产品贸易':'加工制造'),
+            workpieceNames.join(','),
+            supplier.brands ? supplier.brands.join(','):"",
+            supplier.pay_delay + '天',
+            supplier.tax_name
+            ]
+            data.push(rowItem)
+        }
+        data.unshift(tHeader)
+
+        var tmpdata = [];//用来保存转换好的json
+        data.map((row, i) => row.map((v, j) => Object.assign({}, {
+            v: (v ? v : undefined),
+            position: (String.fromCharCode(65 + j)) + (i + 1)
+        }))).reduce((prev, next) => prev.concat(next)).forEach((v, i) => tmpdata[v.position] = {
+            v: v.v
+        });
+
+        var outputPos = Object.keys(tmpdata); //设置区域,比如表格从A1到D10
+        var wb = {
+            SheetNames: ['sheet1'], //保存的表标题
+            Sheets: {
+            'sheet1': Object.assign({},
+                tmpdata, //内容
+                {
+                '!ref': outputPos[0] + ':' + outputPos[outputPos.length - 1] //设置填充区域
+                })
+            }
+        }
+        this.saveAs(new Blob([this.s2ab(XLSX.write(wb, {
+        bookType: 'xlsx',
+        bookSST: false,
+        type: 'binary'
+        }))], {
+            type: ""
+        }), '供应商清单.xlsx');
+    },
+    saveAs(obj, fileName) {
+        let tmpa = document.createElement("a");
+        tmpa.download = fileName;
+        tmpa.href = URL.createObjectURL(obj);
+        tmpa.click();
+        setTimeout(function () {
+          URL.revokeObjectURL(obj);
+        }, 100);
+    },
+    s2ab(s) {
+        if (typeof ArrayBuffer !== 'undefined') {
+            var buf = new ArrayBuffer(s.length);
+            var view = new Uint8Array(buf);
+            for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+            return buf;
+        } else {
+            var buf = new Array(s.length);
+            for (var i = 0; i != s.length; ++i) buf[i] = s.charCodeAt(i) & 0xFF;
+            return buf;
+        }
+    },
   },
 };
 </script>

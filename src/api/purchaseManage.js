@@ -15,3 +15,11 @@ export function add_multi_suppliers(data) {
         data
     })
 }
+
+export function delete_supplier(data) {
+    return request({
+        url: '/corp/company/delete_supplier',
+        method: 'post',
+        data
+    })
+}
