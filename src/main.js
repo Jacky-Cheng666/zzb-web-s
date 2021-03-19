@@ -23,6 +23,7 @@ import backToTop from '@/components/BackToTop'
 Vue.component('Pagination', Pagination)
 Vue.component('RightToolbar', RightToolbar)
 Vue.component('backToTop', backToTop)
+
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
