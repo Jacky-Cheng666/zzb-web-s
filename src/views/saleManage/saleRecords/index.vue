@@ -68,7 +68,7 @@
           <svg-icon style="color:#E34348;font-size:16px;margin-right:4px" icon-class="pdf" />部分退单
         </span>
         <span class="table_tip">
-          <svg-icon style="color:#2A292F;font-size:16px;margin-right:4px" icon-class="pdf" />全部退单或无效
+          <svg-icon style="color:#101010;font-size:16px;margin-right:4px" icon-class="pdf" />全部退单或无效
         </span>
       </el-col>
       
@@ -102,8 +102,8 @@
       <div>
         <!-- <el-button type="primary" icon="el-icon-circle-check" size="mini">所有页全选</el-button> -->
         <el-checkbox style="margin-right: 20px;" v-model="isAllChoose" label="所有页全选" ></el-checkbox>
-        <el-button type="info" @click="handleExportPdf" icon="el-icon-download" size="mini">批量下载附件</el-button>
-        <el-button type="info" @click="handleExportExcel" icon="el-icon-download" size="mini">导出</el-button>
+        <el-button type="primary" @click="handleExportPdf" icon="el-icon-download" size="mini">批量下载附件</el-button>
+        <el-button type="primary" @click="handleExportExcel" icon="el-icon-download" size="mini">导出</el-button>
         <el-tooltip class="item" effect="dark" content="刷新" placement="top">
             <el-button @click="handleRefresh" size="mini" circle icon="el-icon-refresh"/>
         </el-tooltip>
@@ -114,7 +114,7 @@
 </template>
 
 <script>
-import { getAttachOrderList, exportAttachOrders } from '@/api/saleManage'
+import { getAttachOrderList, exportAttachOrders, exportSingleAttachOrder } from '@/api/saleManage'
 
 import { mapGetters } from 'vuex'
 
@@ -340,8 +340,14 @@ export default {
       this.localSearchInfo()
     },
     localSearchInfo(){
+      this.cancelSelect()
       let that = this
       common.handleSearchInfo(that, 1, this.queryParams.searchInputValue, this.queryParams.filterList)
+    },
+    cancelSelect() {
+      if (this.$refs.multipleTable) {
+        this.$refs.multipleTable.clearSelection();
+      }
     },
     resetQuery(){
       this.queryParams.searchInputValue = ''
@@ -411,10 +417,10 @@ export default {
     },
     handleRefresh(){
       getAttachOrderList({
-        "access_token": this.token,
-        "start_date": this.valueTime[0],
-        "end_date": this.valueTime[1],
-        "is_return": false
+        access_token: this.token,
+        start_date: this.valueTime[0],
+        end_date: this.valueTime[1],
+        is_return: false
       }).then(response => {
         if (response.code == 0){
           // this.valueOrderType = 0
@@ -432,40 +438,39 @@ export default {
       })
     },
     downloadSingleAttachOrder(row){
-      // if(row.is_pre_attach){
-      //   this.$message({
-      //     showClose: true,
-      //     type: 'warning',
-      //     message: '预备订单直接归档的属于无效订单，无法查看PDF!'
-      //   });
+      if(row.is_pre_attach){
+        this.$message({
+          showClose: true,
+          type: 'warning',
+          message: '预备订单直接归档的属于无效订单，无法查看PDF!'
+        });
 
-      //   return
-      // }
-      // if(!row.is_synergy){
-      //   this.$alert('非协同订单请进入订单页面，通过打印生成PDF', '提示', {
-      //     confirmButtonText: '确定'
-      //   });
+        return
+      }
 
-      //   return
-      // }
+      if(!row.is_synergy){
+        this.$alert('非协同订单暂无PDF文件！', '提示', {
+          confirmButtonText: '确定'
+        });
 
-      // axios.post('/attachOrder/export_single_attach_order', {
-      //   access_token: this.access_token,
-      //   order_name: row.order_name,
-      //   order_no: row.order_no,
-      //   supplier_code: row.supplier_code,
-      //   supplier_name: row.supplier_name,
-      //   supplier_full_name: row.supplier_full_name,
-      //   purchase_code: row.purchase_code,
-      //   purchase_name: row.purchase_name,
-      //   purchase_full_name: row.purchase_full_name
-      // })
-      // .then(response => {
-      //   let result = response.data
-      //   if (result.code == 0) {
-      //     window.open(result.file_name)
-      //   }
-      // })
+        return
+      }
+
+      exportSingleAttachOrder({
+        access_token: this.token,
+        order_name: row.order_name,
+        order_no: row.order_no,
+        supplier_code: row.supplier_code,
+        supplier_name: row.supplier_name,
+        supplier_full_name: row.supplier_full_name,
+        purchase_code: row.purchase_code,
+        purchase_name: row.purchase_name,
+        purchase_full_name: row.purchase_full_name
+      }).then(response => {
+        if (response.code == 0){
+          window.open(response.file_name)
+        }
+      })
     },
     handleExportPdf(){
       if(this.multipleSelection.length <= 0){
@@ -494,17 +499,19 @@ export default {
         })
         
         exportAttachOrders({
-          "access_token": this.token,
-          "order_list": tmp_order_list,
-          "start_date": this.getTimeShort(this.valueTime[0]),
-          "end_date": this.getTimeShort(this.valueTime[1])
+          access_token: this.token,
+          order_list: tmp_order_list,
+          start_date: this.getTimeShort(this.valueTime[0]),
+          end_date: this.getTimeShort(this.valueTime[1])
         }).then(response => {
           if (response.code == 0){
-            let host = window.location.protocol+"//"+window.location.host
+            // let host = window.location.protocol+"//"+window.location.host
             // let host = 'https://192.168.1.150:4530'
             // let host = 'https://debug.zhizaoband.com:4530'
 
-            let url = host + "/" + result.file_url
+            let host = window.location.protocol+ "//" + response.host + ":" + response.port
+
+            let url = host + "/" + response.file_url
             console.log(url)
             window.open(url)
           }

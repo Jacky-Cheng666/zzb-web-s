@@ -56,6 +56,14 @@ export function exportAttachOrders(data) {
   })
 }
 
+export function exportSingleAttachOrder(data) {
+  return request({
+    url: '/som/attachOrder/export_single_attach_order',
+    method: 'post',
+    data
+  })
+}
+
 export function setPlanOrderReceiveInfo(data) {
   return request({
     url: '/som/planOrder/set_plan_order_receiver_info',
