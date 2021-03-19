@@ -140,7 +140,7 @@ const actions = {
     },
 
     async getAllWorkPieceList({commit}){
-        let result = await get_all_workpiece_list({access_token: store.getters.token})
+        let result = await get_all_workpiece_list({access_token: store.getters.token,require_default: true})
         if(result.code===0){
             commit('SET_WORKPIECE_LIST', result.workpiece_list)
         }
