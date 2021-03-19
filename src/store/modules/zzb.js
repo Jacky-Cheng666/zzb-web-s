@@ -11,7 +11,8 @@ const getDefaultState = () => {
         department_list: getToken('department_list'),
         job_list: getToken('job_list'),
         encode_code: getToken('encode_code'),
-        safeStorageArr: []
+        safeStorageArr: [],
+        product_type_list: []
     }
 }
 const state = getDefaultState()
@@ -124,6 +125,9 @@ const mutations = {
     },
     SET_WORKPIECE_LIST: (state, workpiece_list) => {
         state.workpiece_list = workpiece_list
+    },
+    SET_PRODUCT_TYPE_LIST: (state, product_type_list) => {
+        state.product_type_list = product_type_list
     }
 }
 
@@ -136,7 +140,7 @@ const actions = {
     },
 
     async getAllWorkPieceList({commit}){
-        let result = await get_all_workpiece_list({access_token: store.getters.token})
+        let result = await get_all_workpiece_list({access_token: store.getters.token,require_default: true})
         if(result.code===0){
             commit('SET_WORKPIECE_LIST', result.workpiece_list)
         }

@@ -58,21 +58,24 @@
 
     <pagination :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="handleCurrentChange">
       <div>
-        <el-button type="primary" icon="el-icon-plus" size="mini">新增产品</el-button>
+        <el-button @click="addNewProduct" type="primary" icon="el-icon-plus" size="mini">新增产品</el-button>
         <el-tooltip class="item" effect="dark" content="刷新" placement="top">
             <el-button @click="getProductList" size="mini" circle icon="el-icon-refresh"/>
         </el-tooltip>
       </div>
     </pagination>
 
+    <addProductMask v-model="addForm" @submitAddProductMask="submitAddProductMask" ref="addProductMask" />
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import { get_product_list, delete_product_spec, delete_product } from '@/api/saleManage'
+import { get_product_list, delete_product_spec, delete_product,add_product } from '@/api/saleManage'
+import addProductMask from './components/addProductMask'
 export default {
   name: 'productLibrary',
+  components: {addProductMask},
   data() {
     return {
       queryParams: {
@@ -86,11 +89,19 @@ export default {
       total: 0,
       allRows: [],
       paginationRows: [],
-      currentSpecRow: {}
+      currentSpecRow: {},
+      addForm: {
+        product_name: "",
+        brand: "",
+        unit: "",
+        product_id: [],
+        property_list: []
+      },
+      isEditProduct: false
     }
   },
   computed: {
-    ...mapGetters(['screen_height','token','financial_book_list'])
+    ...mapGetters(['screen_height','token','financial_book_list','product_type_list'])
   },
   created() {
     this.getProductList()
@@ -162,6 +173,57 @@ export default {
               }
             })
         }).catch(()=>{})
+    },
+    addNewProduct(){
+      this.isEditProduct = false;
+      // this.addForm.product_id = [];
+      // this.addForm.product_name = "";
+      // this.addForm.unit = "";
+      // this.addForm.brand = "";
+      // this.addForm.property_list = [];
+      this.$refs.addProductMask.dialogFormVisible = true;
+    },
+    getItem(data, id) {
+      for (let i = 0; i < data.length; i++) {
+        let item = data[i];
+        if (item.id === id) {
+          return item;
+        } else if (item.items && item.items.length > 0) {
+          let result = this.getItem(item.items, id);
+          if (result) {
+            return result;
+          }
+        }
+      }
+      return null;
+    },
+    async submitAddProductMask(){
+      let product_type_id = this.addForm.product_id[this.addForm.product_id.length-1];
+      let product_type_name = this.getItem(this.product_type_list, product_type_id).name;
+      let flag = this.addForm.property_list.some(item=>!item.name||!item.options);
+      if(flag) {
+       return this.$message({type:'warning',message:'属性名称或属性选项不能为空'})
+      }
+      if(!this.isEditProduct){
+        let result = await add_product({
+          access_token: this.token,
+          product_type_id,
+          product_type_name,
+          product_name: this.addForm.product_name,
+          brand: this.addForm.brand,
+          unit: this.addForm.unit,
+          property_list: this.addForm.property_list
+        })
+        if(result.code===0){
+          this.$notify({
+            type: 'success',
+            title: '成功',
+            message: '新增成功'
+          })
+          this.$refs.addProductMask.dialogFormVisible = false;
+          this.getProductList();
+        }
+      }
     },
     handleQuery(){
       let temp = [];

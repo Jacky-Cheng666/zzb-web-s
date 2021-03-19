@@ -284,6 +284,12 @@ export const asyncRoutes = [
         ]
       },
       {
+        path: 'supplierManage',
+        name: 'supplierManage',
+        component: () => import('@/views/purchaseManage/supplierManage/index'),
+        meta: { title: '供应商',icon: 'suppliers',noCache: true}
+      },
+      {
         path: 'purchaseOrder/:order_name',
         name: 'purchaseOrder',
         component: () => import('@/views/purchaseManage/purchaseOrder/index'),

@@ -218,8 +218,10 @@ export default {
 
       },
       handleJoinCompany(){
-        let tmp = corpUrl + '?linkLogin=true'
-        window.location.href = (tmp)
+        this.$message({
+          type: 'warning',
+          message: '注册功能暂未开放'
+        })
       },
       getOtherQuery(query) {
       return Object.keys(query).reduce((acc, cur) => {
