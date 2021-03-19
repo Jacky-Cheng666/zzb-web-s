@@ -123,7 +123,7 @@ export default {
           {title: '新建订单', url:'/purchaseManage/createPurchaseOrder'},
           {title: '我要收货', url:'/purchaseManage/receiveManage'},
           {title: '采购记录', url:'/purchaseManage/purchaseRecords'},
-          {title: '供应商管理', url:''},
+          {title: '供应商管理', url:'/purchaseManage/supplierManage'},
       ],
       manufactureManage: [
         {title: '生产看板', url:''},

@@ -17,6 +17,7 @@ const getters = {
   encode_rule: state => state.zzb.saleBasicInfo.element_code_encode_info,
   encode_code: state => state.zzb.encode_code,
   financial_book_list: state => state.zzb.saleBasicInfo.financial_book_list || [],
-  product_type_list: state => state.zzb.product_type_list || []
+  product_type_list: state => state.zzb.product_type_list || [],
+  workpiece_define_list: state => state.zzb.saleBasicInfo.workpiece_define_list || []
 }
 export default getters

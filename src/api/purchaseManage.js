@@ -23,3 +23,11 @@ export function delete_supplier(data) {
         data
     })
 }
+
+export function set_workpiece_list(data) {
+    return request({
+        url: '/corp/company/set_workpiece_list',
+        method: 'post',
+        data
+    })
+}
