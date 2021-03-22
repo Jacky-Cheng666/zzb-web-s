@@ -65,7 +65,7 @@ export default {
             this.$set(this.workpieces,index,item)
         })
        },
-       submitForm(){
+      submitForm(){
         let list = []
         this.def_workpiece_list.forEach(node => {
           this.workpieces.forEach(id => {
@@ -83,23 +83,31 @@ export default {
           return
         }
 
-        // set_workpiece_list({
-        //     access_token: this.token,
-        //   workpiece_list: list
-        // }).then(result => {
-        //     if (result.code == 0) {
-        //       this.$message({
-        //         type: 'success',
-        //         message: '设置成功!'
-        //       });
+        set_workpiece_list({ access_token: this.token, workpiece_list: list}).then(result => {
+            if (result.code == 0) {
+              this.$message({
+                type: 'success',
+                message: '设置成功!'
+              });
 
-        //       this.$router.push("/purchaseManage/supplierManage")
-        //     }
-        //   })
-        //   .catch(error => {
-        //     console.log(error);
-        //   });
-      }
+              this.$store.dispatch('zzb/getAllWorkPieceList')
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
+      },
+      getAll(){
+        this.workpieces = []
+        this.def_workpiece_list.forEach(node => {
+          if(0 !== node.id) {
+            this.workpieces.push(node.id)
+          }
+        })
+      },
+      getNone(){
+        this.workpieces = []
+      },
     }
 };
 </script>
