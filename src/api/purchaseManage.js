@@ -55,3 +55,11 @@ export function get_brand_list(data) {
         data
     })
 }
+
+export function apply_for_add_supplier(data) {
+    return request({
+        url: '/corp/company/apply_for_add_supplier',
+        method: 'post',
+        data
+    })
+}

@@ -1,6 +1,6 @@
 <template>
   <div class="app-container supplierEdit">
-    <div class="titleEdit">添加供应商</div>
+    <div class="titleEdit">{{!isEdit?"添加供应商":"修改供应商"}}</div>
     <div style="line-height: 22px;margin-left: 80px;">
       <span style="display: inline-block;line-height: 22px;vertical-align: middle;">
         <el-switch style="width:28px" v-model="is_synergy" active-color="#00a0e9" inactive-color="#e3e3e3" @change="changeCheck" />
@@ -49,20 +49,20 @@
           <span class="infoListMsg">{{ruleFormAdd.phone}}</span>
         </el-form-item>
         
-        <el-form-item label="评级" prop="star" :rules="{required: true, message: '评级为必选项', trigger: 'blur'}">
+        <el-form-item style="margin-bottom: 12px" label="评级" prop="star" :rules="{required: true, message: '评级为必选项', trigger: 'blur'}">
           <el-select size="mini" v-model="ruleFormAdd.star"
             style="width: 360px;" clearable placeholder="请选择评级">
             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="发票类型" prop="tax_name" :rules="{required: true, message: '发票类型为必选项',trigger:'blur'}">
+        <el-form-item style="margin-bottom: 12px" label="发票类型" prop="tax_name" :rules="{required: true, message: '发票类型为必选项',trigger:'blur'}">
           <el-row>
             <el-col :span="4" v-for="(item,key) in tax_list" :key="key">
               <el-radio v-model="ruleFormAdd.tax_name" :label="item.tax_name">{{item.tax_name}}</el-radio>
             </el-col>
           </el-row>
         </el-form-item>
-        <el-form-item style="margin-bottom:12px" label="结款周期" prop="pay_delay" :rules="{required: true, message: '结款周期为必填项', trigger: 'blur'}">
+        <el-form-item style="margin-bottom:16px" label="结款周期" prop="pay_delay" :rules="{required: true, message: '结款周期为必填项', trigger: 'blur'}">
           <el-input size="mini" type="number" style="width: 360px;" v-model.number="ruleFormAdd.pay_delay" auto-complete="off" placeholder="结款周期" />&nbsp;&nbsp; 天
         </el-form-item>
 
@@ -117,11 +117,41 @@
         </el-form-item>
       </div>
     </el-form>
+
+
+    <el-dialog @close="dialogClose" width="500px" center title="银行账户" :visible.sync="dialogFormVisible" :modal-append-to-body="false">
+      <el-form :model="form">
+        <el-form-item>
+          <el-select size="small" style="width:150px" v-model="form.type" placeholder="选择类型" disabled>
+            <el-option label="银行账户" value="银行账户"/>
+            <el-option label="现金" value="现金" />
+            <el-option label="企业支付宝" value="企业支付宝" />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <div style="display:flex">
+            <el-input size="small" v-model="form.bank_name" autocomplete="off" placeholder="开户行" />
+          </div>
+        </el-form-item>
+        <el-form-item>
+          <div style="display:flex">
+            <el-input size="small" v-model="form.account_id" autocomplete="off" placeholder="账号" @blur="verifyAccount" />
+          </div>
+        </el-form-item>
+        <el-form-item>
+          <el-input size="small" placeholder="账户名" v-model="form.account_name" autocomplete="off" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button size="mini" @click="dialogFormVisible = false">取 消</el-button>
+        <el-button size="mini" @click="saveBank" type="primary">提 交</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { search_supplier, get_supplier_info } from '@/api/purchaseManage'
+import { search_supplier, get_supplier_info, apply_for_add_supplier } from '@/api/purchaseManage'
 import { mapGetters } from 'vuex'
 export default {
   name: "supplierEdit",
@@ -149,6 +179,8 @@ export default {
       loading: true,
       supplier_list: [],
       isCheckCompany: false,
+      dialogFormVisible: false,
+      form: {},
       ruleFormAdd: {
         pay_delay: "",
         business_type: 3, //0标品 1非标品
@@ -198,11 +230,15 @@ export default {
         },
       ],
       brandMinValue: 1,
-      staff_list: []
+      staff_list: [],
+      bankIndex: 0
     };
   },
   computed: {
-    ...mapGetters(['token','tax_list','workpiece_list','all_brand_list'])
+    ...mapGetters(['token','tax_list','workpiece_list','all_brand_list']),
+    isEdit(){
+      return this.$route.meta.isEdit
+    }
   },
   methods: {
     changeCheck() {},
@@ -247,8 +283,10 @@ export default {
         this.ruleFormAdd.supplier_code = result.supplier_info.company_no;
         this.ruleFormAdd.register_date = result.supplier_info.register_date;
         this.ruleFormAdd.address = result.supplier_info.address;
+        this.staff_list = result.supplier_info.staff_list || [];
         this.ruleFormAdd.contact = result.supplier_info.contact || "";
-        this.staff_list = result.supplier_info.staff_list;
+        this.ruleFormAdd.phone = result.supplier_info.phone || "";
+        this.getContactPhone();
         this.ruleFormAdd.star = result.supplier_info.star? result.supplier_info.star: "";
         this.ruleFormAdd.tax_name = result.supplier_info.tax_name || "";
         this.ruleFormAdd.pay_delay = result.supplier_info.pay_delay || "";
@@ -259,7 +297,7 @@ export default {
             this.$set(item,'access',false)
           }
         })
-        this.ruleFormAdd.bank_account_list = result.supplier_info.bank_account_list.length!=0 && result.supplier_info.bank_account_list.slice(0,1) || [
+        this.ruleFormAdd.bank_account_list =result.supplier_info.bank_account_list && result.supplier_info.bank_account_list.length!=0 && result.supplier_info.bank_account_list.slice(0,1) || [
           {
             type: "银行账户",
             bank_name: "",
@@ -271,10 +309,96 @@ export default {
         this.ruleFormAdd.brands = result.supplier_info.brands ? result.supplier_info.brands: [];
       }
     },
-    getContactPhone(){},
-    editAccount(){},
+    getContactPhone() {
+      this.staff_list.forEach((item) => {
+        if (item.name == this.ruleFormAdd.contact) {
+          this.ruleFormAdd.phone = item.phone;
+        }
+      });
+    },
+    editAccount(row, index) {
+      this.form = this.$DeepClone(row);
+      this.bankIndex = index;
+      this.dialogFormVisible = true;
+    },
     workpiecesChange(){},
-    submitForm(){}
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.handleDiaSureAdd();
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+    async handleDiaSureAdd(){
+      let forData = this.ruleFormAdd;
+      forData.bank_account_list.forEach(item=>{
+        delete item.access;
+      })
+      let arr = [];
+      forData.workpieces.forEach((item) => {
+        arr.push(Number(item));
+      });
+      forData.workpieces = arr;
+      for (var o in forData) {
+        if (typeof forData[o] == "string") {
+          forData[o] = forData[o].trim();
+        }
+      }
+      forData.tax_type = forData.tax_name;
+      let result = await apply_for_add_supplier({
+        access_token: this.token,
+        supplier: forData
+      })
+      if(result.code===0){
+        this.$notify({
+          type: 'success',
+          title: '成功',
+          message: '添加成功'
+        })
+        this.isCheckCompany = false;
+        this.match_name = "";
+      }
+    },
+    verifyAccount() {
+      if (this.form.account_id.length > 24) {
+        this.$message.error("银行卡号位数不能超过24");
+        this.form.account_id = "";
+      }
+    },
+    saveBank(){
+      if (!this.form.bank_name) {
+        this.$message.error("开户行不能为空");
+        return;
+      }
+      if (!this.form.account_id) {
+        this.$message.error("账号不能为空");
+        return;
+      }
+      if (!this.form.account_name) {
+        this.$message.error("账户名不能为空");
+        return;
+      }
+      this.$set( this.form, 'access', true );
+      if(!this.isEdit){
+        // 新增供应商
+        if(this.is_synergy){
+          this.$set(this.ruleFormAdd.bank_account_list, this.bankIndex, this.form);
+          this.$refs.ruleFormAdd.validateField('bank_account_list')
+        }else {
+          this.$set(this.ruleFormAddNo.bank_account_list, this.bankIndex, this.form);
+          this.$refs.ruleFormAddNo.validateField('bank_account_list')
+        }
+      }else{
+        console.log('编辑供应商');
+      }
+      this.dialogFormVisible = false;
+    },
+    dialogClose() {
+      this.form = {};
+    },
   }
 };
 </script>
