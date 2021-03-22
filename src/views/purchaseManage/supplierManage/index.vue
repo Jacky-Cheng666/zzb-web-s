@@ -29,7 +29,9 @@
                 </span>
                 <input type="file" @change="OnFileChanged(this)" ref="imFile" style="display: none" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>
                 <el-button icon="el-icon-upload2" type="info" size="mini" @click="uploadFile">导入供应商</el-button>
-                <el-button style="margin-right: 10px" icon="el-icon-plus" type="primary" size="mini">添加供应商</el-button>
+                <router-link to="/purchaseManage/supplierEdit">
+                    <el-button style="margin:0 10px" icon="el-icon-plus" type="primary" size="mini">添加供应商</el-button>
+                </router-link>
                 <router-link to="/purchaseManage/supplierCategorySet">
                     <el-button icon="el-icon-setting" type="primary" size="mini">分类管理</el-button>
                 </router-link>

@@ -31,3 +31,11 @@ export function set_workpiece_list(data) {
         data
     })
 }
+
+export function search_supplier(data) {
+    return request({
+        url: '/corp/company/search_supplier',
+        method: 'post',
+        data
+    })
+}
