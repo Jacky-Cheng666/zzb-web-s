@@ -1,6 +1,7 @@
 import store from '@/store/index.js'
 import { get_tax_list, get_all_workpiece_list } from '@/api/enterpriseManage'
 import { getSaleBasicInfo } from '@/api/saleManage'
+import { get_brand_list } from '@/api/purchaseManage'
 import { getToken,setToken,removeToken } from '@/utils/auth'
 const getDefaultState = () => {
     return {
@@ -12,7 +13,8 @@ const getDefaultState = () => {
         job_list: getToken('job_list'),
         encode_code: getToken('encode_code'),
         safeStorageArr: [],
-        product_type_list: []
+        product_type_list: [],
+        all_brand_list: []
     }
 }
 const state = getDefaultState()
@@ -128,6 +130,9 @@ const mutations = {
     },
     SET_PRODUCT_TYPE_LIST: (state, product_type_list) => {
         state.product_type_list = product_type_list
+    },
+    SET_BRAND_LIST: (state, brand_list) => {
+        state.all_brand_list = brand_list
     }
 }
 
@@ -149,6 +154,12 @@ const actions = {
         let res = await getSaleBasicInfo({ access_token: store.getters.token })
         if (res.code === 0) {
             commit('setSaleBasicInfo', res)
+        }
+    },
+    async getBrandList({ commit }){
+        let result = await get_brand_list({access_token: store.getters.token})
+        if(result.code===0){
+            commit('SET_BRAND_LIST', result.brand_list)
         }
     }
 }

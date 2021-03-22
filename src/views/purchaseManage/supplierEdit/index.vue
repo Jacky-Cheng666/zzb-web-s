@@ -69,10 +69,10 @@
         <el-form-item style="margin-bottom:12px" label="收款账户" prop="bank_account_list">
           <div class="table-region">
             <el-table stripe :data="ruleFormAdd.bank_account_list" border style="width: 950px">
-              <el-table-column prop="bank_name" label="开户行名称" width="180"></el-table-column>
-              <el-table-column prop="account_name" label="账户名称" ></el-table-column>
-              <el-table-column prop="account_id" label="银行账号" width="180"></el-table-column>
-              <el-table-column prop label="操作" width="80">
+              <el-table-column align="center" prop="bank_name" label="开户行名称" width="180"></el-table-column>
+              <el-table-column align="center" prop="account_name" label="账户名称" ></el-table-column>
+              <el-table-column align="center" prop="account_id" label="银行账号" width="180"></el-table-column>
+              <el-table-column align="center" label="操作" width="80">
                 <template slot-scope="scope">
                   <el-button @click="editAccount(scope.row,scope.$index)" size="mini" type="primary">编辑</el-button>
                 </template>
@@ -81,7 +81,7 @@
           </div>
         </el-form-item>
 
-        <el-form-item label="分类" prop="workpieces" :rules="{required: true, message: '分类为必选项',trigger:'blur'}">
+        <el-form-item style="margin-bottom:12px" label="分类" prop="workpieces" :rules="{required: true, message: '分类为必选项',trigger:'blur'}">
           <el-checkbox-group @change="workpiecesChange" :min="1" v-model="ruleFormAdd.workpieces" style="max-height: 200px;overflow: auto;width: 790px;">
             <el-row style="width: 750px;">
               <el-col style="overflow: hidden;height: 30px;" v-for="(item ,index) in workpiece_list" :key="index" :span="3">
@@ -95,7 +95,7 @@
           :rules="{required: (ruleFormAdd.business_type==0||ruleFormAdd.business_type==3)&&brandMinValue===1, message: '品牌为必选项',trigger:'blur'}">
           <el-checkbox-group :min="brandMinValue" v-model="ruleFormAdd.brands" style="max-height: 300px;overflow: auto;">
             <el-row style="width: 750px;">
-              <el-col style="overflow: hidden;height: 30px;" v-for="(item ,index) in options10" :key="index" :span="4">
+              <el-col style="overflow: hidden;height: 30px;" v-for="(item ,index) in all_brand_list" :key="index" :span="4">
                 <el-checkbox :label="item">{{item}}</el-checkbox>&nbsp;
               </el-col>
             </el-row>
@@ -121,7 +121,7 @@
 </template>
 
 <script>
-import { search_supplier } from '@/api/purchaseManage'
+import { search_supplier, get_supplier_info } from '@/api/purchaseManage'
 import { mapGetters } from 'vuex'
 export default {
   name: "supplierEdit",
@@ -148,7 +148,6 @@ export default {
       match_name: "",
       loading: true,
       supplier_list: [],
-      options10: [],
       isCheckCompany: false,
       ruleFormAdd: {
         pay_delay: "",
@@ -203,7 +202,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['token','tax_list','workpiece_list'])
+    ...mapGetters(['token','tax_list','workpiece_list','all_brand_list'])
   },
   methods: {
     changeCheck() {},
@@ -232,33 +231,45 @@ export default {
         this.match_name = "";
       }
     },
-    handleIconClick(){
-      this.staff_list = [];
-      // let tempObj = {
-      //   pay_delay: "",
-      //   business_type: 3,
-      //   tax_name: 0,
-      //   brands: [],
-      //   supplier_code: "",
-      //   register_date: "",
-      //   name: "",
-      //   nick_name: "",
-      //   legal_person: "",
-      //   legal_person_phone: "",
-      //   address: "",
-      //   contact: "",
-      //   phone: "",
-      //   bank_account_list: [
-      //     {
-      //       type: "银行账户",
-      //       bank_name: "",
-      //       account_name: "",
-      //       account_id: "",
-      //     },
-      //   ],
-      //   workpieces: [],
-      //   star: "",
-      // };
+    async handleIconClick(){
+      // this.staff_list = [];
+      let result = await get_supplier_info({
+        access_token: this.token,
+        supplier_code: this.match_name,
+      })
+      if(result.code===0){
+        this.isCheckCompany = true;
+        this.ruleFormAdd.name = result.supplier_info.name;
+        this.ruleFormAdd.business_type = result.supplier_info.business_type;
+        this.ruleFormAdd.legal_person = result.supplier_info.legal_person_name;
+        this.ruleFormAdd.legal_person_phone = result.supplier_info.legal_person_phone;
+        this.ruleFormAdd.nick_name = result.supplier_info.nick_name;
+        this.ruleFormAdd.supplier_code = result.supplier_info.company_no;
+        this.ruleFormAdd.register_date = result.supplier_info.register_date;
+        this.ruleFormAdd.address = result.supplier_info.address;
+        this.ruleFormAdd.contact = result.supplier_info.contact || "";
+        this.staff_list = result.supplier_info.staff_list;
+        this.ruleFormAdd.star = result.supplier_info.star? result.supplier_info.star: "";
+        this.ruleFormAdd.tax_name = result.supplier_info.tax_name || "";
+        this.ruleFormAdd.pay_delay = result.supplier_info.pay_delay || "";
+        result.supplier_info.bank_account_list&&result.supplier_info.bank_account_list.forEach(item=>{
+          if(item.bank_name&&item.account_name&&item.account_id){
+            this.$set(item,'access',true)
+          }else{
+            this.$set(item,'access',false)
+          }
+        })
+        this.ruleFormAdd.bank_account_list = result.supplier_info.bank_account_list.length!=0 && result.supplier_info.bank_account_list.slice(0,1) || [
+          {
+            type: "银行账户",
+            bank_name: "",
+            account_name: "",
+            account_id: "",
+          },
+        ];
+        this.ruleFormAdd.workpieces = result.supplier_info.workpieces || [];
+        this.ruleFormAdd.brands = result.supplier_info.brands ? result.supplier_info.brands: [];
+      }
     },
     getContactPhone(){},
     editAccount(){},

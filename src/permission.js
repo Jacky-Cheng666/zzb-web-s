@@ -32,6 +32,7 @@ router.beforeEach(async(to, from, next) => {
           store.dispatch('zzb/getTaxList')
           store.dispatch('zzb/getAllWorkPieceList')
           store.dispatch('zzb/getSaleBasicInfo')
+          store.dispatch('zzb/getBrandList')
           next({ ...to, replace: true })
 
         } catch (error) {

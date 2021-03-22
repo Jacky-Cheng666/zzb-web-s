@@ -39,3 +39,19 @@ export function search_supplier(data) {
         data
     })
 }
+
+export function get_supplier_info(data) {
+    return request({
+        url: '/corp/company/get_supplier_info',
+        method: 'post',
+        data
+    })
+}
+
+export function get_brand_list(data) {
+    return request({
+        url: '/corp/company/get_brand_list',
+        method: 'post',
+        data
+    })
+}
