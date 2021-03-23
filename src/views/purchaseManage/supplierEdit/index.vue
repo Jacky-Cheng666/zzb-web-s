@@ -342,7 +342,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['token','tax_list','workpiece_list','all_brand_list']),
+    ...mapGetters(['token','tax_list','workpiece_list','all_brand_list','support_supplier']),
     isEdit(){
       return this.$route.meta.isEdit
     },
@@ -418,7 +418,16 @@ export default {
         }
       }
     },
-    changeCheck() {},
+    changeCheck() {
+      if(!this.support_supplier){
+        this.$message({
+          type: "warning",
+          message: "付费用户才能添加协同供应商，请联系智造帮公司升级为付费账号",
+        });
+
+        this.is_synergy = false;
+      }
+    },
     remoteMethod(query) {
       if (query !== "") {
         this.loading = true;

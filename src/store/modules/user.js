@@ -11,7 +11,8 @@ const getDefaultState = () => {
     profile: getToken('profile'),
     org: getToken('org'),
     company_no: getToken('company_no'),
-    is_admin: getToken('is_admin')
+    is_admin: getToken('is_admin'),
+    userInfo: getToken('userInfo')
   }
 }
 
@@ -41,6 +42,9 @@ const mutations = {
   },
   SET_IS_ADMIN: (state,is_admin) => {
     state.is_admin = is_admin;
+  },
+  SET_USER_INFO: (state, userInfo) => {
+    state.userInfo = userInfo;
   }
 }
 
@@ -57,13 +61,14 @@ const actions = {
           commit('SET_ORG', response.org)
           commit('SET_COMPANY_NO', response.company_no)
           commit('SET_IS_ADMIN', response.is_admin)
-
+          commit('SET_USER_INFO', response)
 
           setToken('zzb_web_s_token',response.access_token)
           setToken('profile', response.profile)
           setToken('org', response.org)
           setToken('company_no', response.company_no)
           setToken('is_admin',response.is_admin)
+          setToken('userInfo', response)
         }
         resolve(response)
       }).catch(error => {
