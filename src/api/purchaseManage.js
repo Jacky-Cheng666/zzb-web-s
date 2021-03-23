@@ -71,3 +71,11 @@ export function check_supplier_name(data) {
         data
     })
 }
+
+export function add_nosynergy_supplier(data) {
+    return request({
+        url: '/corp/company/add_nosynergy_supplier',
+        method: 'post',
+        data
+    })
+}

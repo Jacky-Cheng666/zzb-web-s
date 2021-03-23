@@ -148,7 +148,7 @@
       </el-form-item>
       <el-form-item label="发票类型" prop="tax_name" :rules="{required: true, message: '发票类型为必选项',trigger:'blur'}">
         <el-row>
-          <el-col :span="4" v-for="(item,key) in $store.state.tax_list" :key="key">
+          <el-col :span="4" v-for="(item,key) in tax_list" :key="key">
             <el-radio v-model="ruleFormAddNo.tax_name" :label="item.tax_name">{{item.tax_name}}</el-radio>
           </el-col>
         </el-row>
@@ -160,10 +160,10 @@
       <el-form-item label="收款账户" prop="bank_account_list">
         <div class="table-region">
           <el-table stripe :data="ruleFormAddNo.bank_account_list" border style="width: 950px">
-            <el-table-column prop="bank_name" label="开户行名称" width="180" />
-            <el-table-column prop="account_name" label="账户名称" />
-            <el-table-column prop="account_id" label="银行账号" width="180" />
-            <el-table-column prop label="操作" width="80">
+            <el-table-column align="center" prop="bank_name" label="开户行名称" width="180" />
+            <el-table-column align="center" prop="account_name" label="账户名称" />
+            <el-table-column align="center" prop="account_id" label="银行账号" width="180" />
+            <el-table-column align="center" label="操作" width="80">
               <template slot-scope="scope">
                 <el-button @click="editAccount(scope.row,scope.$index)" size="mini" type="primary">编辑</el-button>
               </template>
@@ -194,10 +194,10 @@
       </el-form-item>
 
       <el-form-item>
-        <router-link to="/supplierManage">
+        <router-link to="/purchaseManage/supplierManage">
           <el-button size="mini">取 消</el-button>
         </router-link>
-        <el-button style="margin-left: 20px;" type="primary" size="mini" @click="submitForm('ruleFormAddNo',true)">保 存</el-button>
+        <el-button style="margin-left: 20px;" type="primary" size="mini" @click="submitForm('ruleFormAddNo')">保 存</el-button>
       </el-form-item>
     </el-form>
 
@@ -234,7 +234,8 @@
 </template>
 
 <script>
-import { search_supplier, get_supplier_info, apply_for_add_supplier, check_supplier_name } from '@/api/purchaseManage'
+import { search_supplier, get_supplier_info, apply_for_add_supplier, check_supplier_name,
+add_nosynergy_supplier } from '@/api/purchaseManage'
 import { mapGetters } from 'vuex'
 export default {
   name: "supplierEdit",
@@ -430,15 +431,15 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.handleDiaSureAdd();
+          this.handleDiaSureAdd(formName);
         } else {
           console.log("error submit!!");
           return false;
         }
       });
     },
-    async handleDiaSureAdd(){
-      let forData = this.ruleFormAdd;
+    async handleDiaSureAdd(formName){
+      let forData = this.is_synergy?this.ruleFormAdd: this.ruleFormAddNo;
       forData.bank_account_list.forEach(item=>{
         delete item.access;
       })
@@ -453,18 +454,25 @@ export default {
         }
       }
       forData.tax_type = forData.tax_name;
-      let result = await apply_for_add_supplier({
-        access_token: this.token,
-        supplier: forData
-      })
+
+      let result = this.is_synergy? await apply_for_add_supplier({ access_token: this.token, supplier: forData}): 
+      await add_nosynergy_supplier({ access_token: this.token, supplier: forData})
+
       if(result.code===0){
         this.$notify({
           type: 'success',
           title: '成功',
           message: '添加成功'
         })
-        this.isCheckCompany = false;
-        this.match_name = "";
+        if(this.is_synergy){
+          this.isCheckCompany = false;
+          this.match_name = "";
+        }else {
+          this.$refs[formName].resetFields();
+          this.isNickNameOk = "";
+          this.isNameOk = "";
+        }
+        
       }
     },
     verifyAccount() {
