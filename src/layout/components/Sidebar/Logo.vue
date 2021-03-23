@@ -2,12 +2,10 @@
   <div class="sidebar-logo-container" :class="{'collapse':collapse}">
     <transition name="sidebarLogoFade">
       <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/">
-        <img v-if="logo" :src="logo" class="sidebar-logo">
-        <h1 v-else class="sidebar-title">{{ title }} </h1>
+        <img src="@/assets/imgs/logo@2x.png" class="sidebar-logo" style="margin-left: 6px;">
       </router-link>
       <router-link v-else key="expand" class="sidebar-logo-link" to="/">
-        <img v-if="logo" :src="logo" class="sidebar-logo">
-        <h1 class="sidebar-title">{{ title }} </h1>
+        <img src="@/assets/imgs/logo@2x.png" class="sidebar-logo">
       </router-link>
     </transition>
   </div>
@@ -24,8 +22,6 @@ export default {
   },
   data() {
     return {
-      title: '边沿服务操作平台',
-      logo: 'https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png'
     }
   }
 }
@@ -55,10 +51,8 @@ export default {
     width: 100%;
 
     & .sidebar-logo {
-      width: 32px;
       height: 32px;
       vertical-align: middle;
-      margin-right: 12px;
     }
 
     & .sidebar-title {

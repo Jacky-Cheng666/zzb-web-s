@@ -1,7 +1,7 @@
 {
   "name": "zzb-web-s",
   "version": "1.0.0",
-  "description": "智造帮边沿服务操作平台",
+  "description": "智造帮-优速版",
   "author": "ChengWeiming",
   "scripts": {
     "dev": "vue-cli-service serve",
