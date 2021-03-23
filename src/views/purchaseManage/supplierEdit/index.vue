@@ -373,7 +373,7 @@ export default {
         access_token: this.token,
         supplier_code
       })
-      console.log('result', result);
+      // console.log('result', result);
       if(result.code===0){
         this.loading = false;
         if(this.is_synergy){
@@ -415,6 +415,21 @@ export default {
             this.ruleFormAddNo[k] = this.$DeepClone(result.supplier_info[k])
             this.ruleFormAddNo.supplier_code = result.supplier_info.company_no;
           }
+          result.supplier_info.bank_account_list&&result.supplier_info.bank_account_list.forEach(item=>{
+            if(item.bank_name&&item.account_name&&item.account_id){
+              this.$set(item,'access',true)
+            }else{
+              this.$set(item,'access',false)
+            }
+          })
+          this.ruleFormAddNo.bank_account_list =result.supplier_info.bank_account_list && result.supplier_info.bank_account_list.length!=0 && result.supplier_info.bank_account_list.slice(0,1) || [
+            {
+              type: "银行账户",
+              bank_name: "",
+              account_name: "",
+              account_id: "",
+            },
+          ];
         }
       }
     },
