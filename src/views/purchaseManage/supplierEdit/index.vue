@@ -21,22 +21,22 @@
       </el-form-item>
 
       <div v-show="isCheckCompany">
-        <el-form-item label="公司全称">
+        <el-form-item style="margin-bottom: 0" label="公司全称">
           <span class="infoListMsg">{{ruleFormAdd.name}}</span>
         </el-form-item>
-        <el-form-item label="公司简称">
+        <el-form-item style="margin-bottom: 0" label="公司简称">
           <span class="infoListMsg">{{ruleFormAdd.nick_name}}</span>
         </el-form-item>
-        <el-form-item label="成立时间">
+        <el-form-item style="margin-bottom: 0" label="成立时间">
           <span class="infoListMsg">{{ruleFormAdd.register_date}}</span>
         </el-form-item>
-        <el-form-item label="公司负责人">
+        <el-form-item style="margin-bottom: 0" label="公司负责人">
           <span class="infoListMsg">{{ruleFormAdd.legal_person}}</span>
         </el-form-item>
-        <el-form-item label="负责人电话">
+        <el-form-item style="margin-bottom: 0" label="负责人电话">
           <span class="infoListMsg">{{ruleFormAdd.legal_person_phone}}</span>
         </el-form-item>
-        <el-form-item label="公司地址">
+        <el-form-item style="margin-bottom: 0" label="公司地址">
           <span class="infoListMsg">{{ruleFormAdd.address}}</span>
         </el-form-item>
   
@@ -45,28 +45,28 @@
             <el-option v-for="item in staff_list" :key="item.name" :label="item.name" :value="item.name" />
           </el-select>
         </el-form-item>
-        <el-form-item label="联系人电话">
+        <el-form-item style="margin-bottom: 0" label="联系人电话">
           <span class="infoListMsg">{{ruleFormAdd.phone}}</span>
         </el-form-item>
         
-        <el-form-item style="margin-bottom: 12px" label="评级" prop="star" :rules="{required: true, message: '评级为必选项', trigger: 'blur'}">
+        <el-form-item label="评级" prop="star" :rules="{required: true, message: '评级为必选项', trigger: 'blur'}">
           <el-select size="mini" v-model="ruleFormAdd.star"
             style="width: 360px;" clearable placeholder="请选择评级">
             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"/>
           </el-select>
         </el-form-item>
-        <el-form-item style="margin-bottom: 12px" label="发票类型" prop="tax_name" :rules="{required: true, message: '发票类型为必选项',trigger:'blur'}">
+        <el-form-item label="发票类型" prop="tax_name" :rules="{required: true, message: '发票类型为必选项',trigger:'blur'}">
           <el-row>
             <el-col :span="4" v-for="(item,key) in tax_list" :key="key">
               <el-radio v-model="ruleFormAdd.tax_name" :label="item.tax_name">{{item.tax_name}}</el-radio>
             </el-col>
           </el-row>
         </el-form-item>
-        <el-form-item style="margin-bottom:16px" label="结款周期" prop="pay_delay" :rules="{required: true, message: '结款周期为必填项', trigger: 'blur'}">
+        <el-form-item style="margin-bottom: 16px" label="结款周期" prop="pay_delay" :rules="{required: true, message: '结款周期为必填项', trigger: 'blur'}">
           <el-input size="mini" type="number" style="width: 360px;" v-model.number="ruleFormAdd.pay_delay" auto-complete="off" placeholder="结款周期" />&nbsp;&nbsp; 天
         </el-form-item>
 
-        <el-form-item style="margin-bottom:12px" label="收款账户" prop="bank_account_list">
+        <el-form-item label="收款账户" prop="bank_account_list">
           <div class="table-region">
             <el-table stripe :data="ruleFormAdd.bank_account_list" border style="width: 950px">
               <el-table-column align="center" prop="bank_name" label="开户行名称" width="180"></el-table-column>
@@ -81,7 +81,7 @@
           </div>
         </el-form-item>
 
-        <el-form-item style="margin-bottom:12px" label="分类" prop="workpieces" :rules="{required: true, message: '分类为必选项',trigger:'blur'}">
+        <el-form-item label="分类" prop="workpieces" :rules="{required: true, message: '分类为必选项',trigger:'blur'}">
           <el-checkbox-group @change="workpiecesChange" :min="1" v-model="ruleFormAdd.workpieces" style="max-height: 200px;overflow: auto;width: 790px;">
             <el-row style="width: 750px;">
               <el-col style="overflow: hidden;height: 30px;" v-for="(item ,index) in workpiece_list" :key="index" :span="3">
@@ -91,7 +91,7 @@
           </el-checkbox-group>
         </el-form-item>
 
-        <el-form-item style="margin-bottom:12px" label="品牌" v-show="ruleFormAdd.business_type==0||ruleFormAdd.business_type==3" prop="brands"
+        <el-form-item label="品牌" v-show="ruleFormAdd.business_type==0||ruleFormAdd.business_type==3" prop="brands"
           :rules="{required: (ruleFormAdd.business_type==0||ruleFormAdd.business_type==3)&&brandMinValue===1, message: '品牌为必选项',trigger:'blur'}">
           <el-checkbox-group :min="brandMinValue" v-model="ruleFormAdd.brands" style="max-height: 300px;overflow: auto;">
             <el-row style="width: 750px;">
@@ -116,6 +116,89 @@
           </router-link>
         </el-form-item>
       </div>
+    </el-form>
+
+    <el-form v-show="!is_synergy" :model="ruleFormAddNo" :rules="rulesAdd" ref="ruleFormAddNo" label-width="120px">
+      <el-form-item label="公司全称" prop="name" :rules="{required: true, message: '公司全称为必填项', }">
+        <el-input size="mini" style="width: 360px;" v-model="ruleFormAddNo.name" auto-complete="off" placeholder="公司全称" />
+        <div style="display: inline-block;width: 150px;line-height:26px;vertical-align: middle;">
+          <i style="margin-left: 10px;color: #2CD03E;font-size:16px" class="el-icon-success" v-show="isNameOk===true"></i>
+          <i style="margin-left: 10px;color: red;font-size:16px" class="el-icon-error" v-show="isNameOk===false"></i>
+          <el-button style="float: right;" type="primary" size="mini" @click="checkOk(ruleFormAddNo.name,true)">检查相同项</el-button>
+        </div>
+      </el-form-item>
+      <el-form-item label="公司简称" prop="nick_name" :rules="{required: true, message: '公司简称为必填项', }">
+        <el-input size="mini" style="width: 360px;" v-model="ruleFormAddNo.nick_name" auto-complete="off" placeholder="公司简称" />
+        <div style="display: inline-block;width: 150px;line-height: 26px;vertical-align: middle;">
+          <i style="margin-left: 10px;color: #2CD03E;font-size:16px" class="el-icon-success" v-show="isNickNameOk===true"></i>
+          <i style="margin-left: 10px;color: red;font-size:16px" class="el-icon-error" v-show="isNickNameOk===false"></i>
+          <el-button style="float: right;" type="primary" size="mini" @click="checkOk(ruleFormAddNo.nick_name,false)">检查相同项</el-button>
+        </div>
+      </el-form-item>
+      <el-form-item label="联系人" prop="contact" :rules="{required: true, message: '联系人为必填项'}">
+        <el-input size="mini" style="width: 360px;" v-model="ruleFormAddNo.contact" auto-complete="off" placeholder="联系人" />
+      </el-form-item>
+      <el-form-item label="联系人电话" prop="phone" :rules="{required: true, message: '联系人电话为必填项', }">
+        <el-input size="mini" style="width: 360px;" v-model="ruleFormAddNo.phone" auto-complete="off" placeholder="手机号码" />
+      </el-form-item>
+      <el-form-item label="评级" prop="star" :rules="{required: true, message: '评级为必选项', trigger: 'blur'}">
+        <el-select size="mini" v-model="ruleFormAddNo.star" style="width: 360px;" clearable placeholder="请选择评级">
+          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="发票类型" prop="tax_name" :rules="{required: true, message: '发票类型为必选项',trigger:'blur'}">
+        <el-row>
+          <el-col :span="4" v-for="(item,key) in $store.state.tax_list" :key="key">
+            <el-radio v-model="ruleFormAddNo.tax_name" :label="item.tax_name">{{item.tax_name}}</el-radio>
+          </el-col>
+        </el-row>
+      </el-form-item>
+      <el-form-item style="margin-bottom: 16px" label="结款周期" prop="pay_delay" :rules="{required: true, message: '结款周期为必填项', trigger: 'blur'}">
+        <el-input size="mini" type="number" style="width: 360px;" v-model.number="ruleFormAddNo.pay_delay" auto-complete="off" placeholder="结款周期"></el-input>&nbsp;&nbsp; 天
+      </el-form-item>
+
+      <el-form-item label="收款账户" prop="bank_account_list">
+        <div class="table-region">
+          <el-table stripe :data="ruleFormAddNo.bank_account_list" border style="width: 950px">
+            <el-table-column prop="bank_name" label="开户行名称" width="180" />
+            <el-table-column prop="account_name" label="账户名称" />
+            <el-table-column prop="account_id" label="银行账号" width="180" />
+            <el-table-column prop label="操作" width="80">
+              <template slot-scope="scope">
+                <el-button @click="editAccount(scope.row,scope.$index)" size="mini" type="primary">编辑</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+      </el-form-item>
+
+      <el-form-item label="分类" prop="workpieces" :rules="{required: true, message: '分类为必选项',}">
+        <el-checkbox-group @change="workpiecesChange" :min="1" v-model="ruleFormAddNo.workpieces" style="max-height: 200px;overflow: auto;width:790px;">
+          <el-row style="width: 750px;">
+            <el-col style="overflow: hidden;height: 30px;" v-for="(item ,index) in workpiece_list" :key="index" :span="3">
+              <el-checkbox :label="item.id">{{item.name}}</el-checkbox>&nbsp;
+            </el-col>
+          </el-row>
+        </el-checkbox-group>
+      </el-form-item>
+
+      <el-form-item label="品牌" v-show="ruleFormAddNo.business_type==0||ruleFormAddNo.business_type==3" prop="brands"
+        :rules="{required: (ruleFormAddNo.business_type==0||ruleFormAddNo.business_type==3)&&brandMinValue===1, message: '品牌为必选项'}">
+        <el-checkbox-group :min="brandMinValue" v-model="ruleFormAddNo.brands" style="max-height: 300px;overflow: auto;">
+          <el-row style="width: 750px;">
+            <el-col style="overflow: hidden;height: 30px;" v-for="(item ,index) in all_brand_list" :key="index" :span="4">
+              <el-checkbox :label="item">{{item}}</el-checkbox>&nbsp;
+            </el-col>
+          </el-row>
+        </el-checkbox-group>
+      </el-form-item>
+
+      <el-form-item>
+        <router-link to="/supplierManage">
+          <el-button size="mini">取 消</el-button>
+        </router-link>
+        <el-button style="margin-left: 20px;" type="primary" size="mini" @click="submitForm('ruleFormAddNo',true)">保 存</el-button>
+      </el-form-item>
     </el-form>
 
 
@@ -151,7 +234,7 @@
 </template>
 
 <script>
-import { search_supplier, get_supplier_info, apply_for_add_supplier } from '@/api/purchaseManage'
+import { search_supplier, get_supplier_info, apply_for_add_supplier, check_supplier_name } from '@/api/purchaseManage'
 import { mapGetters } from 'vuex'
 export default {
   name: "supplierEdit",
@@ -169,7 +252,6 @@ export default {
       if (!valueIndex.access) {
         callback(new Error('收款账户信息不能为空'));
       } else {
-        console.log('我执行了');
         callback();
       }
     };
@@ -207,6 +289,29 @@ export default {
         brands: [],
         star: "",
       },
+      ruleFormAddNo: {
+        pay_delay: "",
+        tax_name: 0,
+        business_type: 3, //0标品 1非标品
+        name: "",
+        nick_name: "",
+        contact: "",
+        phone: "",
+        bank_account_list: [
+          {
+            access: false,
+            type: "银行账户",
+            bank_name: "",
+            account_name: "",
+            account_id: "",
+          },
+        ],
+        workpieces: [],
+        brands: [],
+        star: "",
+      },
+      isNameOk: "",
+      isNickNameOk: "",
       rulesAdd: {
         name: [{ validator: rackNoCheck }],
         bank_account_list: [{ validator: validateBankAccount, required: true, message: '收款账户为必填项'}]
@@ -399,6 +504,26 @@ export default {
     dialogClose() {
       this.form = {};
     },
+    checkOk(name, key) {
+      if (!name) {
+        this.$message({
+          type: "warning",
+          message: "请输入公司名字!",
+        });
+        return;
+      }
+      check_supplier_name({
+        access_token: this.token,
+        name: name,
+        is_fullname: key
+      }).then((result) => {
+        if (result.code == 0) {
+          key ? (this.isNameOk = true) : (this.isNickNameOk = true);
+        } else {
+          key ? (this.isNameOk = false) : (this.isNickNameOk = false);
+        }
+      });
+    },
   }
 };
 </script>
@@ -417,6 +542,9 @@ export default {
   .infoListMsg {
     color: #333333;
     font-weight: bold;
+  }
+  .el-form-item {
+    margin-bottom: 12px;
   }
  
 }

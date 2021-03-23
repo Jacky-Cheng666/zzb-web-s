@@ -63,3 +63,11 @@ export function apply_for_add_supplier(data) {
         data
     })
 }
+
+export function check_supplier_name(data) {
+    return request({
+        url: '/corp/company/check_supplier_name',
+        method: 'post',
+        data
+    })
+}
