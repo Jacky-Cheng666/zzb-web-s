@@ -376,39 +376,46 @@ export default {
       console.log('result', result);
       if(result.code===0){
         this.loading = false;
-        this.isCheckCompany = true;
-        this.ruleFormAdd.name = result.supplier_info.name;
-        this.ruleFormAdd.business_type = result.supplier_info.business_type;
-        this.ruleFormAdd.legal_person = result.supplier_info.legal_person_name;
-        this.ruleFormAdd.legal_person_phone = result.supplier_info.legal_person_phone;
-        this.ruleFormAdd.nick_name = result.supplier_info.nick_name;
-        this.ruleFormAdd.supplier_code = result.supplier_info.company_no;
-        this.ruleFormAdd.register_date = result.supplier_info.register_date;
-        this.ruleFormAdd.address = result.supplier_info.address;
-        this.staff_list = result.supplier_info.staff_list || [];
-        this.ruleFormAdd.contact = result.supplier_info.contact || "";
-        this.ruleFormAdd.phone = result.supplier_info.phone || "";
-        this.getContactPhone();
-        this.ruleFormAdd.star = result.supplier_info.star? result.supplier_info.star: "";
-        this.ruleFormAdd.tax_name = result.supplier_info.tax_name || "";
-        this.ruleFormAdd.pay_delay = result.supplier_info.pay_delay || "";
-        result.supplier_info.bank_account_list&&result.supplier_info.bank_account_list.forEach(item=>{
-          if(item.bank_name&&item.account_name&&item.account_id){
-            this.$set(item,'access',true)
-          }else{
-            this.$set(item,'access',false)
+        if(this.is_synergy){
+          this.isCheckCompany = true;
+          this.ruleFormAdd.name = result.supplier_info.name;
+          this.ruleFormAdd.business_type = result.supplier_info.business_type;
+          this.ruleFormAdd.legal_person = result.supplier_info.legal_person_name;
+          this.ruleFormAdd.legal_person_phone = result.supplier_info.legal_person_phone;
+          this.ruleFormAdd.nick_name = result.supplier_info.nick_name;
+          this.ruleFormAdd.supplier_code = result.supplier_info.company_no;
+          this.ruleFormAdd.register_date = result.supplier_info.register_date;
+          this.ruleFormAdd.address = result.supplier_info.address;
+          this.staff_list = result.supplier_info.staff_list || [];
+          this.ruleFormAdd.contact = result.supplier_info.contact || "";
+          this.ruleFormAdd.phone = result.supplier_info.phone || "";
+          this.getContactPhone();
+          this.ruleFormAdd.star = result.supplier_info.star? result.supplier_info.star: "";
+          this.ruleFormAdd.tax_name = result.supplier_info.tax_name || "";
+          this.ruleFormAdd.pay_delay = result.supplier_info.pay_delay || "";
+          result.supplier_info.bank_account_list&&result.supplier_info.bank_account_list.forEach(item=>{
+            if(item.bank_name&&item.account_name&&item.account_id){
+              this.$set(item,'access',true)
+            }else{
+              this.$set(item,'access',false)
+            }
+          })
+          this.ruleFormAdd.bank_account_list =result.supplier_info.bank_account_list && result.supplier_info.bank_account_list.length!=0 && result.supplier_info.bank_account_list.slice(0,1) || [
+            {
+              type: "银行账户",
+              bank_name: "",
+              account_name: "",
+              account_id: "",
+            },
+          ];
+          this.ruleFormAdd.workpieces = result.supplier_info.workpieces || [];
+          this.ruleFormAdd.brands = result.supplier_info.brands ? result.supplier_info.brands: [];
+        }else {
+          for (const k in this.ruleFormAddNo) {
+            this.ruleFormAddNo[k] = this.$DeepClone(result.supplier_info[k])
+            this.ruleFormAddNo.supplier_code = result.supplier_info.company_no;
           }
-        })
-        this.ruleFormAdd.bank_account_list =result.supplier_info.bank_account_list && result.supplier_info.bank_account_list.length!=0 && result.supplier_info.bank_account_list.slice(0,1) || [
-          {
-            type: "银行账户",
-            bank_name: "",
-            account_name: "",
-            account_id: "",
-          },
-        ];
-        this.ruleFormAdd.workpieces = result.supplier_info.workpieces || [];
-        this.ruleFormAdd.brands = result.supplier_info.brands ? result.supplier_info.brands: [];
+        }
       }
     },
     changeCheck() {},
