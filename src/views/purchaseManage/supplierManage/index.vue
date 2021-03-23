@@ -40,12 +40,12 @@
             <div class="table_container">
                 <el-table v-loading="loading" element-loading-text="加载中..." ref="multipleTable" :data="rows" stripe :height="500" @selection-change="changeFun" style="width: 100%">
                     <el-table-column align="center" type="selection" width="55" />
-                    <el-table-column align="center" label="供应商全称" show-overflow-tooltip width="545">
+                    <el-table-column align="center" label="供应商全称" show-overflow-tooltip>
                         <template slot-scope="scope" >
                             <img style="float: left;margin-left: 10px;width: 20px;height: 20px;" src="@/assets/imgs/company_icon.png" alt="" v-show="scope.row.is_synergy">{{scope.row.name}}
                         </template>
                     </el-table-column>
-                    <el-table-column align="center" label="供应商简称" prop="supplier_name" show-overflow-tooltip/>
+                    <el-table-column align="center" label="供应商简称" prop="supplier_name" show-overflow-tooltip width="130"/>
                     <el-table-column align="center" label="编号" prop="code_name" show-overflow-tooltip  width="130"/>
                     <el-table-column align="center" prop="contact" label="联系人" show-overflow-tooltip  width="130"/>
                     <el-table-column align="center" prop="phone" label="联系人手机" show-overflow-tooltip width="130"/>
