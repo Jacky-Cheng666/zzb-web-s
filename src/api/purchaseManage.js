@@ -79,3 +79,19 @@ export function add_nosynergy_supplier(data) {
         data
     })
 }
+
+export function edit_supplier(data) {
+    return request({
+        url: '/corp/company/edit_supplier',
+        method: 'post',
+        data
+    })
+}
+
+export function edit_nosynergy_supplier(data) {
+    return request({
+        url: '/corp/company/edit_nosynergy_supplier',
+        method: 'post',
+        data
+    })
+}

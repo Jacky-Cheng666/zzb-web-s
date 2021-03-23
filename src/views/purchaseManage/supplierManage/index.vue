@@ -29,7 +29,7 @@
                 </span>
                 <input type="file" @change="OnFileChanged(this)" ref="imFile" style="display: none" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>
                 <el-button icon="el-icon-upload2" type="info" size="mini" @click="uploadFile">导入供应商</el-button>
-                <router-link to="/purchaseManage/supplierEdit">
+                <router-link to="/purchaseManage/supplierAdd">
                     <el-button style="margin:0 10px" icon="el-icon-plus" type="primary" size="mini">添加供应商</el-button>
                 </router-link>
                 <router-link to="/purchaseManage/supplierCategorySet">
@@ -54,7 +54,7 @@
                     </el-table-column>
                     <el-table-column align="center" label="操作" width="120">
                         <template slot-scope="scope" >
-                        <el-button size="mini" type="text" icon="el-icon-edit">编辑</el-button>
+                        <el-button @click="toSupplierEdit(scope.row)" size="mini" type="text" icon="el-icon-edit">编辑</el-button>
                         <el-button @click="deleteMachine(scope.row.supplier_code)" size="mini" type="text" icon="el-icon-delete" class="text-danger">删除</el-button>              
                         </template>
                     </el-table-column>
@@ -530,6 +530,12 @@ export default {
             return buf;
         }
     },
+    toSupplierEdit(row){
+        if(row.supplier_code){
+            this.$router.push('/purchaseManage/supplierEdit?supplier_code='+ row.supplier_code+'&synergy='+ row.is_synergy)
+        }
+        
+    }
   },
 };
 </script>

@@ -1,17 +1,18 @@
 <template>
-  <div class="app-container supplierEdit">
+  <div class="app-container supplierEdit" v-loading="loading" element-loading-text="加载中...">
     <div class="titleEdit">{{!isEdit?"添加供应商":"修改供应商"}}</div>
     <div style="line-height: 22px;margin-left: 80px;">
-      <span style="display: inline-block;line-height: 22px;vertical-align: middle;">
+      <span v-if="!isEdit" style="display: inline-block;line-height: 22px;vertical-align: middle;">
         <el-switch style="width:28px" v-model="is_synergy" active-color="#00a0e9" inactive-color="#e3e3e3" @change="changeCheck" />
       </span>
-      <span style="line-height:22px;vertical-align: middle;margin-left: 10px;font-weight: bold;font-size: 14px;color: #333333;">协同供应商</span>
+      <div v-else style="width:28px;height:20px;display:inline-block"></div>
+      <span style="line-height:22px;vertical-align: middle;margin-left: 10px;font-weight: bold;font-size: 14px;color: #333333;">{{is_synergy?'协同供应商':'非协同供应商'}}</span>
       <div style="margin-left: 40px;margin-bottom: 10px;">
         <span style="font-size: 12px;font-weight: bold;color: #999999;">非协同供应商是不需要对方注册智造帮账号协同办公的一类供应商</span>
       </div>
     </div>
     <el-form v-show="is_synergy" :model="ruleFormAdd" :rules="rulesAdd" ref="ruleFormAdd" label-width="120px">
-      <el-form-item>
+      <el-form-item v-if="!isEdit">
         <el-select size="mini" v-model="match_name" clearable filterable remote style="width: 360px;margin-bottom: 10px;" placeholder="搜索供应商名称" :remote-method="remoteMethod" @change="handleIconClick" :loading="loading">
           <el-option v-for="item in supplier_list" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
@@ -24,8 +25,9 @@
         <el-form-item style="margin-bottom: 0" label="公司全称">
           <span class="infoListMsg">{{ruleFormAdd.name}}</span>
         </el-form-item>
-        <el-form-item style="margin-bottom: 0" label="公司简称">
-          <span class="infoListMsg">{{ruleFormAdd.nick_name}}</span>
+        <el-form-item style="margin-bottom: 0" label="公司简称" prop="nick_name" :rules="{required: true, message: '公司简称为必填项'}">
+          <span v-if="!isEdit" class="infoListMsg">{{ruleFormAdd.nick_name}}</span>
+          <el-input v-else size="mini" style="width: 360px;" v-model="ruleFormAdd.nick_name" auto-complete="off" placeholder="公司简称" />
         </el-form-item>
         <el-form-item style="margin-bottom: 0" label="成立时间">
           <span class="infoListMsg">{{ruleFormAdd.register_date}}</span>
@@ -109,7 +111,7 @@
           <el-button style="margin-left: 20px;" type="primary" size="mini" @click="submitForm('ruleFormAdd',true)">保 存</el-button>
         </el-form-item>
       </div>
-      <div v-show="!isCheckCompany">
+      <div v-show="!isCheckCompany&&!isEdit">
         <el-form-item>
           <router-link to="/purchaseManage/supplierManage">
             <el-button size="mini">取 消</el-button>
@@ -121,7 +123,7 @@
     <el-form v-show="!is_synergy" :model="ruleFormAddNo" :rules="rulesAdd" ref="ruleFormAddNo" label-width="120px">
       <el-form-item label="公司全称" prop="name" :rules="{required: true, message: '公司全称为必填项', }">
         <el-input size="mini" style="width: 360px;" v-model="ruleFormAddNo.name" auto-complete="off" placeholder="公司全称" />
-        <div style="display: inline-block;width: 150px;line-height:26px;vertical-align: middle;">
+        <div style="display: inline-block;width: 150px;line-height:26px;vertical-align: middle;" v-if="!this.isEdit">
           <i style="margin-left: 10px;color: #2CD03E;font-size:16px" class="el-icon-success" v-show="isNameOk===true"></i>
           <i style="margin-left: 10px;color: red;font-size:16px" class="el-icon-error" v-show="isNameOk===false"></i>
           <el-button style="float: right;" type="primary" size="mini" @click="checkOk(ruleFormAddNo.name,true)">检查相同项</el-button>
@@ -129,7 +131,7 @@
       </el-form-item>
       <el-form-item label="公司简称" prop="nick_name" :rules="{required: true, message: '公司简称为必填项', }">
         <el-input size="mini" style="width: 360px;" v-model="ruleFormAddNo.nick_name" auto-complete="off" placeholder="公司简称" />
-        <div style="display: inline-block;width: 150px;line-height: 26px;vertical-align: middle;">
+        <div style="display: inline-block;width: 150px;line-height: 26px;vertical-align: middle;" v-if="!this.isEdit">
           <i style="margin-left: 10px;color: #2CD03E;font-size:16px" class="el-icon-success" v-show="isNickNameOk===true"></i>
           <i style="margin-left: 10px;color: red;font-size:16px" class="el-icon-error" v-show="isNickNameOk===false"></i>
           <el-button style="float: right;" type="primary" size="mini" @click="checkOk(ruleFormAddNo.nick_name,false)">检查相同项</el-button>
@@ -235,7 +237,7 @@
 
 <script>
 import { search_supplier, get_supplier_info, apply_for_add_supplier, check_supplier_name,
-add_nosynergy_supplier } from '@/api/purchaseManage'
+add_nosynergy_supplier ,edit_supplier, edit_nosynergy_supplier } from '@/api/purchaseManage'
 import { mapGetters } from 'vuex'
 export default {
   name: "supplierEdit",
@@ -248,7 +250,6 @@ export default {
       }
     };
     var validateBankAccount = (rule, value, callback) => {
-      console.log('value',value)
       let valueIndex = value[0]?value[0]:{}
       if (!valueIndex.access) {
         callback(new Error('收款账户信息不能为空'));
@@ -257,9 +258,9 @@ export default {
       }
     };
     return {
+      loading: false,
       is_synergy: false,
       match_name: "",
-      loading: true,
       supplier_list: [],
       isCheckCompany: false,
       dialogFormVisible: false,
@@ -344,9 +345,72 @@ export default {
     ...mapGetters(['token','tax_list','workpiece_list','all_brand_list']),
     isEdit(){
       return this.$route.meta.isEdit
+    },
+    synergy(){
+      const synergy = this.$route.query.synergy
+      return synergy==='true'?true:false
+    }
+  },
+  watch: {
+    synergy: {
+      deep: true,
+      immediate: true,
+      handler(newV,oldV){
+        this.is_synergy = newV
+      }
+    }
+  },
+  created() {
+    if(this.isEdit){
+      this.getSupplierInfo()
     }
   },
   methods: {
+    async getSupplierInfo(){
+      const { supplier_code } = this.$route.query
+      this.loading = true;
+      let result = await get_supplier_info({
+        access_token: this.token,
+        supplier_code
+      })
+      console.log('result', result);
+      if(result.code===0){
+        this.loading = false;
+        this.isCheckCompany = true;
+        this.ruleFormAdd.name = result.supplier_info.name;
+        this.ruleFormAdd.business_type = result.supplier_info.business_type;
+        this.ruleFormAdd.legal_person = result.supplier_info.legal_person_name;
+        this.ruleFormAdd.legal_person_phone = result.supplier_info.legal_person_phone;
+        this.ruleFormAdd.nick_name = result.supplier_info.nick_name;
+        this.ruleFormAdd.supplier_code = result.supplier_info.company_no;
+        this.ruleFormAdd.register_date = result.supplier_info.register_date;
+        this.ruleFormAdd.address = result.supplier_info.address;
+        this.staff_list = result.supplier_info.staff_list || [];
+        this.ruleFormAdd.contact = result.supplier_info.contact || "";
+        this.ruleFormAdd.phone = result.supplier_info.phone || "";
+        this.getContactPhone();
+        this.ruleFormAdd.star = result.supplier_info.star? result.supplier_info.star: "";
+        this.ruleFormAdd.tax_name = result.supplier_info.tax_name || "";
+        this.ruleFormAdd.pay_delay = result.supplier_info.pay_delay || "";
+        result.supplier_info.bank_account_list&&result.supplier_info.bank_account_list.forEach(item=>{
+          if(item.bank_name&&item.account_name&&item.account_id){
+            this.$set(item,'access',true)
+          }else{
+            this.$set(item,'access',false)
+          }
+        })
+        this.ruleFormAdd.bank_account_list =result.supplier_info.bank_account_list && result.supplier_info.bank_account_list.length!=0 && result.supplier_info.bank_account_list.slice(0,1) || [
+          {
+            type: "银行账户",
+            bank_name: "",
+            account_name: "",
+            account_id: "",
+          },
+        ];
+        this.ruleFormAdd.workpieces = result.supplier_info.workpieces || [];
+        this.ruleFormAdd.brands = result.supplier_info.brands ? result.supplier_info.brands: [];
+      }
+    },
     changeCheck() {},
     remoteMethod(query) {
       if (query !== "") {
@@ -374,12 +438,13 @@ export default {
       }
     },
     async handleIconClick(){
-      // this.staff_list = [];
+      this.loading = true;
       let result = await get_supplier_info({
         access_token: this.token,
         supplier_code: this.match_name,
       })
       if(result.code===0){
+        this.loading = false;
         this.isCheckCompany = true;
         this.ruleFormAdd.name = result.supplier_info.name;
         this.ruleFormAdd.business_type = result.supplier_info.business_type;
@@ -454,25 +519,33 @@ export default {
         }
       }
       forData.tax_type = forData.tax_name;
-
-      let result = this.is_synergy? await apply_for_add_supplier({ access_token: this.token, supplier: forData}): 
-      await add_nosynergy_supplier({ access_token: this.token, supplier: forData})
-
+      let result;
+      if(!this.isEdit){
+        result = this.is_synergy? await apply_for_add_supplier({ access_token: this.token, supplier: forData}): 
+        await add_nosynergy_supplier({ access_token: this.token, supplier: forData})
+      }else {
+        result = this.is_synergy? await edit_supplier({ access_token: this.token, supplier: forData}): 
+        await edit_nosynergy_supplier({ access_token: this.token, supplier: forData})
+      }
+      
       if(result.code===0){
         this.$notify({
           type: 'success',
           title: '成功',
-          message: '添加成功'
+          message: '操作成功'
         })
-        if(this.is_synergy){
-          this.isCheckCompany = false;
-          this.match_name = "";
-        }else {
-          this.$refs[formName].resetFields();
-          this.isNickNameOk = "";
-          this.isNameOk = "";
+        if(!this.isEdit){
+          if(this.is_synergy){
+            this.isCheckCompany = false;
+            this.match_name = "";
+          }else {
+            this.$refs[formName].resetFields();
+            this.isNickNameOk = "";
+            this.isNameOk = "";
+          }
+        }else{
+          this.getSupplierInfo();
         }
-        
       }
     },
     verifyAccount() {
@@ -505,7 +578,13 @@ export default {
           this.$refs.ruleFormAddNo.validateField('bank_account_list')
         }
       }else{
-        console.log('编辑供应商');
+        if(this.is_synergy){
+          this.$set(this.ruleFormAdd.bank_account_list, this.bankIndex, this.form);
+          this.$refs.ruleFormAdd.validateField('bank_account_list')
+        }else {
+          this.$set(this.ruleFormAddNo.bank_account_list, this.bankIndex, this.form);
+          this.$refs.ruleFormAddNo.validateField('bank_account_list')
+        }
       }
       this.dialogFormVisible = false;
     },

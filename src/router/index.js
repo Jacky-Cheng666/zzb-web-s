@@ -297,10 +297,17 @@ export const asyncRoutes = [
         hidden: true
       },
       {
+        path: 'supplierAdd',
+        name: 'supplierAdd',
+        component: () => import('@/views/purchaseManage/supplierEdit/index'),
+        meta: { title: '添加供应商', activeMenu: '/purchaseManage/supplierManage'},
+        hidden: true
+      },
+      {
         path: 'supplierEdit',
         name: 'supplierEdit',
         component: () => import('@/views/purchaseManage/supplierEdit/index'),
-        meta: { title: '添加供应商'},
+        meta: { title: '修改供应商', activeMenu: '/purchaseManage/supplierManage', isEdit: true, noCache: true},
         hidden: true
       },
       {
