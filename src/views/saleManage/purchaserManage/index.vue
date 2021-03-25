@@ -121,7 +121,12 @@ export default {
         })
       }).catch(() => {});
     },
-    handleCurrentChange(){},
+    handleCurrentChange({page:currentPage,limit: pageSize}){
+      this.tableData = this.paginationRows.slice(
+        pageSize * (currentPage - 1),
+        pageSize * currentPage
+      );
+    },
     handleRefresh(){
       this.getPurchaserList();
     },
