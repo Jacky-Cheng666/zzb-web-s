@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container supplierEdit" v-loading="loading" element-loading-text="加载中...">
+  <div class="app-container supplierEdit">
     <div class="titleEdit">{{!isEdit?"添加供应商":"修改供应商"}}</div>
     <div style="line-height: 22px;margin-left: 80px;">
       <span v-if="!isEdit" style="display: inline-block;line-height: 22px;vertical-align: middle;">
@@ -108,7 +108,7 @@
           <router-link to="/purchaseManage/supplierManage">
             <el-button size="mini">取 消</el-button>
           </router-link>
-          <el-button style="margin-left: 20px;" type="primary" size="mini" @click="submitForm('ruleFormAdd',true)">保 存</el-button>
+          <el-button :loading="saveLoading" style="margin-left: 20px;" type="primary" size="mini" @click="submitForm('ruleFormAdd',true)">保 存</el-button>
         </el-form-item>
       </div>
       <div v-show="!isCheckCompany&&!isEdit">
@@ -199,7 +199,7 @@
         <router-link to="/purchaseManage/supplierManage">
           <el-button size="mini">取 消</el-button>
         </router-link>
-        <el-button style="margin-left: 20px;" type="primary" size="mini" @click="submitForm('ruleFormAddNo')">保 存</el-button>
+        <el-button :loading="saveLoading" style="margin-left: 20px;" type="primary" size="mini" @click="submitForm('ruleFormAddNo')">保 存</el-button>
       </el-form-item>
     </el-form>
 
@@ -338,7 +338,8 @@ export default {
       ],
       brandMinValue: 1,
       staff_list: [],
-      bankIndex: 0
+      bankIndex: 0,
+      saveLoading: false
     };
   },
   computed: {
@@ -368,14 +369,12 @@ export default {
   methods: {
     async getSupplierInfo(){
       const { supplier_code } = this.$route.query
-      this.loading = true;
       let result = await get_supplier_info({
         access_token: this.token,
         supplier_code
       })
       // console.log('result', result);
       if(result.code===0){
-        this.loading = false;
         if(this.is_synergy){
           this.isCheckCompany = true;
           this.ruleFormAdd.name = result.supplier_info.name;
@@ -551,6 +550,7 @@ export default {
       }
       forData.tax_type = forData.tax_name;
       let result;
+      this.saveLoading = true;
       if(!this.isEdit){
         result = this.is_synergy? await apply_for_add_supplier({ access_token: this.token, supplier: forData}): 
         await add_nosynergy_supplier({ access_token: this.token, supplier: forData})
@@ -560,6 +560,7 @@ export default {
       }
       
       if(result.code===0){
+        this.saveLoading = false;
         this.$notify({
           type: 'success',
           title: '成功',
