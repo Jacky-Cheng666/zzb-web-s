@@ -174,6 +174,13 @@ export const asyncRoutes = [
         hidden: true
       },
       {
+        path: 'purchaserAdd',
+        name: 'purchaserAdd',
+        component: () => import('@/views/saleManage/purchaserEdit/index'),
+        meta: { title: '添加客户',activeMenu: '/saleManage/purchaserManage'},
+        hidden: true
+      },
+      {
         path: 'saleOrder/:order_name/:order_no',
         name: 'saleOrder',
         component: () => import('@/views/saleManage/saleOrder/index'),

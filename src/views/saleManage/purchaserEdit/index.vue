@@ -1,7 +1,7 @@
 <template>
   <div class="app-container purchaserEdit" v-loading="loading" element-loading-text="加载中...">
     <div class="titleEdit">
-      {{ is_synergy ? "修改协同采购商" : "修改非协同采购商" }}
+      {{ !isEdit ? "添加非协同采购商": is_synergy ? "修改协同采购商" : "修改非协同采购商" }}
     </div>
     <el-form v-show="is_synergy" :model="ruleFormSynergy" ref="ruleFormSynergy" label-width="120px">
       <el-form-item label="公司全称">
@@ -231,7 +231,6 @@ export default {
         delete purchaser.company_no;
         result = await edit_purchaser({access_token: this.token, purchaser})
       }else {
-        // 修改非协同
         result = await edit_no_synergy_purchaser({access_token: this.token,purchaser})
       }
       if(result.code===0){

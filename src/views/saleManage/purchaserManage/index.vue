@@ -37,7 +37,9 @@
 
     <pagination :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="handleCurrentChange">
       <div>
-        <el-button type="primary" icon="el-icon-plus" size="mini">添加非协同采购商</el-button>
+        <router-link to="/saleManage/purchaserAdd">
+          <el-button type="primary" icon="el-icon-plus" size="mini">添加非协同采购商</el-button>
+        </router-link>
         <el-tooltip class="item" effect="dark" content="刷新" placement="top">
             <el-button @click="handleRefresh" size="mini" circle icon="el-icon-refresh"/>
         </el-tooltip>
