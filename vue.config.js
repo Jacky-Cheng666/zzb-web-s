@@ -33,7 +33,7 @@ module.exports = {
     port: port,
     open: true,
     host: '0.0.0.0',
-    https: true,
+    https: false,
     overlay: {
       warnings: false,
       errors: true

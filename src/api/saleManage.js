@@ -111,3 +111,19 @@ export function add_product(data) {
     data
   })
 }
+// 客户管理
+export function get_purchaser_list(data) {
+  return request({
+    url: '/corp/company/get_purchaser_list',
+    method: 'post',
+    data
+  })
+}
+
+export function supplier_add_agree(data) {
+  return request({
+    url: '/corp/company/supplier_add_agree',
+    method: 'post',
+    data
+  })
+}
