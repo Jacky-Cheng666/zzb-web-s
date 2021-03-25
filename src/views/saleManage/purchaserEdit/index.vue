@@ -168,7 +168,6 @@ export default {
         access_token: this.token,
         purchase_code
       })
-      console.log('result', result);
       if(result.code===0){
         this.loading = false;
         let purchaser_info = result.purchaser_info;
@@ -226,13 +225,18 @@ export default {
       let purchaser = this.$DeepClone(this.is_synergy ? this.ruleFormSynergy : this.ruleFormSet);
       let result;
       this.btnLoading = true;
-      if(this.is_synergy){
-        purchaser.purchase_code = purchaser.company_no;
-        delete purchaser.company_no;
-        result = await edit_purchaser({access_token: this.token, purchaser})
-      }else {
-        result = await edit_no_synergy_purchaser({access_token: this.token,purchaser})
+      if(this.isEdit){
+        if(this.is_synergy){
+          purchaser.purchase_code = purchaser.company_no;
+          delete purchaser.company_no;
+          result = await edit_purchaser({access_token: this.token, purchaser})
+        }else {
+          result = await edit_no_synergy_purchaser({access_token: this.token,purchaser})
+        }
+      }else{
+        alert('添加非协同采购商')
       }
+      
       if(result.code===0){
         this.btnLoading = false;
         this.$notify({
