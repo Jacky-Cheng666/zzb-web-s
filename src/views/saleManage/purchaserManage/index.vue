@@ -1,7 +1,7 @@
 <template>
   <div class="app-container purchaserManage">
     <el-form class="mb10" :model="queryParams" ref="queryForm" :inline="true">
-      <el-form-item>
+      <el-form-item prop="inputValue">
         <el-input v-model="queryParams.inputValue" placeholder="输入关键字" clearable size="small" style="width: 180px" @keyup.enter.native="handleQuery"/>
       </el-form-item>
       <el-form-item>
@@ -95,7 +95,10 @@ export default {
       this.queryParams.pageNum = 1;
       this.tableData = this.paginationRows.slice(0, this.queryParams.pageSize);
     },
-    resetQuery(){},
+    resetQuery(){
+      this.$refs.queryForm.resetFields();
+      this.handleQuery();
+    },
     handleSelectionChange(){},
     supplierAgree(row){
       this.$confirm('确定接受合作？', '提示', {
