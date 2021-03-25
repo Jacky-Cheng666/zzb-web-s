@@ -93,7 +93,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { get_purchaser_info, edit_purchaser, edit_no_synergy_purchaser, check_purchase_name } from '@/api/saleManage'
+import { get_purchaser_info, edit_purchaser, edit_no_synergy_purchaser, check_purchase_name, add_no_synergy_purchaser } from '@/api/saleManage'
 export default {
   name: "purchaserEdit",
   data() {
@@ -234,7 +234,10 @@ export default {
           result = await edit_no_synergy_purchaser({access_token: this.token,purchaser})
         }
       }else{
-        alert('添加非协同采购商')
+        purchaser.nick_name = purchaser.purchase_name;
+        delete purchaser.purchase_name;
+        delete purchaser.purchase_code;
+        result = await add_no_synergy_purchaser({access_token: this.token, purchaser})
       }
       
       if(result.code===0){
@@ -244,7 +247,14 @@ export default {
           title: '成功',
           message: '操作成功'
         })
-        this.getPurchaserInfo();
+        if(this.isEdit){
+          this.getPurchaserInfo();
+        }else {
+          this.isNameOk = "";
+          this.isNickNameOk = "";
+          this.$refs[formName].resetFields();
+        }
+        
       }else{
         this.btnLoading = false;
       }

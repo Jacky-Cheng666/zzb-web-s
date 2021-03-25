@@ -167,3 +167,11 @@ export function check_purchase_name(data) {
     data
   })
 }
+
+export function add_no_synergy_purchaser(data) {
+  return request({
+    url: '/corp/company/add_no_synergy_purchaser',
+    method: 'post',
+    data
+  })
+}
