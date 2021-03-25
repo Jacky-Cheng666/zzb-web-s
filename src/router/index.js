@@ -161,6 +161,12 @@ export const asyncRoutes = [
         ]
       },
       {
+        path: 'purchaserManage',
+        name: 'purchaserManage',
+        component: () => import('@/views/saleManage/purchaserManage/index'),
+        meta: { title: '客户管理',icon: 'customer' }
+      },
+      {
         path: 'saleOrder/:order_name/:order_no',
         name: 'saleOrder',
         component: () => import('@/views/saleManage/saleOrder/index'),
