@@ -578,6 +578,8 @@ export default {
         }else{
           this.getSupplierInfo();
         }
+      }else {
+        this.saveLoading = false;
       }
     },
     verifyAccount() {
