@@ -135,3 +135,35 @@ export function delete_purchaser(data) {
     data
   })
 }
+
+export function get_purchaser_info(data) {
+  return request({
+    url: '/corp/company/get_purchaser_info',
+    method: 'post',
+    data
+  })
+}
+
+export function edit_purchaser(data) {
+  return request({
+    url: '/corp/company/edit_purchaser',
+    method: 'post',
+    data
+  })
+}
+
+export function edit_no_synergy_purchaser(data) {
+  return request({
+    url: '/corp/company/edit_no_synergy_purchaser',
+    method: 'post',
+    data
+  })
+}
+
+export function check_purchase_name(data) {
+  return request({
+    url: '/corp/company/check_purchase_name',
+    method: 'post',
+    data
+  })
+}

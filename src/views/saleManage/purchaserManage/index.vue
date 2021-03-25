@@ -29,8 +29,8 @@
       </el-table-column>
       <el-table-column align="center" label="操作" width="120">
         <template slot-scope="scope" >
-          <el-button size="mini" type="text" icon="el-icon-edit">编辑</el-button>
-          <el-button @click="deleteMachine(scope.row.purchase_code)" size="mini" type="text" icon="el-icon-delete" class="text-danger">删除</el-button>              
+          <el-button @click="toPurchaserEdit(scope.row)" size="mini" type="text" icon="el-icon-edit">编辑</el-button>
+          <el-button @click="deletePurchaser(scope.row.purchase_code)" size="mini" type="text" icon="el-icon-delete" class="text-danger">删除</el-button>              
         </template>
       </el-table-column>
     </el-table>
@@ -120,7 +120,7 @@ export default {
     handleRefresh(){
       this.getPurchaserList();
     },
-    deleteMachine(purchase_code){
+    deletePurchaser(purchase_code){
       this.$confirm('确定删除该采购商？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -140,7 +140,13 @@ export default {
             }
           })
       }).catch(() => {});
-      },
+    },
+    toPurchaserEdit(row){
+      if(row.purchase_code){
+        this.$router.push('/saleManage/purchaserEdit/'+row.purchase_code)
+      }
+      
+    }
   },
 
 }
