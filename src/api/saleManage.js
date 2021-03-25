@@ -127,3 +127,11 @@ export function supplier_add_agree(data) {
     data
   })
 }
+
+export function delete_purchaser(data) {
+  return request({
+    url: '/corp/company/delete_purchaser',
+    method: 'post',
+    data
+  })
+}

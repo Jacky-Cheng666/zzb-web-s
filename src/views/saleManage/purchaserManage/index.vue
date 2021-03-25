@@ -30,7 +30,7 @@
       <el-table-column align="center" label="操作" width="120">
         <template slot-scope="scope" >
           <el-button size="mini" type="text" icon="el-icon-edit">编辑</el-button>
-          <el-button size="mini" type="text" icon="el-icon-delete" class="text-danger">删除</el-button>              
+          <el-button @click="deleteMachine(scope.row.purchase_code)" size="mini" type="text" icon="el-icon-delete" class="text-danger">删除</el-button>              
         </template>
       </el-table-column>
     </el-table>
@@ -48,7 +48,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { get_purchaser_list, supplier_add_agree } from '@/api/saleManage'
+import { get_purchaser_list, supplier_add_agree, delete_purchaser } from '@/api/saleManage'
 export default {
   name: "purchaserManage",
   data() {
@@ -119,7 +119,28 @@ export default {
     handleCurrentChange(){},
     handleRefresh(){
       this.getPurchaserList();
-    }
+    },
+    deleteMachine(purchase_code){
+      this.$confirm('确定删除该采购商？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        delete_purchaser({
+          access_token: this.token,
+          purchase_code
+        }).then(result => {
+            if (result.code == 0) {
+              this.$notify({
+                type: 'success',
+                title: '成功',
+                message:"删除成功"
+              });
+              this.getPurchaserList()
+            }
+          })
+      }).catch(() => {});
+      },
   },
 
 }
