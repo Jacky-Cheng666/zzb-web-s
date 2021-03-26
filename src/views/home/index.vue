@@ -46,48 +46,48 @@
             </div>
         </el-card>
 
-        <el-card class="box-card" style="width:200px">
+        <el-card class="box-card">
             <div slot="header" class="clearfix">
                 <span>销售管理</span>
                 <svg-icon style="float: right" iconClass="nail"></svg-icon>
             </div>
-            <el-link @click="toDetailPage(item)" style="margin-bottom:6px;display:block" type="primary" :underline="false" v-for="(item,index) in saleManage" :key="index">{{item.title}}</el-link>
+            <el-link :disabled="!item.url" @click="toDetailPage(item)" class="el-link" :class="{'mr0':index%2!=0}" type="primary" :underline="false" v-for="(item,index) in saleManage" :key="index">{{item.title}}</el-link>
         </el-card>
 
-        <el-card class="box-card" style="width:200px">
+        <el-card class="box-card">
             <div slot="header" class="clearfix">
                 <span>采购管理</span>
                 <svg-icon style="float: right" iconClass="nail"></svg-icon>
             </div>
-            <el-link @click="toDetailPage(item)" style="margin-bottom:6px;display:block" type="primary" :underline="false" v-for="(item,index) in purchaseManage" :key="index">{{item.title}}</el-link>
+            <el-link :disabled="!item.url" @click="toDetailPage(item)" class="el-link" :class="{'mr0':index%2!=0}" type="primary" :underline="false" v-for="(item,index) in purchaseManage" :key="index">{{item.title}}</el-link>
         </el-card>
 
-        <el-card class="box-card" style="width:200px">
+        <el-card class="box-card">
             <div slot="header" class="clearfix">
                 <span>生产管理</span>
                 <svg-icon style="float: right" iconClass="nail"></svg-icon>
             </div>
-            <el-link @click="toDetailPage(item)" style="margin-bottom:6px;display:block" type="primary" :underline="false" v-for="(item,index) in manufactureManage" :key="index">{{item.title}}</el-link>
+            <el-link :disabled="!item.url" @click="toDetailPage(item)" style="margin-bottom:12px;display:block" type="primary" :underline="false" v-for="(item,index) in manufactureManage" :key="index">{{item.title}}</el-link>
         </el-card>
 
-        <el-card class="box-card" style="width:200px">
+        <el-card class="box-card">
             <div slot="header" class="clearfix">
                 <span>财务管理</span>
                 <svg-icon style="float: right" iconClass="nail"></svg-icon>
             </div>
-            <el-link @click="toDetailPage(item)" style="margin-bottom:6px;display:block" type="primary" :underline="false" v-for="(item,index) in financeManage" :key="index">{{item.title}}</el-link>
+            <el-link :disabled="!item.url" @click="toDetailPage(item)" class="el-link" :class="{'mr0':index%2!=0}" type="primary" :underline="false" v-for="(item,index) in financeManage" :key="index">{{item.title}}</el-link>
         </el-card>
 
-        <el-card class="box-card" style="width:200px">
+        <el-card class="box-card">
             <div slot="header" class="clearfix">
                 <span>企业管理</span>
                 <svg-icon style="float: right" iconClass="nail"></svg-icon>
             </div>
-            <el-link @click="toDetailPage(item)" style="margin-bottom:6px;display:block" type="primary" :underline="false" v-for="(item,index) in companyManage" :key="index">{{item.title}}</el-link>
+            <el-link :disabled="!item.url" @click="toDetailPage(item)" style="margin-bottom:12px;display:block" type="primary" :underline="false" v-for="(item,index) in companyManage" :key="index">{{item.title}}</el-link>
         </el-card>
       </div>
 
-      <el-card class="box-card dsasbord-content">
+      <el-card class="dsasbord-content">
         <div slot="header" class="clearfix">
             <span>公司看板</span>
         </div>
@@ -111,29 +111,46 @@ export default {
       company_no: '',
       saleManage:[
           {title: '新建销单', url:'/saleManage/createSaleOrder'},
-          {title: '协同接单', url:'/saleManage/synergyOrderManage'},
+          {title: '预备订单', url:''},
+          {title: '协同报价', url:'/saleManage/synergyOfferPrice'},
+          {title: '客户询价', url:''},
+          {title: '协同接单', url:'/saleManage/synergyOrderManage/overView'},
+          {title: '订单跟进', url:''},
           {title: '我要发货', url:'/saleManage/deliveryManage'},
           {title: '销售记录', url:'/saleManage/saleRecords'},
-          {title: '客户管理', url:''},
           {title: '产品管理', url:'/saleManage/productManage'},
+          {title: '客户管理', url:'/saleManage/purchaserManage'},
+          {title: '销售统计', url:''},
+          {title: '对账中心', url:''},
       ],
       purchaseManage:[
-          {title: '我要请购', url:'/purchaseManage/RequestOrderManage'},
-          {title: '我要询价', url:''},
+          {title: '我的请购', url:'/purchaseManage/RequestOrderManage'},
+          {title: '请购审批', url:''},
+          {title: '我要发单', url:''},
+          {title: '订单审批', url:''},
           {title: '新建订单', url:'/purchaseManage/createPurchaseOrder'},
+          {title: '订单跟进', url:''},
           {title: '我要收货', url:'/purchaseManage/receiveManage'},
           {title: '采购记录', url:'/purchaseManage/purchaseRecords'},
+          {title: '成交履历', url:''},
           {title: '供应商管理', url:'/purchaseManage/supplierManage'},
+          {title: '采购统计', url:''},
+          {title: '对账中心', url:''},
       ],
       manufactureManage: [
         {title: '生产看板', url:''},
         {title: '工单管理', url:''},
+        {title: '工单跟进', url:''},
         {title: '团队管理', url:''},
+        {title: '设备管理', url:''},
       ],
       financeManage: [
         {title: '报销中心', url:''},
+        {title: '报销审批', url:''},
         {title: '付款管理', url:''},
+        {title: '收票管理', url:''},
         {title: '收款管理', url:''},
+        {title: '开票管理', url:''},
         {title: '付款统计', url:''},
         {title: '收款统计', url:''},
       ],
@@ -232,6 +249,9 @@ export default {
       margin-bottom: 24px;
     }
   }
+  .box-card {
+    width: 200px;
+  }
   .hot-link{
       display: flex;
       justify-content: space-between;
@@ -244,6 +264,13 @@ export default {
   .bottom{
       text-align: center;
       font-size: 14px;
+  }
+  .mr0{
+    margin-right: 0 !important;
+  }
+  .el-link {
+    margin-bottom:12px;
+    margin-right:20px
   }
 }
 </style>
