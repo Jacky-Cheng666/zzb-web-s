@@ -1,7 +1,7 @@
 <template>
   <div class="app-container purchaserManage">
     <el-form class="mb10" :model="queryParams" ref="queryForm" :inline="true">
-      <el-form-item>
+      <el-form-item prop="inputValue">
         <el-input v-model="queryParams.inputValue" placeholder="输入关键字" clearable size="small" style="width: 180px" @keyup.enter.native="handleQuery"/>
       </el-form-item>
       <el-form-item>
@@ -29,15 +29,17 @@
       </el-table-column>
       <el-table-column align="center" label="操作" width="120">
         <template slot-scope="scope" >
-          <el-button size="mini" type="text" icon="el-icon-edit">编辑</el-button>
-          <el-button @click="deleteMachine(scope.row.purchase_code)" size="mini" type="text" icon="el-icon-delete" class="text-danger">删除</el-button>              
+          <el-button @click="toPurchaserEdit(scope.row)" size="mini" type="text" icon="el-icon-edit">编辑</el-button>
+          <el-button @click="deletePurchaser(scope.row.purchase_code)" size="mini" type="text" icon="el-icon-delete" class="text-danger">删除</el-button>              
         </template>
       </el-table-column>
     </el-table>
 
     <pagination :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="handleCurrentChange">
       <div>
-        <el-button type="primary" icon="el-icon-plus" size="mini">添加非协同采购商</el-button>
+        <router-link to="/saleManage/purchaserAdd">
+          <el-button style="margin-right:10px" type="primary" icon="el-icon-plus" size="mini">添加非协同采购商</el-button>
+        </router-link>
         <el-tooltip class="item" effect="dark" content="刷新" placement="top">
             <el-button @click="handleRefresh" size="mini" circle icon="el-icon-refresh"/>
         </el-tooltip>
@@ -93,7 +95,10 @@ export default {
       this.queryParams.pageNum = 1;
       this.tableData = this.paginationRows.slice(0, this.queryParams.pageSize);
     },
-    resetQuery(){},
+    resetQuery(){
+      this.$refs.queryForm.resetFields();
+      this.handleQuery();
+    },
     handleSelectionChange(){},
     supplierAgree(row){
       this.$confirm('确定接受合作？', '提示', {
@@ -116,11 +121,16 @@ export default {
         })
       }).catch(() => {});
     },
-    handleCurrentChange(){},
+    handleCurrentChange({page:currentPage,limit: pageSize}){
+      this.tableData = this.paginationRows.slice(
+        pageSize * (currentPage - 1),
+        pageSize * currentPage
+      );
+    },
     handleRefresh(){
       this.getPurchaserList();
     },
-    deleteMachine(purchase_code){
+    deletePurchaser(purchase_code){
       this.$confirm('确定删除该采购商？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -140,7 +150,13 @@ export default {
             }
           })
       }).catch(() => {});
-      },
+    },
+    toPurchaserEdit(row){
+      if(row.purchase_code){
+        this.$router.push('/saleManage/purchaserEdit/'+row.purchase_code)
+      }
+      
+    }
   },
 
 }
