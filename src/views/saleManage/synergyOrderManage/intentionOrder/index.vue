@@ -18,7 +18,7 @@
         </div>
         <div class="f14">
           <span>结款计划：</span>
-          <el-tooltip placement="top" content="点击查看付款计划">
+          <el-tooltip placement="top" content="点击查看结款计划">
             <svg-icon iconClass="eye-open" style="font-size:16px;color:#3894FF;cursor:pointer"></svg-icon>
           </el-tooltip>
           <span class="ml20">收货地址：</span>

@@ -74,7 +74,7 @@
         </el-form-item>
         <el-form-item>
           <el-badge :value="payPlanLength" class="item" type="primary">
-            <el-button @click="editPayPlan" type="primary" size="mini">付款计划</el-button>
+            <el-button @click="editPayPlan" type="primary" size="mini">结款计划</el-button>
           </el-badge>
         </el-form-item>
         <el-form-item>
@@ -1196,7 +1196,7 @@ export default {
       if(totalPay === 0){
         this.$message({
           showClose: true,
-          message: '该订单总金额为0，无需编辑付款计划！',
+          message: '该订单总金额为0，无需编辑结款计划！',
           type: 'warning'
         })
 

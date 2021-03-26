@@ -1,6 +1,6 @@
 <template>
   <div class="payPlanDialog">
-    <el-dialog center title="付款计划" :visible.sync="openPlan" width="960px" append-to-body>
+    <el-dialog center title="结款计划" :visible.sync="openPlan" width="960px" append-to-body>
       <el-table 
         :data="payPlanData" 
         class="pay-plan-table" 
@@ -243,13 +243,13 @@ export default {
       }
     },
     handleDoPayPlan(){
-      //执行付款计划
+      //执行结款计划
       let len = this.payPlanData.length
 
       if(this.valuePayPlan < len){
         this.$message({
           showClose: true,
-          message: '选择的分期数小于当前付款计划期数，请检查！',
+          message: '选择的分期数小于当前结款计划期数，请检查！',
           type: 'warning'
         })
 
@@ -472,7 +472,7 @@ export default {
           this.$message({
             showClose: true,
             type: 'warning',
-            message: '付款计划总百分比不是100%，请检查！'
+            message: '结款计划总百分比不是100%，请检查！'
           });
 
           return
@@ -484,7 +484,7 @@ export default {
           this.$message({
             showClose: true,
             type: 'warning',
-            message: '付款计划总金额和订单总金额不一致，请检查！'
+            message: '结款计划总金额和订单总金额不一致，请检查！'
           });
 
           return
