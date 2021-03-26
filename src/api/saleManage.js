@@ -1,5 +1,15 @@
 import request from '@/utils/request'
 
+// 发货管理
+export function getAllDeliveryRecords(data) {
+  return request({
+    url: '/som/traceOrder/get_all_delivery_records',
+    method: 'post',
+    data
+  })
+}
+
+//
 export function getSaleBasicInfo(data) {
   return request({
     url: '/som/orderCommon/get_sale_basic_info',
@@ -111,6 +121,7 @@ export function add_product(data) {
     data
   })
 }
+
 // 客户管理
 export function get_purchaser_list(data) {
   return request({

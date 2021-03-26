@@ -33,13 +33,13 @@
           </router-link>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="客户订单号" prop="receive_side_name" width="180" />
+      <el-table-column align="center" label="客户订单号" prop="purchase_name" width="180" />
       <el-table-column align="center" label="客户名称" prop="purchase_name" />
-      <el-table-column align="center" label="收货地址" prop="total_money_with_tax" width="120" />
-      <el-table-column align="center" label="收货人" prop="receiver" width="80" />
+      <el-table-column align="center" label="收货地址" prop="receive_addr" width="120" />
+      <el-table-column align="center" label="收货人" prop="receiver_name" width="80" />
       <el-table-column align="center" label="销售人" prop="saler" width="80" />
       <el-table-column align="center" label="协议交期" width="200"></el-table-column>
-      <el-table-column align="center" label="附件" width="60"></el-table-column>
+      <el-table-column align="center" label="状态" width="60"></el-table-column>
     </el-table>
 
     <pagination :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="handleCurrentChange">
@@ -57,29 +57,41 @@
 </template>
 
 <script>
+import { getAllDeliveryRecords } from '@/api/saleManage'
 import { mapGetters } from 'vuex'
+import common from '@/utils/common'
+
 export default {
   name: "deliveryList",
   data() {
     return {
       queryParams:{
-        inputValue: '',
-        selectStatus: 'all'
+        searchInputValue: '',
+        pageNum: 1,
+        pageSize: 20
       },
       showSearch: true,
       loading: false,
-      tableData: [{order_name:"PO210115171738"},{order_name:"PO222222222"},{order_name:"PO33333333"}],
+      // tableData: [{order_name:"PO210115171738"},{order_name:"PO222222222"},{order_name:"PO33333333"}],
+      tableData: [],
       total: 0,
       allRows: [],
+      multipleSelection: [],
+      booksTypeOptions: [],
     };
   },
   computed: {
-    ...mapGetters(['screen_height'])
+    ...mapGetters(['screen_height', 'token'])
   },
   methods: {
     handleQuery(){},
-    resetQuery(){},
-    handleSelectionChange(){},
+    resetQuery(){
+      this.queryParams.searchInputValue = ''
+      this.handleQuery()
+    },
+    handleSelectionChange(val){
+      this.multipleSelection = val
+    },
     getPayDemandList(){},
     handleCurrentChange(){}
   },
