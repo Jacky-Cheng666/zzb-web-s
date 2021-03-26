@@ -51,7 +51,7 @@
       <el-table-column align="center" type="selection" width="50" />
       <el-table-column align="center" label="询价单号" prop="order_name" width="140">
           <template slot-scope="scope">
-              <router-link :to="'/saleManage/synergyOrderManage/AskPriceOrder/'+scope.row.order_name">
+              <router-link :to="'/saleManage/customerAskPrice/AskPriceOrder/'+scope.row.order_name">
                 <el-link :underline="false" type="primary">{{scope.row.order_name}}</el-link>
               </router-link>
           </template>

@@ -56,6 +56,40 @@ export const asyncRoutes = [
         meta: { title: '新建销单',icon: 'el-icon-document-add' }
       },
       {
+        path: 'synergyOfferPrice',
+        name: 'synergyOfferPrice',
+        component: () => import('@/views/saleManage/synergyOfferPrice/index'),
+        meta: { title: '协同报价',icon: 'el-icon-money' }
+      },
+      {
+        path: 'customerAskPrice',
+        name: 'customerAskPrice',
+        component: EmptyLayout,
+        meta: { title: '客户询价',icon: 'el-icon-price-tag' },
+        alwaysShow: true,
+        children: [
+          {
+            path: 'overView',
+            name: 'overView',
+            component: () => import('@/views/saleManage/customerAskPrice/overView/index'),
+            meta: { title: '询价总览',icon: 'el-icon-tickets' }
+          },
+          {
+            path: 'newAskPirce',
+            name: 'newAskPirce',
+            component: () => import('@/views/saleManage/customerAskPrice/newAskPirce/index'),
+            meta: { title: '新建询价',icon: 'el-icon-plus' }
+          },
+          {
+            path: 'AskPriceOrder/:order_name',
+            name: 'AskPriceOrder',
+            component: () => import('@/views/saleManage/customerAskPrice/AskPriceOrder/index'),
+            meta: { title: '询价单',icon: 'el-icon-price-tag',activeMenu: '/saleManage/customerAskPrice/overView' },
+            hidden: true,
+          },
+        ]
+      },
+      {
         path: 'synergyOrderManage',
         name: 'synergyOrderManage',
         component: EmptyLayout,
@@ -64,30 +98,11 @@ export const asyncRoutes = [
         meta: { title: '协同接单',icon: 'el-icon-connection' },
         children: [
           {
-            path: 'intentionOrder',
-            name: 'intentionOrder',
-            component: () => import('@/views/saleManage/intentionOrder/index'),
-            meta: { title: '意向订单',icon: 'el-icon-tickets' }
-          },
-          {
-            path: 'synergyOfferPrice',
-            name: 'synergyOfferPrice',
-            component: () => import('@/views/saleManage/synergyOfferPrice/index'),
-            meta: { title: '协同报价',icon: 'el-icon-money' }
-          },
-          {
-            path: 'customerAskPrice',
-            name: 'customerAskPrice',
-            component: () => import('@/views/saleManage/customerAskPrice/index'),
-            meta: { title: '客户询价',icon: 'el-icon-price-tag' }
-          },
-          {
-            path: 'AskPriceOrder/:order_name',
-            name: 'AskPriceOrder',
-            component: () => import('@/views/saleManage/AskPriceOrder/index'),
-            meta: { title: '询价单',icon: 'el-icon-price-tag',activeMenu: '/saleManage/synergyOrderManage/customerAskPrice' },
-            hidden: true,
-          },
+            path: 'overView',
+            name: 'overView',
+            component: () => import('@/views/saleManage/synergyOrderManage/overView/index'),
+            meta: { title: '总览',icon: 'el-icon-tickets' }
+          }
         ]
       },
       {
