@@ -1,5 +1,5 @@
 <template>
-  <div>新建询价页面</div>
+  <div class="app-container">新建询价页面</div>
 </template>
 
 <script>

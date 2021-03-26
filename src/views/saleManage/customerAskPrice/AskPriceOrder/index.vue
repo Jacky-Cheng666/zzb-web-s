@@ -35,7 +35,7 @@
       </el-form>
 
 
-      <el-table class="mb8" height="490" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
+      <el-table class="mb8" :height="screen_height-450" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
         <el-table-column align="center" type="selection" width="50" />
         <el-table-column align="center" label="客户物料名称" prop="guest_element_name" width="300" />
         <el-table-column align="center" label="客户物料型号" prop="guest_spec_code" width="300" />
@@ -55,11 +55,12 @@
 
       <pagination :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="handleCurrentChange">
         <div>
-            <el-switch style="margin-right:10px" v-model="value1" active-text="报未税价" inactive-text="报含税价"></el-switch>
-            <el-button @click="handleImport" type="info" icon="el-icon-upload2" size="mini">导入</el-button>
+            <el-button type="primary" icon="el-icon-refresh" size="mini">转订单</el-button>
+            <el-button @click="handleImport" type="info" icon="el-icon-upload2" size="mini">上传图纸</el-button>
             <el-button type="info" icon="el-icon-download" size="mini">导出</el-button>
             <el-button type="danger" icon="el-icon-close" size="mini">不报价</el-button>
-            <el-button type="success" icon="el-icon-check" size="mini">已报价</el-button>
+            <el-button type="success" size="mini">
+                <svg-icon icon-class="save" class-name="btn_icon_svg"></svg-icon>&nbsp;保存</el-button>
         </div>
     </pagination>
 
@@ -69,6 +70,7 @@
 
 <script>
 import uploadFile from '@/components/UploadFile/index'
+import { mapGetters } from 'vuex'
 export default {
   name: "AskPriceOrder",
   components:{uploadFile},
@@ -76,12 +78,14 @@ export default {
     return {
         showSearch: true,
         queryParams: {},
-        value1: true,
         total: 0,
         loading: false,
         tableData: [{guest_element_name:"特斯拉汽车Model3"}],
         
     };
+  },
+  computed: {
+    ...mapGetters(['screen_height'])
   },
   methods: {
       getPayDemandList(){},

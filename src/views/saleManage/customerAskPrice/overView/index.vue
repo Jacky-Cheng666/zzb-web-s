@@ -65,17 +65,18 @@
       <el-table-column align="center" label="报价时间" prop="" width="160" />
       <el-table-column align="center" label="操作" width="80">
         <template>
-          <el-button size="mini" type="text"><svg-icon icon-class="return" class-name="btn_icon_svg"></svg-icon>&nbsp;退回</el-button>
+          <el-button class="text-danger" size="mini" type="text"><svg-icon icon-class="return" class-name="btn_icon_svg"></svg-icon>&nbsp;退回</el-button>
         </template>
       </el-table-column>
     </el-table>
 
     <pagination :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="handleCurrentChange">
         <div>
-            <el-button type="danger" icon="el-icon-close" size="mini">不报价</el-button>
-            <el-button type="success" icon="el-icon-check" size="mini">已报价</el-button>
+            <router-link to="/saleManage/customerAskPrice/newAskPirce">
+              <el-button type="primary" icon="el-icon-plus" size="mini">新建</el-button>
+            </router-link>
             <el-tooltip class="item" effect="dark" content="刷新" placement="top">
-                <el-button size="mini" circle icon="el-icon-refresh"/>
+                <el-button style="margin-left:10px" size="mini" circle icon="el-icon-refresh"/>
             </el-tooltip>
         </div>
     </pagination>

@@ -39,9 +39,9 @@
     <el-table class="mb8" :height="screen_height-350" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
       <el-table-column align="center" label="订单号" prop="request_name" width="140">
         <template slot-scope="scope">
-          <!-- <router-link :to="'/purchaseManage/requestOrder/'+scope.row.request_name"> -->
+          <router-link to="/saleManage/synergyOrderManage/intentionOrder">
             <el-link :underline="false" type="primary">{{scope.row.order_name}}</el-link>
-          <!-- </router-link> -->
+          </router-link>
         </template>
       </el-table-column>
       <el-table-column align="center" label="客户" prop="purchase_full_name" width="240" />
