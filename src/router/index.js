@@ -78,7 +78,7 @@ export const asyncRoutes = [
             path: 'newAskPirce',
             name: 'newAskPirce',
             component: () => import('@/views/saleManage/customerAskPrice/newAskPirce/index'),
-            meta: { title: '新建询价',icon: 'el-icon-plus' }
+            meta: { title: '新建询价',icon: 'el-icon-document-add' }
           },
           {
             path: 'AskPriceOrder/:order_name',
@@ -102,6 +102,13 @@ export const asyncRoutes = [
             name: 'overView',
             component: () => import('@/views/saleManage/synergyOrderManage/overView/index'),
             meta: { title: '总览',icon: 'el-icon-tickets' }
+          },
+          {
+            path: 'intentionOrder',
+            name: 'intentionOrder',
+            component: () => import('@/views/saleManage/synergyOrderManage/intentionOrder/index'),
+            meta: { title: '意向订单', activeMenu: '/saleManage/synergyOrderManage/overView' },
+            hidden: true
           }
         ]
       },
