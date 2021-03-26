@@ -1268,10 +1268,36 @@ export default {
       }
 
       let msg = element ? "确定删除该物料？" : "确定删除这一批物料？";
+      let interval;
       this.$confirm(msg, "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        closeOnClickModal: false,
+        closeOnPressEscape: false,
+        type: "warning",
+        beforeClose: (action, instance, done) => {
+          if (action === "confirm") {
+            let currentTime = 60,
+              time;
+            instance.confirmButtonLoading = true;
+            instance.confirmButtonText = "60秒后，删除物料";
+            instance.cancelButtonText = "取消删除";
+            interval = setInterval(() => {
+              currentTime--;
+              time = currentTime + "秒";
+              instance.confirmButtonText = time + "后，删除物料";
+              if (currentTime <= 0) {
+                clearInterval(interval);
+                instance.confirmButtonLoading = false;
+                done();
+              }
+            }, 1000);
+          } else {
+            instance.confirmButtonLoading = false;
+            clearInterval(interval);
+            done();
+          }
+        },
       })
         .then(() => {
           delete_elements({
@@ -1289,12 +1315,7 @@ export default {
             }
           });
         })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
-        });
+        .catch(() => {});
     },
     downloadAll() {
       this.$confirm("确定导出全部物料清单？", "提示", {
@@ -1481,10 +1502,36 @@ export default {
       return jsonData.map(v => filterVal.map(j => v[j]));
     },
     deleteAllElements() {
+      let interval;
       this.$confirm("确定要清空物料库？请谨慎操作", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        closeOnClickModal: false,
+        closeOnPressEscape: false,
+        type: "warning",
+        beforeClose: (action, instance, done) => {
+          if (action === "confirm") {
+            let currentTime = 60,
+              time;
+            instance.confirmButtonLoading = true;
+            instance.confirmButtonText = "60秒后，删除物料";
+            instance.cancelButtonText = "取消删除";
+            interval = setInterval(() => {
+              currentTime--;
+              time = currentTime + "秒";
+              instance.confirmButtonText = time + "后，删除物料";
+              if (currentTime <= 0) {
+                clearInterval(interval);
+                instance.confirmButtonLoading = false;
+                done();
+              }
+            }, 1000);
+          } else {
+            instance.confirmButtonLoading = false;
+            clearInterval(interval);
+            done();
+          }
+        },
       })
         .then(() => {
           delete_all_element({
@@ -1500,12 +1547,7 @@ export default {
               }
             });
         })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
-        });
+        .catch(() => {});
     },
   },
 }
