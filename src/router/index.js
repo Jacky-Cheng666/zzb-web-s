@@ -201,6 +201,33 @@ export const asyncRoutes = [
         meta: { title: '客户管理',icon: 'customer' ,noCache: true}
       },
       {
+        path: 'billCenter',
+        name: 'billCenter',
+        component: EmptyLayout,
+        redirect: '/saleManage/billCenter/overView',
+        meta: { title: '对账中心',icon: 'el-icon-s-operation'},
+        children: [
+          {
+            path: 'overView',
+            name: 'overView',
+            component: () => import('@/views/saleManage/billCenter/overView/index'),
+            meta: { title: '对账总览',icon: 'el-icon-tickets' }
+          },
+          {
+            path: 'notInvoice',
+            name: 'notInvoice',
+            component: () => import('@/views/saleManage/billCenter/notInvoice/index'),
+            meta: { title: '未开票',icon: 'el-icon-tickets' }
+          },
+          {
+            path: 'notBillCheck',
+            name: 'notBillCheck',
+            component: () => import('@/views/saleManage/billCenter/notBillCheck/index'),
+            meta: { title: '未对账',icon: 'el-icon-tickets' }
+          },
+        ]
+      },
+      {
         path: 'purchaserEdit/:purchase_code',
         name: 'purchaserEdit',
         component: () => import('@/views/saleManage/purchaserEdit/index'),
