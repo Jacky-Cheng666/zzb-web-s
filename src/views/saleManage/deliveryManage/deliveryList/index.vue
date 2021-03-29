@@ -43,14 +43,14 @@
     </el-table>
 
     <pagination :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="handleCurrentChange">
-      <div>
-        <el-button type="primary" icon="el-icon-circle-check" size="mini">所有页全选</el-button>
-        <el-button type="info" icon="el-icon-download" size="mini">批量下载附件</el-button>
-        <el-button type="warning" icon="el-icon-printer" size="mini">批量打印</el-button>
-        <el-tooltip class="item" effect="dark" content="刷新" placement="top">
-            <el-button size="mini" circle icon="el-icon-refresh"/>
-        </el-tooltip>
-      </div>
+      
+      <el-checkbox style="margin-right: 20px;" v-model="isAllChoose" label="所有页全选" ></el-checkbox>
+      <el-button type="info" icon="el-icon-download" size="mini">批量下载附件</el-button>
+      <el-button type="warning" icon="el-icon-printer" size="mini">批量打印</el-button>
+      <el-tooltip class="item" effect="dark" content="刷新" placement="top">
+          <el-button size="mini" circle icon="el-icon-refresh"/>
+      </el-tooltip>
+      
     </pagination>
 
   </div>
@@ -78,6 +78,7 @@ export default {
       allRows: [],
       multipleSelection: [],
       booksTypeOptions: [],
+      isAllChoose: false
     };
   },
   computed: {

@@ -4,7 +4,7 @@
       <el-form-item>
         <el-input v-model="queryParams.searchInputValue" placeholder="输入关键字" clearable size="small" style="width: 180px" @keyup.enter.native="handleRefresh"/>
       </el-form-item>
-      <el-form-item label="付款状态">
+      <el-form-item label="收款状态">
         <el-select style="width:100px;" size="small" @change="changePayStatus" v-model="queryParams.valuePayStatus" placeholder="请选择">
           <el-option
             v-for="item in payStatusOptions"

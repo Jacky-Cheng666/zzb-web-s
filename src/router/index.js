@@ -140,39 +140,39 @@ export const asyncRoutes = [
           {
             path: 'deliveryList',
             name: 'deliveryList',
-            component: () => import('@/views/saleManage/deliveryList/index'),
-            meta: { title: '发货',icon: 'deliver' }
+            component: () => import('@/views/saleManage/deliveryManage/deliveryList/index'),
+            meta: { title: '发货总览',icon: 'deliver' }
           },
           {
             path: 'deliveryRecords',
             name: 'deliveryRecords',
-            component: () => import('@/views/saleManage/deliveryRecords/index'),
+            component: () => import('@/views/saleManage/deliveryManage/deliveryRecords/index'),
             meta: { title: '发货记录',icon: 'el-icon-tickets' }
           },
           {
             path: 'cusReturnRecords',
             name: 'cusReturnRecords',
-            component: () => import('@/views/saleManage/cusReturnRecords/index'),
+            component: () => import('@/views/saleManage/deliveryManage/cusReturnRecords/index'),
             meta: { title: '退货记录',icon: 'el-icon-tickets' }
           },
           {
             path: 'deSaleOrder/:order_name',
             name: 'deSaleOrder',
-            component: () => import('@/views/saleManage/deSaleOrder/index'),
-            meta: { title: '销售订单',icon: '', },
+            component: () => import('@/views/saleManage/deliveryManage/deSaleOrder/index'),
+            meta: { title: '销售订单' },
             hidden: true
           },
           {
             path: 'deliveryOrder/:deliver_name',
             name: 'deliveryOrder',
-            component: () => import('@/views/saleManage/deliveryOrder/index'),
+            component: () => import('@/views/saleManage/deliveryManage/deliveryOrder/index'),
             meta: { title: '发货单',icon: '', activeMenu: '/saleManage/deliveryManage/deliveryRecords' },
             hidden: true
           },
           {
             path: 'cusReturnOrder/:deliver_name',
             name: 'cusReturnOrder',
-            component: () => import('@/views/saleManage/cusReturnOrder/index'),
+            component: () => import('@/views/saleManage/deliveryManage/cusReturnOrder/index'),
             meta: { title: '退货单',icon: '', activeMenu: '/saleManage/deliveryManage/cusReturnRecords' },
             hidden: true
           },
