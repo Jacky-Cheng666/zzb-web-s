@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">新建询价页面</div>
+  <div>批量建单页面</div>
 </template>
 
 <script>

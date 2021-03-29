@@ -63,8 +63,9 @@
       <el-table-column align="center" label="结款" prop="period" width="80" />
       <el-table-column align="center" label="销售人" prop="saler" width="80" />
       <el-table-column align="center" label="报价时间" prop="" width="160" />
-      <el-table-column align="center" label="操作" width="80">
+      <el-table-column align="center" label="操作" width="120">
         <template>
+          <el-button size="mini" type="text"><svg-icon icon-class="connect" class-name="btn_icon_svg"></svg-icon>&nbsp;关联</el-button>
           <el-button class="text-danger" size="mini" type="text"><svg-icon icon-class="return" class-name="btn_icon_svg"></svg-icon>&nbsp;退回</el-button>
         </template>
       </el-table-column>
@@ -72,12 +73,15 @@
 
     <pagination :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="handleCurrentChange">
         <div>
-            <router-link to="/saleManage/customerAskPrice/newAskPirce">
-              <el-button type="primary" icon="el-icon-plus" size="mini">新建</el-button>
-            </router-link>
-            <el-tooltip class="item" effect="dark" content="刷新" placement="top">
-                <el-button style="margin-left:10px" size="mini" circle icon="el-icon-refresh"/>
-            </el-tooltip>
+          <router-link to="/saleManage/customerAskPrice/batCreateOrder">
+            <el-button type="primary" icon="el-icon-plus" size="mini">批量新建</el-button>
+          </router-link>
+          <router-link to="/saleManage/customerAskPrice/newAskPrice">
+            <el-button style="margin:0 10px"  type="primary" icon="el-icon-plus" size="mini">新建</el-button>
+          </router-link>
+          <el-tooltip class="item" effect="dark" content="刷新" placement="top">
+              <el-button size="mini" circle icon="el-icon-refresh"/>
+          </el-tooltip>
         </div>
     </pagination>
 

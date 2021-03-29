@@ -56,6 +56,12 @@ export const asyncRoutes = [
         meta: { title: '新建销单',icon: 'el-icon-document-add' }
       },
       {
+        path: 'preOrder',
+        name: 'preOrder',
+        component: () => import('@/views/saleManage/preOrder/index'),
+        meta: { title: '预备订单',icon: 'el-icon-tickets' }
+      },
+      {
         path: 'synergyOfferPrice',
         name: 'synergyOfferPrice',
         component: () => import('@/views/saleManage/synergyOfferPrice/index'),
@@ -75,10 +81,16 @@ export const asyncRoutes = [
             meta: { title: '询价总览',icon: 'el-icon-tickets' }
           },
           {
-            path: 'newAskPirce',
-            name: 'newAskPirce',
-            component: () => import('@/views/saleManage/customerAskPrice/newAskPirce/index'),
-            meta: { title: '新建询价',icon: 'el-icon-document-add' }
+            path: 'newAskPrice',
+            name: 'newAskPrice',
+            component: () => import('@/views/saleManage/customerAskPrice/newAskPrice/index'),
+            meta: { title: '独立建单',icon: 'el-icon-document-add' }
+          },
+          {
+            path: 'batCreateOrder',
+            name: 'batCreateOrder',
+            component: () => import('@/views/saleManage/customerAskPrice/batCreateOrder/index'),
+            meta: { title: '批量建单',icon: 'el-icon-document-add' }
           },
           {
             path: 'AskPriceOrder/:order_name',

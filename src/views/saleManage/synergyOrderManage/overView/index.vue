@@ -1,6 +1,6 @@
 <template>
   <div class="app-container intentionOrder">
-    <el-form class="mb10" :model="queryParams" ref="queryForm" v-show="showSearch" :inline="true">
+    <el-form class="mb10" :model="queryParams" ref="queryForm" :inline="true">
       <el-form-item>
         <el-input v-model="queryParams.searchInputValue" placeholder="输入关键字" clearable size="small" style="width: 180px" @keyup.enter.native="handleQuery"/>
       </el-form-item>
@@ -82,42 +82,11 @@ export default {
         pageSize: 100,
         filterList: []
       },
-      showSearch: true,
       loading: false,
-      // tableData: [{request_name: "IO144415422"}],
       tableData: [],
       total: 0,
       allRows: [],
       rows: [],
-      pickerOptions: {
-        shortcuts: [{
-          text: '最近一周',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-            picker.$emit('pick', [start, end]);
-          }
-        }, {
-          text: '最近一个月',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-            picker.$emit('pick', [start, end]);
-          }
-        }, {
-          text: '最近三个月',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-            picker.$emit('pick', [start, end]);
-          }
-        }]
-      },
-      checked: false,
-      //
       booksTypeOptions: [],
       ordersTypeOptions: [
         {

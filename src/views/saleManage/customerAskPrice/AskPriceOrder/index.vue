@@ -26,6 +26,12 @@
               <el-input v-model="queryParams.inputValue" placeholder="输入关键字" clearable size="small" style="width: 180px" @keyup.enter.native="handleQuery"/>
           </el-form-item>
           <el-form-item>
+            <el-select v-model="queryParams.invoiceStatus" size="small" style="width: 102px">
+                <el-option label="未税价" value="notSubmit"></el-option>
+                <el-option label="含税价" value="toBeApprove"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
               <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
               <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
           </el-form-item>
@@ -37,18 +43,22 @@
 
       <el-table class="mb8" :height="screen_height-450" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
         <el-table-column align="center" type="selection" width="50" />
-        <el-table-column align="center" label="客户物料名称" prop="guest_element_name" width="300" />
-        <el-table-column align="center" label="客户物料型号" prop="guest_spec_code" width="300" />
+        <el-table-column align="center" label="客户物料名称" prop="guest_element_name" width="200" />
+        <el-table-column align="center" label="客户物料型号" prop="guest_spec_code" width="240" />
         <el-table-column align="center" label="品牌" prop="brand" width="100" />
         <el-table-column align="center" label="单位" prop="unit" width="60" />
-        <el-table-column align="center" label="数量" prop="num" width="100" />
-        <el-table-column align="center" label="未税报价" prop="" width="130" />
-        <el-table-column align="center" label="含税报价" prop="" width="130" />
-        <el-table-column align="center" label="最近未税报价" prop="" width="130" />
-        <el-table-column align="center" label="最近未税成交" prop="" width="130" />
-        <el-table-column align="center" label="操作">
+        <el-table-column align="center" label="数量" prop="num" width="80" />
+        <el-table-column align="center" label="需求日期" prop="" width="100" />
+        <el-table-column align="center" label="交货日期" prop="" width="100" />
+        <el-table-column align="center" label="我方报价" prop="" width="100" />
+        <el-table-column align="center" label="最近报价" prop="" width="100" />
+        <el-table-column align="center" label="最近成交" prop="" width="100" />
+        <el-table-column align="center" label="金额" prop="" width="100" />
+        <el-table-column align="center" label="税金" prop="" width="100" />
+        <el-table-column align="center" label="税价合计" prop="" width="100" />
+        <el-table-column fixed="right" align="center" label="操作">
             <template>
-                <el-button style="color:#E34348" size="mini" icon="el-icon-circle-close" type="text">不报</el-button>
+                <el-button size="mini" type="text"><svg-icon icon-class="connect" class-name="btn_icon_svg"></svg-icon>&nbsp;关联</el-button>
             </template>
         </el-table-column>
       </el-table>

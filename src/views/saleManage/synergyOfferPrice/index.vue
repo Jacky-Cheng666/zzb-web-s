@@ -27,6 +27,12 @@
       </el-form-item>
       <el-form-item>
         <el-select v-model="queryParams.invoiceStatus" size="small" style="width: 102px">
+          <el-option label="未税价" value="notSubmit"></el-option>
+          <el-option label="含税价" value="toBeApprove"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-select v-model="queryParams.invoiceStatus" size="small" style="width: 102px">
           <el-option label="全部" value="all"></el-option>
           <el-option label="未报价" value="notSubmit"></el-option>
           <el-option label="已报价" value="toBeApprove"></el-option>
@@ -71,8 +77,6 @@
           <el-option label="1%" value="notVoice"></el-option>
           <el-option label="6%" value="invoiced"></el-option>
         </el-select>
-        
-        <el-switch style="margin-right:10px" v-model="value1" active-text="报未税价" inactive-text="报含税价"></el-switch>  
         
         <el-button type="success" icon="el-icon-check" size="mini">报价</el-button>
         <el-button type="success" size="mini">
