@@ -32,8 +32,7 @@
           </el-form-item>
 
           <el-form-item style="float:right;margin-right:0">
-              <span class="mr20 table_tip">客户订单号：HJ-PU2012128</span>
-              <span class="table_tip">订单说明：这是一个订单样板原型</span>
+            <span class="table_tip">订单说明：这是一个订单样板原型</span>
           </el-form-item>
       </el-form>
 
@@ -58,6 +57,7 @@
         <div>
             <el-button type="warning" icon="el-icon-printer" size="mini">打印退货单</el-button>
             <el-button type="warning" icon="el-icon-printer" size="mini">打印物料卡</el-button>
+            <el-button type="info" icon="el-icon-download" size="mini">导出</el-button>
             <el-button type="primary" size="mini">
                 <svg-icon icon-class="receiveGoods" class-name="btn_icon_svg"></svg-icon>&nbsp;转备货
             </el-button>

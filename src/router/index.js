@@ -156,7 +156,7 @@ export const asyncRoutes = [
             path: 'deliveryList',
             name: 'deliveryList',
             component: () => import('@/views/saleManage/deliveryManage/deliveryList/index'),
-            meta: { title: '发货总览',icon: 'deliver' }
+            meta: { title: '订单总览',icon: 'deliver' }
           },
           {
             path: 'deliveryRecords',
@@ -169,6 +169,12 @@ export const asyncRoutes = [
             name: 'cusReturnRecords',
             component: () => import('@/views/saleManage/deliveryManage/cusReturnRecords/index'),
             meta: { title: '退货记录',icon: 'el-icon-tickets' }
+          },
+          {
+            path: 'productList',
+            name: 'productList',
+            component: () => import('@/views/saleManage/deliveryManage/productList/index'),
+            meta: { title: '产品总览',icon: 'el-icon-tickets' }
           },
           {
             path: 'deSaleOrder/:order_name',

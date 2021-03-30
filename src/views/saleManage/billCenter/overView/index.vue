@@ -12,25 +12,29 @@
           <el-option :label="item.financial_book_name" :value="item.financial_book_no" v-for="item in financial_book_list" :key="item.financial_book_no" />
         </el-select>
       </el-form-item>
-      <el-form-item>
+      <!-- <el-form-item>
         <el-select v-model="queryParams.invoiceStatus" size="small" style="width: 102px">
           <el-option label="全部" value="all"></el-option>
           <el-option label="未对账" value="notSubmit"></el-option>
           <el-option label="已对账" value="toBeApprove"></el-option>
           <el-option label="已归档" value="toBeApprove"></el-option>
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="24">
-        <svg-icon iconClass="tip" class="mr5" style="font-size:18px;"></svg-icon>
-        <span class="f14 table_tip">点击“客户名称”可以查看该客户所有未开票的清单，点击“附件”可以查看对账单详情。</span>
-      </el-col>
+    <el-row class="mb8">
+      <svg-icon iconClass="tip" class="mr5" style="font-size:18px;"></svg-icon>
+      <span class="f14 table_tip">点击“客户名称”可以查看该客户所有未开票的清单，点击“附件”可以查看对账单详情。</span>
+      <el-radio-group style="float:right;margin-top:8px" v-model="queryParams.value">
+        <el-radio :label="0">全部</el-radio>
+        <el-radio :label="1">未对账</el-radio>
+        <el-radio :label="2">已对账</el-radio>
+        <el-radio :label="3">已归档</el-radio>
+      </el-radio-group>
     </el-row>
 
     <el-table class="mb8" :height="screen_height-350" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
@@ -69,7 +73,8 @@ export default {
         searchInputValue: '',
         pageNum: 1,
         pageSize: 20,
-        selectStatus: 0
+        selectStatus: 0,
+        value: 0
       },
       showSearch: true,
       loading: false,

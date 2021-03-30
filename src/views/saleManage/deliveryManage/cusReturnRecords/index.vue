@@ -14,24 +14,27 @@
           <el-option label="账本4" value="invoiced"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="状态">
+      <!-- <el-form-item label="状态">
         <el-select v-model="queryParams.invoiceStatus" size="small" style="width: 100px">
           <el-option label="全部" value="all"></el-option>
           <el-option label="未收货" value="notVoice"></el-option>
           <el-option label="已收货" value="invoiced"></el-option>
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="12">
-        <svg-icon iconClass="tip" class="mr5" style="font-size:18px;"></svg-icon>
-        <span class="f14 table_tip">点击“发货单号”可以进入发货单页，点击“订单号”可以进入订单页。</span>
-      </el-col>
+    <el-row class="mb8">
+      <svg-icon iconClass="tip" class="mr5" style="font-size:18px;"></svg-icon>
+      <span class="f14 table_tip">点击“发货单号”可以进入发货单页，点击“订单号”可以进入订单页。</span>
+      <el-radio-group style="float:right;margin-top:8px" v-model="queryParams.value">
+        <el-radio :label="0">全部</el-radio>
+        <el-radio :label="1">未转备货</el-radio>
+        <el-radio :label="2">已转备货</el-radio>
+      </el-radio-group>
     </el-row>
 
     <el-table class="mb8" :height="screen_height-350" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
@@ -80,7 +83,8 @@ export default {
         inputValue: '',
         selectStatus: 'all',
         time_range: [],
-        invoiceStatus: "all"
+        invoiceStatus: "all",
+        value: 0
       },
       showSearch: true,
       loading: false,

@@ -1,6 +1,6 @@
 <template>
   <div class="app-container deliveryList">
-    <el-form class="mb10" :model="queryParams" ref="queryForm" v-show="showSearch" :inline="true">
+    <el-form class="mb10" :model="queryParams" ref="queryForm" :inline="true">
       <el-form-item>
         <el-input v-model="queryParams.inputValue" placeholder="输入关键字" clearable size="small" style="width: 180px" @keyup.enter.native="handleQuery"/>
       </el-form-item>
@@ -17,11 +17,14 @@
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="6">
-        <svg-icon iconClass="tip" class="mr5" style="font-size:18px;"></svg-icon>
-        <span class="f14 table_tip">点击“订单号”可以进入订单页。</span>
-      </el-col>
+    <el-row class="mb8">
+      <svg-icon iconClass="tip" class="mr5" style="font-size:18px;"></svg-icon>
+      <span class="f14 table_tip">点击“订单号”可以进入订单页。</span>
+      <el-radio-group style="float:right;margin-top:8px" v-model="queryParams.value">
+        <el-radio :label="0">全部</el-radio>
+        <el-radio :label="1">无退货</el-radio>
+        <el-radio :label="2">有退货</el-radio>
+      </el-radio-group>
     </el-row>
 
     <el-table class="mb8" :height="screen_height-350" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
@@ -43,9 +46,6 @@
     </el-table>
 
     <pagination :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="handleCurrentChange">
-      
-      <el-checkbox style="margin-right: 20px;" v-model="isAllChoose" label="所有页全选" ></el-checkbox>
-      <el-button type="info" icon="el-icon-download" size="mini">批量下载附件</el-button>
       <el-button type="warning" icon="el-icon-printer" size="mini">批量打印</el-button>
       <el-tooltip class="item" effect="dark" content="刷新" placement="top">
           <el-button size="mini" circle icon="el-icon-refresh"/>
@@ -68,12 +68,12 @@ export default {
       queryParams:{
         searchInputValue: '',
         pageNum: 1,
-        pageSize: 20
+        pageSize: 20,
+        value: 0
       },
-      showSearch: true,
       loading: false,
-      // tableData: [{order_name:"PO210115171738"},{order_name:"PO222222222"},{order_name:"PO33333333"}],
-      tableData: [],
+      tableData: [{order_name:"PO210115171738"},{order_name:"PO222222222"},{order_name:"PO33333333"}],
+      // tableData: [],
       total: 0,
       allRows: [],
       multipleSelection: [],
