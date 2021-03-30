@@ -96,6 +96,17 @@
               <div class="checkBoxWord">对进入采买阶段的物料需求，按照其需求类型自动归入分单中，等待采购人员处理。</div>
               <el-checkbox label="非协同订单代理发货" v-model="current_ai_assist.scm.auto_agent_deliver"></el-checkbox>
               <div class="checkBoxWord">在非协同订单的交货日期，自动往仓库发布出库需求单（代理发货）。</div>
+              <div style="font-size:14px;color: #606266;margin-top:20px;margin-bottom:10px">采购订单物料清单模板</div>
+              <el-radio-group style="padding-left:25px" v-model="current_ai_assist.scm.order_template_id">
+                <el-radio :label="0">
+                  <span>模板1</span>
+                  <img src="@/assets/imgs/muban1.png" alt="">
+                </el-radio>
+                <el-radio :label="1">
+                  <span>模板2</span>
+                  <img src="@/assets/imgs/muban2.png" alt="">
+                </el-radio>
+              </el-radio-group>
             </div>
             <div style="margin-top:15px" v-if="itemIndex==='wms'">
               <span>免检预设：</span>
