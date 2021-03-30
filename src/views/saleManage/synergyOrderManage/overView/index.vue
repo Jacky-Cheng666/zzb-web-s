@@ -15,24 +15,17 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-select style="width: 120px;" size="small" @change="changeOrderType" v-model="queryParams.valueOrderType" placeholder="请选择">
-          <el-option
-            v-for="item in ordersTypeOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
+    <el-row class="mb8">
       <svg-icon iconClass="tip" class="mr5" style="font-size:18px;display:inline-block"></svg-icon>
       <span class="table_tip">点击“订单号”可以查看意向订单详情。</span>
+      <el-radio-group style="float:right;margin-top:8px" v-model="queryParams.valueOrderType">
+        <el-radio :label="item.value" v-for="item in ordersTypeOptions" :key="item.value">{{item.label}}</el-radio>
+      </el-radio-group>
     </el-row>
 
     
@@ -91,7 +84,7 @@ export default {
       ordersTypeOptions: [
         {
           value: 0,
-          label: '全部订单'
+          label: '全部'
         }, 
         {
           value: 1,
@@ -103,7 +96,7 @@ export default {
         }, 
         {
           value: 3,
-          label: '已退回'
+          label: '待审批'
         }
       ],
       multipleSelection: []

@@ -26,28 +26,25 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-select v-model="queryParams.invoiceStatus" size="small" style="width: 102px">
-          <el-option label="未税价" value="notSubmit"></el-option>
-          <el-option label="含税价" value="toBeApprove"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-select v-model="queryParams.invoiceStatus" size="small" style="width: 102px">
-          <el-option label="全部" value="all"></el-option>
-          <el-option label="未报价" value="notSubmit"></el-option>
-          <el-option label="已报价" value="toBeApprove"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
+    <el-row class="mb8">
       <svg-icon iconClass="tip" class="mr5" style="font-size:18px;display:inline-block"></svg-icon>
       <span class="table_tip">点击“客户物料型号”可以查看图纸。</span>
 
+      <el-radio-group style="float:right;margin-top:8px;" v-model="queryParams.value">
+        <el-radio label="0">全部</el-radio>
+        <el-radio label="1">未报价</el-radio>
+        <el-radio label="2">已报价</el-radio>
+      </el-radio-group>
+
+      <el-radio-group style="float:right;margin-top:8px;margin-right:20px" v-model="queryParams.value">
+        <el-radio label="1">未税价</el-radio>
+        <el-radio label="2">含税价</el-radio>
+      </el-radio-group>
     </el-row>
 
 

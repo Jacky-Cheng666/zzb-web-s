@@ -102,8 +102,8 @@
       <div>
         <!-- <el-button type="primary" icon="el-icon-circle-check" size="mini">所有页全选</el-button> -->
         <el-checkbox style="margin-right: 20px;" v-model="isAllChoose" label="所有页全选" ></el-checkbox>
-        <el-button type="primary" @click="handleExportPdf" icon="el-icon-download" size="mini">批量下载附件</el-button>
-        <el-button type="primary" @click="handleExportExcel" icon="el-icon-download" size="mini">导出</el-button>
+        <el-button type="info" @click="handleExportPdf" icon="el-icon-download" size="mini">批量下载附件</el-button>
+        <el-button type="info" @click="handleExportExcel" icon="el-icon-download" size="mini">导出</el-button>
         <el-tooltip class="item" effect="dark" content="刷新" placement="top">
             <el-button @click="handleRefresh" size="mini" circle icon="el-icon-refresh"/>
         </el-tooltip>

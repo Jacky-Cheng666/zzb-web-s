@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container saleOrder">
+  <div class="app-container saleOrder" v-loading="loading" element-loading-text="加载中...">
     <fieldset class="field">
       <div class="order_basic_info">
         <div class="title mb12">深圳市智造帮科技有限公司-销售订单</div>
@@ -17,13 +17,11 @@
           <span class="mr20">协议交货日期：{{ deliveryTime }}</span>
         </div>
         <div class="f14">
-          <span>结款计划：</span>
           <el-tooltip placement="top" content="点击查看结款计划">
-            <svg-icon iconClass="eye-open" style="font-size:16px;color:#3894FF;cursor:pointer"></svg-icon>
+            <el-link style="margin-right:20px" :underline="false" type="primary">结款计划</el-link>
           </el-tooltip>
-          <span class="ml20">收货地址：</span>
           <el-tooltip placement="top" content="点击查看收货地址">
-            <svg-icon iconClass="receiving_address" style="font-size:18px;color:#3894FF;cursor:pointer"></svg-icon>
+            <el-link :underline="false" type="primary">收货地址</el-link>
           </el-tooltip>
         </div>
         <el-tag v-if="orderInfo.payment_over" class="tag" type="success">已收迄</el-tag>
@@ -31,67 +29,66 @@
         <el-tag v-else class="tag" type="info">无效</el-tag>
       </div>
     </fieldset>
-      <el-form :model="queryParams" ref="queryForm" :inline="true">
-        <el-form-item>
-          <el-input v-model="queryParams.searchInputValue" placeholder="输入关键字" clearable size="small" style="width: 180px" @keyup.enter.native="handleQuery"/>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-          <!-- <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button> -->
-        </el-form-item>
+    <el-form :model="queryParams" ref="queryForm" :inline="true">
+      <el-form-item>
+        <el-input v-model="queryParams.searchInputValue" placeholder="输入关键字" clearable size="small" style="width: 180px" @keyup.enter.native="handleQuery"/>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <!-- <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button> -->
+      </el-form-item>
 
-        <el-form-item style="float:right;margin-right:0">
-          <span class="mr20 table_tip">客户订单号：{{ orderInfo.guest_order_name ? orderInfo.guest_order_name : '无' }}</span>
-          <span class="table_tip">订单说明：{{ orderInfo.order_describe ? orderInfo.order_describe : '无' }}</span>
-        </el-form-item>
-      </el-form>
+      <el-form-item style="float:right;margin-right:0">
+        <span class="table_tip">订单说明：{{ orderInfo.order_describe ? orderInfo.order_describe : '无' }}</span>
+      </el-form-item>
+    </el-form>
 
         
-      <el-table class="mb8" ref="multipleTable" :height="screen_height-470" v-loading="loading" :data="tableData" @selection-change="handleSelectionChange">
-        <el-table-column align="center" type="selection" width="50" />
-        <el-table-column align="center" label="名称" prop="element_info.element_name" width="180" />
-        <el-table-column align="center" label="型号" prop="element_info.spec_code" width="240" />
-        <el-table-column align="center" label="品牌" prop="element_info.brand" width="100" />
-        <el-table-column align="center" label="单位" prop="element_info.unit" width="60" />
-        <el-table-column align="center" label="下单数量" prop="buy_info.num" width="80" />
-        <el-table-column align="center" label="退单数量" prop="trade_info.reject_num" width="80" />
-        <el-table-column
-          label="成交数量" v-if="!is_pre_attach"
-          width="80">
-          <template slot-scope="scope">
-            <span v-if="is_pre_attach"> 0 </span>
-            <span v-else>{{ scope.row.buy_info.num -  scope.row.trade_info.reject_num}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column v-if="is_pre_attach"
-          prop="buy_info.buy_price"
-          label="未税价格"
-          width="100">
-          <template slot-scope="scope">
-            <span>{{ scope.row.buy_info.buy_price }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="税金" prop="trade_info.total_tax" width="100" ></el-table-column>
-        <el-table-column align="center" label="税价合计" prop="trade_info.total_tax_price" width="100" />
-        <el-table-column align="center" label="物料代码" prop="element_info.element_code" width="100" />
-        <el-table-column align="center" label="客户物料名称" prop="element_info.guest_element_name" width="100" />
-        <el-table-column align="center" label="客户物料型号" prop="element_info.guest_spec_code" width="100" />
-        <el-table-column align="center" label="客户物料代码" prop="element_info.guest_element_no" width="100" />
-        <el-table-column align="center" label="客户项目号" prop="element_info.guest_task_code" width="100" />
-        <el-table-column align="center" label="备注" prop="remark" width="200" />
-      </el-table>
+    <el-table class="mb8" ref="multipleTable" :height="screen_height-470" :data="tableData" @selection-change="handleSelectionChange">
+      <el-table-column align="center" type="selection" width="50" />
+      <el-table-column align="center" label="名称" prop="element_info.element_name" width="180" />
+      <el-table-column align="center" label="型号" prop="element_info.spec_code" width="240" />
+      <el-table-column align="center" label="品牌" prop="element_info.brand" width="100" />
+      <el-table-column align="center" label="单位" prop="element_info.unit" width="60" />
+      <el-table-column align="center" label="下单数量" prop="buy_info.num" width="80" />
+      <el-table-column align="center" label="退单数量" prop="trade_info.reject_num" width="80" />
+      <el-table-column
+        label="成交数量" v-if="!is_pre_attach"
+        width="80">
+        <template slot-scope="scope">
+          <span v-if="is_pre_attach"> 0 </span>
+          <span v-else>{{ scope.row.buy_info.num -  scope.row.trade_info.reject_num}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="is_pre_attach"
+        prop="buy_info.buy_price"
+        label="未税价格"
+        width="100">
+        <template slot-scope="scope">
+          <span>{{ scope.row.buy_info.buy_price }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="税金" prop="trade_info.total_tax" width="100" ></el-table-column>
+      <el-table-column align="center" label="税价合计" prop="trade_info.total_tax_price" width="100" />
+      <el-table-column align="center" label="物料代码" prop="element_info.element_code" width="100" />
+      <el-table-column align="center" label="客户物料名称" prop="element_info.guest_element_name" width="100" />
+      <el-table-column align="center" label="客户物料型号" prop="element_info.guest_spec_code" width="100" />
+      <el-table-column align="center" label="客户物料代码" prop="element_info.guest_element_no" width="100" />
+      <el-table-column align="center" label="客户项目号" prop="element_info.guest_task_code" width="100" />
+      <el-table-column align="center" label="备注" prop="remark" width="200" />
+    </el-table>
       
 
-      <pagination :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="handleCurrentChange">
-        <div>
-          <el-button type="danger" size="mini">
-              <svg-icon @click="handleReturnOrder" disabled icon-class="returnOrder" class-name="btn_icon_svg"></svg-icon>&nbsp;退单
-          </el-button>
-          <el-button type="info" @click="handleExportOrder" icon="el-icon-download" size="mini">导出</el-button>
-          <el-tooltip class="item" @click="handleRefresh" effect="dark" content="刷新" placement="top">
-              <el-button size="mini" circle icon="el-icon-refresh"/>
-          </el-tooltip>
-        </div>
+    <pagination :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="handleCurrentChange">
+      <div>
+        <el-button type="danger" size="mini">
+            <svg-icon @click="handleReturnOrder" disabled icon-class="returnOrder" class-name="btn_icon_svg"></svg-icon>&nbsp;退单
+        </el-button>
+        <el-button type="info" @click="handleExportOrder" icon="el-icon-download" size="mini">导出</el-button>
+        <el-tooltip class="item" @click="handleRefresh" effect="dark" content="刷新" placement="top">
+            <el-button size="mini" circle icon="el-icon-refresh"/>
+        </el-tooltip>
+      </div>
     </pagination>
   </div>
 </template>
@@ -190,11 +187,13 @@ export default {
       })
     },
     handleRefresh(){
+      this.loading = true;
       getAttachOrder({
         access_token: this.token,
         order_no: this.orderNo
       }).then(response => {
         if (response.code == 0){
+          this.loading = false;
           this.orderInfo = response
           this.totalNum = 0; //总数量
           this.noTaxTotalPrice = this.orderInfo.total_price; //整单未税合计

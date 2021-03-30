@@ -1,6 +1,6 @@
 <template>
   <div class="app-container customerAskPrice">
-    <el-form class="mb10" :model="queryParams" ref="queryForm" v-show="showSearch" :inline="true">
+    <el-form class="mb10" :model="queryParams" ref="queryForm" :inline="true">
       <el-form-item>
         <el-input v-model="queryParams.inputValue" placeholder="输入关键字" clearable size="small" style="width: 180px" @keyup.enter.native="handleQuery"/>
       </el-form-item>
@@ -26,24 +26,19 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-select v-model="queryParams.invoiceStatus" size="small" style="width: 102px">
-          <el-option label="全部" value="all"></el-option>
-          <el-option label="未报价" value="notSubmit"></el-option>
-          <el-option label="已报价" value="toBeApprove"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="12">
-       <svg-icon iconClass="tip" class="mr5" style="font-size:18px;"></svg-icon>
-       <span class="f14 table_tip">点击“询价单号”可以查看询价单详情。</span>
-      </el-col>
-
+    <el-row class="mb8">
+      <svg-icon iconClass="tip" class="mr5" style="font-size:18px;" />
+      <span class="f14 table_tip">点击“询价单号”可以查看询价单详情。</span>
+      <el-radio-group style="float:right;margin-top:8px" v-model="queryParams.invoiceStatus">
+        <el-radio :label="0">全部</el-radio>
+        <el-radio :label="1">未报价</el-radio>
+        <el-radio :label="2">已报价</el-radio>
+      </el-radio-group>
     </el-row>
 
 
@@ -63,26 +58,24 @@
       <el-table-column align="center" label="结款" prop="period" width="80" />
       <el-table-column align="center" label="销售人" prop="saler" width="80" />
       <el-table-column align="center" label="报价时间" prop="" width="160" />
-      <el-table-column align="center" label="操作" width="120">
+      <el-table-column align="center" label="操作" width="60">
         <template>
-          <el-button size="mini" type="text"><svg-icon icon-class="connect" class-name="btn_icon_svg"></svg-icon>&nbsp;关联</el-button>
-          <el-button class="text-danger" size="mini" type="text"><svg-icon icon-class="return" class-name="btn_icon_svg"></svg-icon>&nbsp;退回</el-button>
+          <el-button class="text-danger" icon="el-icon-delete" size="mini" type="text">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
 
     <pagination :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="handleCurrentChange">
-        <div>
-          <router-link to="/saleManage/customerAskPrice/batCreateOrder">
-            <el-button type="primary" icon="el-icon-plus" size="mini">批量新建</el-button>
-          </router-link>
-          <router-link to="/saleManage/customerAskPrice/newAskPrice">
-            <el-button style="margin:0 10px"  type="primary" icon="el-icon-plus" size="mini">新建</el-button>
-          </router-link>
-          <el-tooltip class="item" effect="dark" content="刷新" placement="top">
-              <el-button size="mini" circle icon="el-icon-refresh"/>
-          </el-tooltip>
-        </div>
+      <el-button style="margin-right: 10px" type="danger" icon="el-icon-delete" size="mini">删除</el-button>
+      <router-link to="/saleManage/customerAskPrice/batCreateOrder">
+        <el-button type="primary" icon="el-icon-plus" size="mini">批量新建</el-button>
+      </router-link>
+      <router-link to="/saleManage/customerAskPrice/newAskPrice">
+        <el-button style="margin:0 10px"  type="primary" icon="el-icon-plus" size="mini">新建</el-button>
+      </router-link>
+      <el-tooltip class="item" effect="dark" content="刷新" placement="top">
+          <el-button size="mini" circle icon="el-icon-refresh"/>
+      </el-tooltip>
     </pagination>
 
   </div>
@@ -96,46 +89,16 @@ export default {
     return {
       queryParams: {
         inputValue: "",
-        pay_period: "全部",
-        invoiceStatus: "all",
+        invoiceStatus: 0,
         selectStatus: "all",
         pageNum: 1,
         pageSize: 100,
       },
-      showSearch: true,
       loading: false,
       tableData: [{order_name: "PO11234455",guest_spec_code:"Model 3"}],
       total: 0,
       allRows: [],
       value2:[],
-      pickerOptions: {
-        shortcuts: [{
-          text: '最近一周',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-            picker.$emit('pick', [start, end]);
-          }
-        }, {
-          text: '最近一个月',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-            picker.$emit('pick', [start, end]);
-          }
-        }, {
-          text: '最近三个月',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-            picker.$emit('pick', [start, end]);
-          }
-        }]
-      },
-      checked: false
     }
   },
   computed: {

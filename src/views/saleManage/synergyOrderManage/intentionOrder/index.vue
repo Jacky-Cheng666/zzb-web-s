@@ -17,13 +17,11 @@
           <span class="mr20">需求日期：2021-01-06</span>
         </div>
         <div class="f14">
-          <span>结款计划：</span>
           <el-tooltip placement="top" content="点击查看结款计划">
-            <svg-icon iconClass="eye-open" style="font-size:16px;color:#3894FF;cursor:pointer"></svg-icon>
+            <el-link style="margin-right:20px" :underline="false" type="primary">结款计划</el-link>
           </el-tooltip>
-          <span class="ml20">收货地址：</span>
           <el-tooltip placement="top" content="点击查看收货地址">
-            <svg-icon iconClass="receiving_address" style="font-size:18px;color:#3894FF;cursor:pointer"></svg-icon>
+            <el-link :underline="false" type="primary">收货地址</el-link>
           </el-tooltip>
         </div>
         <el-tag class="tag" type="success">已收迄</el-tag>
@@ -36,16 +34,17 @@
           <el-input v-model="queryParams.searchInputValue" placeholder="输入关键字" clearable size="small" style="width: 180px" @keyup.enter.native="handleQuery"/>
         </el-form-item>
         <el-form-item>
-          <el-select style="width: 120px;" size="small" @change="changeOrderType" v-model="queryParams.valueOrderType" placeholder="请选择">
-            <el-option v-for="item in selectOptions" :key="item.value" :label="item.label" :value="item.value" />
-          </el-select>
-        </el-form-item>
-        <el-form-item>
           <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
           <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
         </el-form-item>
 
-        <el-form-item style="float:right;margin-right:0">
+        <el-form-item style="float:right;">
+          <el-radio-group  v-model="queryParams.value">
+            <el-radio :label="item.value" v-for="item in selectOptions" :key="item.value">{{item.label}}</el-radio>
+          </el-radio-group>
+        </el-form-item>
+
+        <el-form-item style="float:right;margin-right: 20px">
           <span class="table_tip">订单说明：这是一个订单说明</span>
         </el-form-item>
       </el-form>
@@ -93,7 +92,8 @@ export default {
           searchInputValue: '',
           pageNum: 1,
           pageSize: 100,
-          filterList: []
+          filterList: [],
+          value: 0
         },
         total: 1000,
         loading: false,
