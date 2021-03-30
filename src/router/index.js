@@ -52,8 +52,23 @@ export const asyncRoutes = [
       {
         path: 'createSaleOrder',
         name: 'createSaleOrder',
-        component: () => import('@/views/saleManage/createSaleOrder/index'),
-        meta: { title: '新建销单',icon: 'el-icon-document-add' }
+        component: EmptyLayout,
+        meta: { title: '新建销单',icon: 'el-icon-tickets' },
+        redirect: '/saleManage/createSaleOrder/newSingleOrder',
+        children: [
+          {
+            path: 'newSingleOrder',
+            name: 'newSingleOrder',
+            component: () => import('@/views/saleManage/createSaleOrder/newSingleOrder/index'),
+            meta: { title: '独立建单',icon: 'el-icon-document-add' }
+          },
+          {
+            path: 'batCreateOrder',
+            name: 'batCreateOrder',
+            component: () => import('@/views/saleManage/createSaleOrder/batCreateOrder/index'),
+            meta: { title: '批量建单',icon: 'el-icon-document-add' }
+          },
+        ]
       },
       {
         path: 'preOrder',

@@ -60,6 +60,12 @@
           <el-input v-model="queryParams.orderExplainText" placeholder="输入订单说明" clearable size="small" style="width: 561px"/>
         </el-form-item>
         <br>
+        <el-form-item label="未核价" label-width="64px">
+          <el-switch></el-switch>
+        </el-form-item>
+        <el-form-item label="无单号" label-width="64px">
+          <el-switch></el-switch>
+        </el-form-item>
         <el-form-item label="不开票" label-width="64px">
           <el-switch v-model="queryParams.isNeedInvoice"></el-switch>
         </el-form-item>
@@ -128,9 +134,6 @@
       </div>
     </pagination>
 
-    <!-- <el-tooltip placement="top" content="返回顶部">
-      <back-to-top :custom-style="myBackToTopStyle" :visibility-height="300" :back-position="0" transition-name="fade" />
-    </el-tooltip> -->
 
     <pay-plan @sendPlanResult="handleReceivePlanResult" :receivedTotalPrice="order_total_pay" ref="payPlan"></pay-plan>
     <address-dialog v-model="addressList" ref="addressDialog"></address-dialog>
@@ -204,7 +207,7 @@
 <script>
 import payPlan from './components/payPlanDialog'
 import addressDialog from './components/addressDialog'
-import elementInfo from '../../../components/elementInfo'
+import elementInfo from '@/components/elementInfo'
 const battchAdd = ()=>import('./components/batchAdd')
 import uploadFile from '@/components/UploadFile/index'
 
