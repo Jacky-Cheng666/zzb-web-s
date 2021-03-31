@@ -44,6 +44,27 @@ export const constantRoutes = [
 ]
 export const asyncRoutes = [
   {
+    path: '/approveCenter',
+    name: 'approveCenter',
+    component: Layout,
+    meta: { title: '审批中心',icon: 'el-icon-chat-line-square' },
+    redirect: '/approveCenter/toBeApprove',
+    children: [
+      {
+        path: 'toBeApprove',
+        name: 'toBeApprove',
+        component: () => import('@/views/approveCenter/toBeApprove/index'),
+        meta: { title: '待我审批',icon: 'el-icon-reading' }
+      },
+      {
+        path: 'alreadyApprove',
+        name: 'alreadyApprove',
+        component: () => import('@/views/approveCenter/alreadyApprove/index'),
+        meta: { title: '我已审批',icon: 'el-icon-tickets' }
+      },
+    ]
+  },
+  {
     path: '/saleManage',
     component: Layout,
     meta: { title: '销售管理',icon: 'el-icon-sold-out' },
