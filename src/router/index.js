@@ -177,6 +177,13 @@ export const asyncRoutes = [
             meta: { title: '产品总览',icon: 'el-icon-tickets' }
           },
           {
+            path: 'notDeliveryList',
+            name: 'notDeliveryList',
+            component: () => import('@/views/saleManage/deliveryManage/notDeliveryList/index'),
+            meta: { title: '未发清单', activeMenu: '/saleManage/deliveryManage/productList' },
+            hidden: true
+          },
+          {
             path: 'deSaleOrder/:order_name',
             name: 'deSaleOrder',
             component: () => import('@/views/saleManage/deliveryManage/deSaleOrder/index'),
