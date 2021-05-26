@@ -4,7 +4,7 @@
       <div class="nav">
         <div class="left">
           <div class="logo">
-            <router-link to="/"><img src="../../assets/imgs/logo.png" class="logo-img" alt=""/></router-link>
+            <router-link to="/"><img src="../../assets/imgs/logo@2x.png" class="logo-img" alt=""/></router-link>
           </div>
           <div v-if="isJoinCompany" class="user-company" style="font-size: 18px; margin-right: 120px">
             <el-select v-if="companies && companies.length>1" style="font-size: 18px;color: white;margin-left: 0px;width: 240px;" v-model="company_no" @change="changeCompany" placeholder="请输入或者选择">
@@ -220,7 +220,7 @@ export default {
   .top {
     width: 100%;
     height: 56px;
-    background-color: #303f56;
+    background-color: #101010;
     margin-bottom: 24px;
     .nav {
       width: 80%;

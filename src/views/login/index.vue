@@ -19,7 +19,7 @@
             <el-col :span="12"><img src="../../assets/imgs/bigBg.png" style="height: 663px;" alt=""></el-col>
             <el-col :span="12">
               <div class="loginmsg">
-                <div><img src="../../assets/imgs/login-logo.png" style="height: 65px;margin-top:82px;" alt="logo"></div>
+                <div><img src="../../assets/imgs/login-logo.png" style="width: 320px;margin-top:41px;" alt="logo"></div>
                 <div style="padding-top: 50px;">
                   <div class="loginInfoInner" style="width: 320px;margin: 0 auto;">
                     <div style="color:#333333;font-size: 20px;font-weight: bold;text-align: left;">欢迎登录</div>
