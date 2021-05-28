@@ -62,6 +62,13 @@ export const asyncRoutes = [
         component: () => import('@/views/approveCenter/alreadyApprove/index'),
         meta: { title: '我已审批',icon: 'el-icon-tickets' }
       },
+      {
+        path: 'prmApprove',
+        name: 'prmApprove',
+        component: () => import('@/views/approveCenter/prmApprove/index'),
+        meta: { title: '请购审批',activeMenu: '/approveCenter/toBeApprove' },
+        hidden: true,
+      },
     ]
   },
   {
