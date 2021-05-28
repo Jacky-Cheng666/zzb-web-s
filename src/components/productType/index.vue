@@ -13,14 +13,28 @@ import { mapGetters } from "vuex";
 import { get_type_list } from "@/api/saleManage";
 export default {
   name: "productType",
+  props: {
+    value: {
+      type: Array,
+      default: []
+    }
+  },
   computed: {
     ...mapGetters(["token"]),
   },
   data() {
     return {
-      product_id: "",
+      product_id: this.value,
       product_type_list: [],
     };
+  },
+  watch: {
+    value:{
+      deep: true,
+      handler(newV,oldV){
+        this.product_id = this.$DeepClone(newV)
+      }
+    }
   },
   created() {
     this.getTypeList();

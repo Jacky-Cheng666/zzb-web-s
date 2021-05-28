@@ -3,7 +3,6 @@
     <el-dialog @closed="dialogClosed" width="900px" center title="产品信息" :visible.sync="dialogFormVisible">
       <el-form ref="ruleForm" :model="form" :rules="rules">
         <el-form-item prop="product_id">
-          <!-- <el-cascader style="width:100%" v-model="form.product_id" :options="product_type_list" :props="{ expandTrigger: 'hover',value: 'id', label: 'name',children: 'items'}" @change="handleChange"></el-cascader> -->
           <productType v-model="form.product_id" />
         </el-form-item>
         <el-form-item>
@@ -106,20 +105,8 @@ export default {
     };
   },
   created() {
-    // this.getTypeList();
   },
   methods: {
-    // getTypeList(){
-    //     axios.post('/product/get_type_list', {
-    //         access_token: this.access_token
-    //     }).then(response=>{
-    //         let result = response.data
-    //         if(result.code===0){
-    //             this.product_type_list = result.product_type_list
-    //             this.$store.commit("setProductTypeList",JSON.parse(JSON.stringify(this.product_type_list)))
-    //         }
-    //     })
-    // },
     addAttribute() {
       this.form.property_list.push({
         name: "",
@@ -129,11 +116,6 @@ export default {
     deleteAttribute(index) {
       this.form.property_list.splice(index, 1);
     },
-    // handleChange(value) {
-    //     let product_type_id = value[value.length-1];
-    //     let obj = this.getItem(this.product_type_list, product_type_id);
-    //     this.product_type_name = obj.name;
-    // },
     submitForm() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {

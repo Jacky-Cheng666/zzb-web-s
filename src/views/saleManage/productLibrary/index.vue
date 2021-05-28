@@ -38,7 +38,7 @@
         <template slot-scope="scope">
           <div v-if="!scope.row.disabled" style="display: flex; flex-direction: row; align-items: center; justify-content: center;">
             <span @click="editProduct(scope.row)" style="color: #3893E6; cursor: pointer;margin-right:20px">编辑产品</span>
-            <span style="color: #3893E6; cursor: pointer;margin-right:20px">上传图片</span>
+            <span style="color: #ccc; cursor: test;margin-right:20px">上传图片</span>
             <span @click="addNewSpecCode(scope.row)" style="color: #3893E6; cursor: pointer;margin-right:20px">新增型号</span>
             <span @click="deleteProduct(scope.row)" style="color: #E34348; cursor: pointer;">删除产品</span>
           </div>
@@ -65,13 +65,36 @@
       </div>
     </pagination>
 
+    <el-dialog width="492px" center title="型号信息" :visible.sync="addModelVisible">
+      <el-form :model="form" ref="form">
+        <el-form-item class="mb20" prop="spec_code" :rules="[{ required: true, message: '请输入规格型号', trigger: 'blur' }]">
+          <el-input size="small" clearable v-model="form.spec_code" autocomplete="off" placeholder="规格型号" />
+        </el-form-item>
+        <div style="text-align:left;margin-bottom:10px">属性列表：</div>
+        <el-table :header-cell-style="{backgroundColor: '#F7F7F7', color: '#5B6B73!important',height: '32px!important'}" stripe border :data="form.attribute_list" style="width: 100%">
+            <el-table-column prop="name" label="属性名称" width="180"></el-table-column>
+            <el-table-column prop="options" label="属性选项" width="260">
+                <template slot-scope="scope">
+                    <el-select size="mini" v-model="scope.row.value" placeholder="请选择">
+                      <el-option v-for="item in scope.row.options" :key="item" :label="item" :value="item" />
+                    </el-select>
+                </template>
+            </el-table-column>
+        </el-table>
+      </el-form>
+      <div slot="footer" class="dialog-footer" style="text-align:right">
+        <el-button size="mini" @click="addModelVisible = false">取 消</el-button>
+        <el-button size="mini" type="primary" @click="sureAddSpecCode">确 定</el-button>
+      </div>
+    </el-dialog>
+
     <addProductMask v-model="addForm" @submitAddProductMask="submitAddProductMask" ref="addProductMask" />
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import { get_product_list, delete_product_spec, delete_product,add_product } from '@/api/saleManage'
+import { get_product_list, delete_product_spec, delete_product,add_product,edit_product,add_product_spec } from '@/api/saleManage'
 import addProductMask from './components/addProductMask'
 export default {
   name: 'productLibrary',
@@ -97,7 +120,13 @@ export default {
         product_id: [],
         property_list: []
       },
-      isEditProduct: false
+      isEditProduct: false,
+      isEditSpec: false,
+      currentRow: {},
+      addModelVisible: false,
+      form:{
+        attribute_list: []
+      },
     }
   },
   computed: {
@@ -176,11 +205,11 @@ export default {
     },
     addNewProduct(){
       this.isEditProduct = false;
-      // this.addForm.product_id = [];
-      // this.addForm.product_name = "";
-      // this.addForm.unit = "";
-      // this.addForm.brand = "";
-      // this.addForm.property_list = [];
+      this.addForm.product_id = [];
+      this.addForm.product_name = "";
+      this.addForm.unit = "";
+      this.addForm.brand = "";
+      this.addForm.property_list = [];
       this.$refs.addProductMask.dialogFormVisible = true;
     },
     getItem(data, id) {
@@ -223,6 +252,26 @@ export default {
           this.$refs.addProductMask.dialogFormVisible = false;
           this.getProductList();
         }
+      }else{
+        let result = await edit_product({
+          access_token: this.token,
+          product_id: this.currentRow.product_id,
+          product_type_id,
+          product_type_name,
+          product_name: this.addForm.product_name,
+          brand: this.addForm.brand,
+          unit: this.addForm.unit,
+          property_list: this.addForm.property_list
+        })
+        if(result.code===0){
+          this.$notify({
+            type: 'success',
+            title: '成功',
+            message: '操作成功'
+          })
+          this.$refs.addProductMask.dialogFormVisible = false;
+          this.getProductList();
+        }
       }
     },
     handleQuery(){
@@ -246,7 +295,87 @@ export default {
     handleCurrentChange(){},
     viewSalesOrder(row){
       this.$router.push('/saleManage/saleOrder'+row.order_name)
-    }
+    },
+    addNewSpecCode(row){
+      this.isEditSpec = false;
+      this.currentRow = this.$DeepClone(row)
+      let arr = this.$DeepClone(row.property_list)
+      
+      arr.forEach(item=>{
+        let options = item.options.split(",")
+        item.options = options
+      })
+      this.form.attribute_list = JSON.parse(JSON.stringify(arr))
+      this.addModelVisible = true;
+    },
+    sureAddSpecCode(){
+      this.$refs.form.validate((valid)=>{
+        if(valid){
+          let property_list = this.form.attribute_list.map(item=>{
+              return {
+                name: item.name,
+                value: item.value
+              }
+            })
+          if(!this.isEditSpec){
+            add_product_spec({
+              access_token: this.token,
+              product_id: this.currentRow.product_id,
+              spec_code: this.form.spec_code.trim(),
+              property_list
+            }).then(result=>{
+              if(result.code===0){
+                this.$notify({
+                  type: 'success',
+                  title: '成功',
+                  message:"操作成功",
+                })
+                this.addModelVisible = false;
+                this.getProductList();
+              }
+            })
+          }else{
+            axios.post('/product/edit_product_spec', {
+                access_token: this.access_token,
+                product_id: this.currentSpecRow.product_id,
+                spec_id: this.currentSpecRow.spec_id,
+                spec_code: this.form.spec_code.trim(),
+                property_list
+            }).then(response=>{
+              let result = response.data
+              if(result.code===0){
+                this.$notify({
+                  type: 'success',
+                  title: '成功',
+                  message:"操作成功",
+                })
+                this.addModelVisible = false;
+                this.handleRefresh();
+              }
+            })
+          }
+          
+        }else{
+          console.log('error submit!');
+          return false;
+        }
+      })
+    },
+    editProduct(row){
+      let product_type_id = row.product_type_id;
+      let second_id = product_type_id - product_type_id%100
+      let first_id = product_type_id - product_type_id%1000
+      let product_id = [first_id, second_id, product_type_id]
+      this.addForm.product_id = product_id;
+      this.addForm.product_name = row.product_name;
+      this.addForm.unit = row.unit;
+      this.addForm.brand = row.brand;
+      this.addForm.property_list = JSON.parse(JSON.stringify(row.property_list));
+      this.addForm.valueWorkPiece = row.workpiece_id;
+      this.currentRow = JSON.parse(JSON.stringify(row));
+      this.$refs.addProductMask.dialogFormVisible = true;
+      this.isEditProduct = true;
+    },
   },
 
 }

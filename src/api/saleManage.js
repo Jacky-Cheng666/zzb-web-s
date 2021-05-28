@@ -81,7 +81,7 @@ export function setPlanOrderReceiveInfo(data) {
     data
   })
 }
-
+// 产品管理
 export function get_product_list(data) {
   return request({
     url: '/som/product/get_product_list',
@@ -117,6 +117,22 @@ export function get_type_list(data) {
 export function add_product(data) {
   return request({
     url: '/som/product/add_product',
+    method: 'post',
+    data
+  })
+}
+
+export function edit_product(data) {
+  return request({
+    url: '/som/product/edit_product',
+    method: 'post',
+    data
+  })
+}
+
+export function add_product_spec(data) {
+  return request({
+    url: '/som/product/add_product_spec',
     method: 'post',
     data
   })
