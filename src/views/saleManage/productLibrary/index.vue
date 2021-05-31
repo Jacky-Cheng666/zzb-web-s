@@ -50,7 +50,7 @@
       </el-table-column>
       <el-table-column align="center" label="操作" width="120">
         <template slot-scope="scope" v-if="scope.row.disabled"> 
-          <el-button size="mini" icon="el-icon-money" type="text">报价</el-button>
+          <el-button @click="responsePrice(scope.row)" size="mini" icon="el-icon-money" type="text">报价</el-button>
           <el-button @click="deleteSpec(scope.row)" size="mini" icon="el-icon-delete" type="text" class="text-danger">删除</el-button>
         </template>
       </el-table-column>
@@ -89,16 +89,19 @@
     </el-dialog>
 
     <addProductMask v-model="addForm" @submitAddProductMask="submitAddProductMask" ref="addProductMask" />
+    <setPriceRuleMask @submitSetPrice="submitSetPrice" v-model="price_form" ref="setPriceRuleMask" />
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import { get_product_list, delete_product_spec, delete_product,add_product,edit_product,add_product_spec } from '@/api/saleManage'
+import { get_product_list, delete_product_spec, delete_product,add_product,edit_product,add_product_spec,edit_product_spec,set_pricing } from '@/api/saleManage'
 import addProductMask from './components/addProductMask'
+import setPriceRuleMask from './components/setPriceRuleMask'
+import common from "@/utils/common.js"
 export default {
   name: 'productLibrary',
-  components: {addProductMask},
+  components: {addProductMask,setPriceRuleMask},
   data() {
     return {
       queryParams: {
@@ -127,6 +130,28 @@ export default {
       form:{
         attribute_list: []
       },
+      price_form: {
+        element_info:{
+          product_name:"",
+          spec_code: "",
+          brand: "",
+          unit: ""
+        },
+        pricing:{
+          auto_offer: false,
+          basic: {
+              base_price: "",
+              lowest_price: "",
+              offer_with_tax: false,
+              tax_value: 0,
+              expire_date: new Date().getTime(),
+              num_range: [],
+              deliver_days: ""
+          },
+          step_offer: false,
+          step_list: []
+        }  
+      }
     }
   },
   computed: {
@@ -292,7 +317,12 @@ export default {
       this.handleQuery();
     },
     getPayDemandList(){},
-    handleCurrentChange(){},
+    handleCurrentChange({page:currentPage,limit: pageSize}){
+      this.tableData = this.paginationRows.slice(
+        pageSize * (currentPage - 1),
+        pageSize * currentPage
+      );
+    },
     viewSalesOrder(row){
       this.$router.push('/saleManage/saleOrder'+row.order_name)
     },
@@ -335,14 +365,13 @@ export default {
               }
             })
           }else{
-            axios.post('/product/edit_product_spec', {
-                access_token: this.access_token,
-                product_id: this.currentSpecRow.product_id,
-                spec_id: this.currentSpecRow.spec_id,
-                spec_code: this.form.spec_code.trim(),
-                property_list
-            }).then(response=>{
-              let result = response.data
+            edit_product_spec({
+              access_token: this.token,
+              product_id: this.currentSpecRow.product_id,
+              spec_id: this.currentSpecRow.spec_id,
+              spec_code: this.form.spec_code.trim(),
+              property_list
+            }).then(result=>{
               if(result.code===0){
                 this.$notify({
                   type: 'success',
@@ -350,7 +379,7 @@ export default {
                   message:"操作成功",
                 })
                 this.addModelVisible = false;
-                this.handleRefresh();
+                this.getProductList();
               }
             })
           }
@@ -375,6 +404,93 @@ export default {
       this.currentRow = JSON.parse(JSON.stringify(row));
       this.$refs.addProductMask.dialogFormVisible = true;
       this.isEditProduct = true;
+    },
+    editSpec(row){
+      this.currentSpecRow = this.$DeepClone(row)
+      this.isEditSpec = true;
+      this.$set(this.form,"spec_code",row.spec_code)
+      row.property_list.forEach(item=>{
+        row.product_property_list.forEach(it=>{
+          if(it.name===item.name){
+            item.options = it.options.split(",");
+          }
+        })
+      })
+      this.form.attribute_list = this.$DeepClone(row.property_list);
+      this.addModelVisible = true;
+    },
+    responsePrice(row){
+      this.currentRow = this.$DeepClone(row);
+      this.price_form.element_info.product_name = this.currentRow.product_name;
+      this.price_form.element_info.spec_code = this.currentRow.spec_code;
+      this.price_form.element_info.brand = this.currentRow.brand;
+      this.price_form.element_info.unit = this.currentRow.unit;
+
+      let obj =  this.price_form.pricing;
+      if(row.pricing){
+        let newObj = this.$DeepClone(row.pricing)
+        newObj.step_list.forEach(item=>{
+          this.$set(item,'on_sale_percent',common.fixFloat2(item.on_sale*100))
+        })
+        for (const k in obj) {
+          obj[k] = newObj[k]
+        }
+      }else{
+        this.price_form.pricing.auto_offer = false;
+        this.price_form.pricing.step_offer = false;
+        this.price_form.pricing.step_list = [];
+        this.price_form.pricing.basic.base_price = "";
+        this.price_form.pricing.basic.deliver_days = "";
+        this.price_form.pricing.basic.lowest_price = "";
+        this.price_form.pricing.basic.num_range = [];
+        this.price_form.pricing.basic.offer_with_tax = false;
+        this.price_form.pricing.basic.tax_name = "普票";
+        this.price_form.pricing.basic.tax_value = 0;
+      }
+      this.$refs.setPriceRuleMask.dialogFormVisible = true;
+    },
+    submitSetPrice(val){
+      this.price_form.pricing.basic.base_price = parseFloat(this.price_form.pricing.basic.base_price);
+      this.price_form.pricing.basic.lowest_price = parseFloat(this.price_form.pricing.basic.lowest_price);
+      let row_index = 0;
+      let flag = this.price_form.pricing.step_list.some((item,index)=>{                           
+        delete item.on_sale_percent
+        if(!item.deliver_days || item.num_range.length<2){
+          row_index = index;
+          return true;
+        }
+      })
+      if(flag){
+        return this.$message({
+            showClose: true,
+            message: `第${row_index+1}行 最小数量 或 最大数量 或 标准交期为空`,
+            type: 'warning'
+        })
+      }
+      set_pricing({
+        access_token: this.token,
+        product_id: this.currentRow.product_id,
+        spec_id: this.currentRow.spec_id,
+        pricing: {
+          auto_offer: this.price_form.pricing.auto_offer,
+          basic: {
+            ...this.price_form.pricing.basic,
+            tax_name: val
+          },
+          step_offer: this.price_form.pricing.step_offer,
+          step_list: this.price_form.pricing.step_list
+        }
+      }).then(result=>{
+        if(result.code===0){
+          this.$notify({
+            message: '操作成功',
+            title: '成功',
+            type: 'success'
+          })
+          this.$refs.setPriceRuleMask.dialogFormVisible = false;
+          this.getProductList();
+        }
+      })
     },
   },
 

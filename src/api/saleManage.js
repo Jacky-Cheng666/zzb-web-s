@@ -137,6 +137,21 @@ export function add_product_spec(data) {
     data
   })
 }
+export function edit_product_spec(data) {
+  return request({
+    url: '/som/product/edit_product_spec',
+    method: 'post',
+    data
+  })
+}
+
+export function set_pricing(data) {
+  return request({
+    url: '/som/product/set_pricing',
+    method: 'post',
+    data
+  })
+}
 
 // 客户管理
 export function get_purchaser_list(data) {
