@@ -329,7 +329,7 @@ export const asyncRoutes = [
             path: 'myRequestList',
             name: 'myRequestList',
             component: () => import('@/views/purchaseManage/myRequestList/index'),
-            meta: { title: '我的请购',icon: 'el-icon-tickets' }
+            meta: { title: '请购总览',icon: 'el-icon-tickets' }
           },
           {
             path: 'reqListFollow',
@@ -349,8 +349,35 @@ export const asyncRoutes = [
       {
         path: 'createPurchaseOrder',
         name: 'createPurchaseOrder',
-        component: () => import('@/views/purchaseManage/createPurchaseOrder/index'),
-        meta: { title: '新建订单',icon: 'el-icon-document-add' }
+        component: EmptyLayout,
+        redirect: '/purchaseManage/createPurchaseOrder/preAskPrice',
+        meta: { title: '我要发单',icon: 'el-icon-document-add' },
+        children: [
+          {
+            path: 'preAskPrice',
+            name: 'preAskPrice',
+            component: () => import('@/views/purchaseManage/createPurchaseOrder/preAskPrice/index'),
+            meta: { title: '未询价',icon: 'el-icon-tickets' }
+          },
+          {
+            path: 'alreadyAskPrice',
+            name: 'alreadyAskPrice',
+            component: () => import('@/views/purchaseManage/createPurchaseOrder/alreadyAskPrice/index'),
+            meta: { title: '已询价',icon: 'el-icon-tickets' }
+          },
+          {
+            path: 'askPriceOverview',
+            name: 'askPriceOverview',
+            component: () => import('@/views/purchaseManage/createPurchaseOrder/askPriceOverview/index'),
+            meta: { title: '询价总览',icon: 'el-icon-tickets' }
+          },
+          {
+            path: 'singleOrderOverview',
+            name: 'singleOrderOverview',
+            component: () => import('@/views/purchaseManage/createPurchaseOrder/singleOrderOverview/index'),
+            meta: { title: '分单管理',icon: 'el-icon-tickets' }
+          },
+        ]
       },
       {
         path: 'purchaseRecords',
